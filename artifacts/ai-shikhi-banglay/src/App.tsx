@@ -3,7 +3,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HelmetProvider } from "react-helmet-async";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { useEffect } from "react";
 import { PageLayout } from "./components/layout/page-layout";
 import NotFound from "@/pages/not-found";
 import { AdminContext, useAdminState } from "@/hooks/useAdmin";
@@ -86,11 +85,6 @@ function Router() {
 
 function AppInner() {
   const adminState = useAdminState();
-
-  // Enforce dark mode globally
-  useEffect(() => {
-    document.documentElement.classList.add("dark");
-  }, []);
 
   return (
     <AdminContext.Provider value={adminState}>

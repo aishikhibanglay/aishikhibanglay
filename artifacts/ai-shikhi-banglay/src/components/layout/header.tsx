@@ -1,14 +1,16 @@
 import { Link, useLocation } from "wouter";
-import { Menu, X, Brain, Youtube } from "lucide-react";
+import { Menu, X, Brain, Youtube, Sun, Moon } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useSiteSettings } from "@/lib/useSiteSettings";
+import { useTheme } from "@/lib/useTheme";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [location] = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const { settings } = useSiteSettings();
+  const { isDark, toggle } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,7 +41,7 @@ export function Header() {
           <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
             <Brain className="w-5 h-5" />
           </div>
-          <span className="font-bold text-xl tracking-tight bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
+          <span className="font-bold text-xl tracking-tight text-foreground dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-white dark:to-white/70">
             AI শিখি <span className="text-primary">বাংলায়</span>
           </span>
         </Link>
@@ -57,26 +59,51 @@ export function Header() {
               {link.name}
             </Link>
           ))}
+
+          {/* Theme toggle */}
+          <button
+            onClick={toggle}
+            aria-label={isDark ? "লাইট মোড চালু করুন" : "ডার্ক মোড চালু করুন"}
+            className="ml-1 w-9 h-9 flex items-center justify-center rounded-md text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all duration-200"
+          >
+            {isDark
+              ? <Sun className="w-4 h-4" />
+              : <Moon className="w-4 h-4" />
+            }
+          </button>
+
           <a
             href={subscribeUrl}
             target="_blank"
             rel="noopener noreferrer"
             data-testid="button-subscribe-header"
           >
-            <Button className="ml-4 gap-2">
+            <Button className="ml-3 gap-2">
               <Youtube className="w-4 h-4" />
               সাবস্ক্রাইব করুন
             </Button>
           </a>
         </nav>
 
-        {/* Mobile Toggle */}
-        <button 
-          className="md:hidden p-2 text-muted-foreground hover:text-primary transition-colors"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+        {/* Mobile: theme toggle + hamburger */}
+        <div className="md:hidden flex items-center gap-1">
+          <button
+            onClick={toggle}
+            aria-label={isDark ? "লাইট মোড" : "ডার্ক মোড"}
+            className="w-9 h-9 flex items-center justify-center rounded-md text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all duration-200"
+          >
+            {isDark
+              ? <Sun className="w-4 h-4" />
+              : <Moon className="w-4 h-4" />
+            }
+          </button>
+          <button 
+            className="p-2 text-muted-foreground hover:text-primary transition-colors"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Nav */}
