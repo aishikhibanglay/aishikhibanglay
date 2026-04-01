@@ -1,0 +1,40 @@
+Create a complete Next.js website for a Bangla YouTube channel called "AI শিখি বাংলায়" (AI Shikhi Banglay). This is a Bengali language educational platform about Artificial Intelligence.
+
+Use Next.js with Tailwind CSS. Dark theme with cyan/teal accent colors.
+
+Create these pages:
+1. Homepage (app/page.tsx)
+2. Blog page (app/blog/page.tsx)
+3. AI Tools page (app/tools/page.tsx)
+4. About page (app/about/page.tsx)
+5. Contact page (app/contact/page.tsx)
+6. Privacy Policy page (app/privacy-policy/page.tsx)
+7. Terms & Conditions page (app/terms-and-conditions/page.tsx)
+8. Disclaimer page (app/disclaimer/page.tsx)
+9. Cookie Policy page (app/cookie-policy/page.tsx)
+
+Homepage should have:
+- Header with navigation: Blog, Tools, About, Contact
+- Hero section with title "বাংলায় শিখুন AI" and subtitle in Bengali
+- 6 category cards: AI টিউটোরিয়াল, AI টুলস রিভিউ, Prompt গাইড, AI দিয়ে আয়, AI নিউজ, ভিডিও
+- A YouTube video embed section (placeholder with VIDEO_ID for now)
+- Newsletter signup section before footer
+- Footer with links to: Privacy Policy, Terms & Conditions, Disclaimer, Cookie Policy, Contact, About
+
+Blog page: list of 5 sample blog post cards in Bengali about AI topics with category tags.
+
+Tools page: grid of popular AI tools (ChatGPT, Gemini, Claude, Midjourney, Perplexity, ElevenLabs) with Bengali descriptions, star ratings, and free/paid badges.
+
+About page: describe the channel mission in Bengali.
+
+Contact page: a contact form with name, email, message fields and a submit button. Show success message on submit (no backend needed). Also show email address and social links.
+
+Privacy Policy page: full professional Privacy Policy in Bengali for a blog/educational website. Must include sections about: data collection, cookies, Google AdSense, third party links, user rights, contact information. Website name: AI শিখি বাংলায়, Email: [CONTACT_EMAIL]
+
+Terms & Conditions page: full professional Terms and Conditions in Bengali. Must include: acceptance of terms, intellectual property, user conduct, disclaimer of warranties, limitation of liability, governing law, contact info.
+
+Disclaimer page: full professional Disclaimer in Bengali. Must include: general disclaimer, affiliate disclaimer (this site may contain affiliate links), no professional advice disclaimer, errors and omissions, external links disclaimer.
+
+Cookie Policy page: full professional Cookie Policy in Bengali. Must include: what cookies are, types of cookies used (essential, analytics, advertising/AdSense cookies), how to control cookies, Google AdSense cookie explanation, contact info.
+
+Make everything modern, beautiful, fully responsive. Use Bengali text throughout. All legal pages must be complete, professional and suitable for Google AdSense approval.
