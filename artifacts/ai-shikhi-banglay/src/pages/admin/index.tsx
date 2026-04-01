@@ -50,6 +50,8 @@ function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<number | null>(null);
   const [subscriberCount, setSubscriberCount] = useState<number | null>(null);
+  const [subscribers, setSubscribers] = useState<{ id: number; email: string; subscribedAt: string }[]>([]);
+  const [showSubscribers, setShowSubscribers] = useState(false);
 
   const loadPosts = async () => {
     try {
@@ -67,6 +69,7 @@ function AdminDashboard() {
       const res = await fetch("/api/admin/subscribers", { credentials: "include" });
       if (res.ok) {
         const data = await res.json();
+        setSubscribers(data);
         setSubscriberCount(data.length);
       }
     } catch {
@@ -179,8 +182,8 @@ function AdminDashboard() {
             </div>
           </div>
           <button
-            onClick={() => setLocation("/admin/settings")}
-            className="bg-gray-900 border border-gray-800 rounded-xl p-4 hover:border-cyan-500/50 transition-colors text-left"
+            onClick={() => setShowSubscribers((v) => !v)}
+            className="bg-gray-900 border border-gray-800 rounded-xl p-4 hover:border-purple-500/50 transition-colors text-left"
           >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center">
@@ -195,6 +198,48 @@ function AdminDashboard() {
             </div>
           </button>
         </div>
+
+        {/* Subscriber List Panel */}
+        {showSubscribers && (
+          <div className="bg-gray-900 border border-purple-500/30 rounded-xl overflow-hidden mb-6">
+            <div className="p-4 border-b border-gray-800 flex items-center justify-between">
+              <h2 className="text-white font-semibold flex items-center gap-2">
+                <Mail className="w-5 h-5 text-purple-400" />
+                সাবস্ক্রাইবার তালিকা
+                <span className="text-xs font-normal bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded-full">
+                  {subscribers.length} জন
+                </span>
+              </h2>
+              <button
+                onClick={() => setShowSubscribers(false)}
+                className="text-gray-500 hover:text-gray-300 text-sm transition-colors"
+              >
+                ✕ বন্ধ করুন
+              </button>
+            </div>
+            {subscribers.length === 0 ? (
+              <div className="p-8 text-center text-gray-500">
+                <Mail className="w-10 h-10 text-gray-700 mx-auto mb-2" />
+                <p>এখনো কোনো সাবস্ক্রাইবার নেই</p>
+              </div>
+            ) : (
+              <div className="divide-y divide-gray-800 max-h-80 overflow-y-auto">
+                {subscribers.map((sub, i) => (
+                  <div key={sub.id} className="px-4 py-3 flex items-center gap-3 hover:bg-gray-800/50 transition-colors">
+                    <span className="text-gray-600 text-xs w-6 text-right">{i + 1}</span>
+                    <div className="w-7 h-7 bg-purple-500/20 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Mail className="w-3.5 h-3.5 text-purple-400" />
+                    </div>
+                    <span className="text-gray-200 text-sm flex-1">{sub.email}</span>
+                    <span className="text-gray-600 text-xs">
+                      {new Date(sub.subscribedAt).toLocaleDateString("bn-BD")}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
