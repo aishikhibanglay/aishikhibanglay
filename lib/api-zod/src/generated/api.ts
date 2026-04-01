@@ -14,3 +14,206 @@ import * as zod from "zod";
 export const HealthCheckResponse = zod.object({
   status: zod.string(),
 });
+
+/**
+ * @summary List published posts
+ */
+export const ListPostsQueryParams = zod.object({
+  category: zod.coerce.string().optional(),
+  search: zod.coerce.string().optional(),
+});
+
+export const ListPostsResponseItem = zod.object({
+  id: zod.number(),
+  title: zod.string(),
+  slug: zod.string(),
+  excerpt: zod.string(),
+  content: zod.string(),
+  category: zod.string(),
+  coverImage: zod.string().nullish(),
+  status: zod.enum(["draft", "published"]),
+  readTime: zod.number(),
+  publishedAt: zod.string().nullish(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+export const ListPostsResponse = zod.array(ListPostsResponseItem);
+
+/**
+ * @summary Get a single published post
+ */
+export const GetPostParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const GetPostResponse = zod.object({
+  id: zod.number(),
+  title: zod.string(),
+  slug: zod.string(),
+  excerpt: zod.string(),
+  content: zod.string(),
+  category: zod.string(),
+  coverImage: zod.string().nullish(),
+  status: zod.enum(["draft", "published"]),
+  readTime: zod.number(),
+  publishedAt: zod.string().nullish(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+
+/**
+ * @summary Get a single published post by slug
+ */
+export const GetPostBySlugParams = zod.object({
+  slug: zod.coerce.string(),
+});
+
+export const GetPostBySlugResponse = zod.object({
+  id: zod.number(),
+  title: zod.string(),
+  slug: zod.string(),
+  excerpt: zod.string(),
+  content: zod.string(),
+  category: zod.string(),
+  coverImage: zod.string().nullish(),
+  status: zod.enum(["draft", "published"]),
+  readTime: zod.number(),
+  publishedAt: zod.string().nullish(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+
+/**
+ * @summary Admin login
+ */
+export const AdminLoginBody = zod.object({
+  username: zod.string(),
+  password: zod.string(),
+});
+
+export const AdminLoginResponse = zod.object({
+  username: zod.string(),
+});
+
+/**
+ * @summary Admin logout
+ */
+export const AdminLogoutResponse = zod.object({
+  message: zod.string(),
+});
+
+/**
+ * @summary Get current admin session
+ */
+export const AdminMeResponse = zod.object({
+  username: zod.string(),
+});
+
+/**
+ * @summary List all posts (admin)
+ */
+export const AdminListPostsResponseItem = zod.object({
+  id: zod.number(),
+  title: zod.string(),
+  slug: zod.string(),
+  excerpt: zod.string(),
+  content: zod.string(),
+  category: zod.string(),
+  coverImage: zod.string().nullish(),
+  status: zod.enum(["draft", "published"]),
+  readTime: zod.number(),
+  publishedAt: zod.string().nullish(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+export const AdminListPostsResponse = zod.array(AdminListPostsResponseItem);
+
+/**
+ * @summary Create a new post
+ */
+export const AdminCreatePostBody = zod.object({
+  title: zod.string(),
+  slug: zod.string(),
+  excerpt: zod.string(),
+  content: zod.string(),
+  category: zod.string(),
+  coverImage: zod.string().nullish(),
+  status: zod.enum(["draft", "published"]),
+  readTime: zod.number(),
+});
+
+/**
+ * @summary Get a post by ID (admin)
+ */
+export const AdminGetPostParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const AdminGetPostResponse = zod.object({
+  id: zod.number(),
+  title: zod.string(),
+  slug: zod.string(),
+  excerpt: zod.string(),
+  content: zod.string(),
+  category: zod.string(),
+  coverImage: zod.string().nullish(),
+  status: zod.enum(["draft", "published"]),
+  readTime: zod.number(),
+  publishedAt: zod.string().nullish(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+
+/**
+ * @summary Update a post
+ */
+export const AdminUpdatePostParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const AdminUpdatePostBody = zod.object({
+  title: zod.string().optional(),
+  slug: zod.string().optional(),
+  excerpt: zod.string().optional(),
+  content: zod.string().optional(),
+  category: zod.string().optional(),
+  coverImage: zod.string().nullish(),
+  status: zod.enum(["draft", "published"]).optional(),
+  readTime: zod.number().optional(),
+});
+
+export const AdminUpdatePostResponse = zod.object({
+  id: zod.number(),
+  title: zod.string(),
+  slug: zod.string(),
+  excerpt: zod.string(),
+  content: zod.string(),
+  category: zod.string(),
+  coverImage: zod.string().nullish(),
+  status: zod.enum(["draft", "published"]),
+  readTime: zod.number(),
+  publishedAt: zod.string().nullish(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+
+/**
+ * @summary Delete a post
+ */
+export const AdminDeletePostParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+/**
+ * @summary Request a presigned upload URL
+ */
+export const RequestUploadUrlBody = zod.object({
+  name: zod.string(),
+  size: zod.number(),
+  contentType: zod.string(),
+});
+
+export const RequestUploadUrlResponse = zod.object({
+  uploadURL: zod.string(),
+  objectPath: zod.string(),
+});

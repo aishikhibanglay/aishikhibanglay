@@ -8,3 +8,98 @@
 export interface HealthStatus {
   status: string;
 }
+
+export interface ErrorResponse {
+  error: string;
+}
+
+export interface SuccessResponse {
+  message: string;
+}
+
+export interface LoginBody {
+  username: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  username: string;
+}
+
+export type PostStatus = (typeof PostStatus)[keyof typeof PostStatus];
+
+export const PostStatus = {
+  draft: "draft",
+  published: "published",
+} as const;
+
+export interface Post {
+  id: number;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  category: string;
+  coverImage?: string | null;
+  status: PostStatus;
+  readTime: number;
+  publishedAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type ListPostsResponse = Post[];
+
+export type CreatePostBodyStatus =
+  (typeof CreatePostBodyStatus)[keyof typeof CreatePostBodyStatus];
+
+export const CreatePostBodyStatus = {
+  draft: "draft",
+  published: "published",
+} as const;
+
+export interface CreatePostBody {
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  category: string;
+  coverImage?: string | null;
+  status: CreatePostBodyStatus;
+  readTime: number;
+}
+
+export type UpdatePostBodyStatus =
+  (typeof UpdatePostBodyStatus)[keyof typeof UpdatePostBodyStatus];
+
+export const UpdatePostBodyStatus = {
+  draft: "draft",
+  published: "published",
+} as const;
+
+export interface UpdatePostBody {
+  title?: string;
+  slug?: string;
+  excerpt?: string;
+  content?: string;
+  category?: string;
+  coverImage?: string | null;
+  status?: UpdatePostBodyStatus;
+  readTime?: number;
+}
+
+export interface RequestUploadUrlBody {
+  name: string;
+  size: number;
+  contentType: string;
+}
+
+export interface RequestUploadUrlResponse {
+  uploadURL: string;
+  objectPath: string;
+}
+
+export type ListPostsParams = {
+  category?: string;
+  search?: string;
+};

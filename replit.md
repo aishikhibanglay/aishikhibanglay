@@ -24,8 +24,9 @@ Bengali AI educational website "AI শিখি বাংলায়". React + 
 
 Pages:
 - `/` — Homepage with hero, category cards, YouTube embed placeholder, newsletter signup, footer
-- `/blog` — Blog listing page (5 sample posts)
-- `/blog/chatgpt-bangla-guide` — Full ChatGPT guide blog post in Bengali
+- `/blog` — Blog listing page — fetches published posts from `GET /api/posts`; category filter + search
+- `/blog/:slug` — Dynamic blog post page from DB via `GET /api/posts/slug/:slug`
+- `/blog/chatgpt-bangla-guide` — Legacy hardcoded ChatGPT guide blog post
 - `/tools` — AI tools grid (ChatGPT, Gemini, Claude, Midjourney, Perplexity, ElevenLabs)
 - `/about` — About page
 - `/contact` — Contact form with social links
@@ -33,6 +34,20 @@ Pages:
 - `/terms-and-conditions` — Full Bengali terms & conditions
 - `/disclaimer` — Full Bengali disclaimer
 - `/cookie-policy` — Full Bengali cookie policy
+
+Admin Panel (session-protected at `/admin/*`):
+- `/admin/login` — Login page (credentials: ADMIN_USERNAME / ADMIN_PASSWORD env vars)
+- `/admin` — Dashboard with post stats and post list
+- `/admin/posts/new` — New post editor (TipTap rich text, image upload, category/slug/status sidebar)
+- `/admin/posts/:id/edit` — Edit existing post
+
+Admin features:
+- Session-based auth (express-session with in-memory store, SESSION_SECRET env var)
+- TipTap WYSIWYG editor (bold, italic, headings, lists, links, image, text-align, underline)
+- Cover image upload via presigned URL → Object Storage → served at `/api/storage/...`
+- Post status: draft / published (publishedAt set on first publish)
+- Slug auto-generated from title, editable in sidebar
+- Read time field, category dropdown
 
 ## Structure
 
