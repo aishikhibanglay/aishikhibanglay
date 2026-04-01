@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Clock, Calendar, ArrowRight, Search, X, Loader2, PenSquare } from "lucide-react";
 import { Link } from "wouter";
 import { api, type Post } from "@/lib/api";
+import { PageSEO } from "@/components/PageSEO";
 
 const CATEGORY_COLORS: Record<string, string> = {
   "টিউটোরিয়াল": "bg-blue-500/10 text-blue-400 border-blue-500/20",
@@ -69,6 +70,11 @@ export default function Blog() {
 
   return (
     <div className="min-h-screen py-12 md:py-20">
+      <PageSEO
+        title="ব্লগ"
+        canonical="/blog"
+        description="AI বিষয়ক সর্বশেষ খবর, টিউটোরিয়াল এবং গাইডলাইন বাংলায় পড়ুন। ChatGPT, Gemini, Midjourney সহ সব AI টুলসের বিস্তারিত আলোচনা।"
+      />
       <div className="container mx-auto px-4">
 
         {/* Header */}

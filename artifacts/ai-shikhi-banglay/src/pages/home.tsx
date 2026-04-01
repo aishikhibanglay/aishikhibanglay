@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, BookOpen, PenTool, Lightbulb, TrendingUp, Newspaper, PlaySquare, Play, Sparkles, Youtube } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PageSEO } from "@/components/PageSEO";
 import { Link } from "wouter";
 import { useSiteSettings } from "@/lib/useSiteSettings";
 
@@ -88,6 +89,10 @@ export default function Home() {
 
   return (
     <div className="w-full">
+      <PageSEO
+        canonical="/"
+        description="বাংলায় AI শিখুন — ChatGPT, Gemini, Midjourney সহ সব AI টুলসের সহজ গাইড। ভিডিও, আর্টিকেল ও ফ্রি রিসোর্স।"
+      />
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 lg:py-32">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/20 via-background to-background pointer-events-none" />

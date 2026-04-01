@@ -1,10 +1,16 @@
 import { motion } from "framer-motion";
 import { Brain, Youtube, Users, Target, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PageSEO } from "@/components/PageSEO";
 
 export default function About() {
   return (
     <div className="min-h-screen py-12 md:py-20">
+      <PageSEO
+        title="আমাদের সম্পর্কে"
+        canonical="/about"
+        description="AI শিখি বাংলায় সম্পর্কে জানুন। আমাদের লক্ষ্য বাংলাভাষীদের কাছে AI শিক্ষাকে সহজলভ্য করা।"
+      />
       <div className="container mx-auto px-4">
         {/* Header Section */}
         <div className="max-w-4xl mx-auto text-center mb-20">

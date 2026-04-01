@@ -1,10 +1,12 @@
 import { motion } from "framer-motion";
+import { PageSEO } from "@/components/PageSEO";
 
 export default function TermsAndConditions() {
   const lastUpdated = "২০ জানুয়ারি, ২০২৫";
 
   return (
     <div className="min-h-screen py-12 md:py-20">
+      <PageSEO title="ব্যবহারের শর্তাবলী" canonical="/terms-and-conditions" />
       <div className="container mx-auto px-4 max-w-4xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

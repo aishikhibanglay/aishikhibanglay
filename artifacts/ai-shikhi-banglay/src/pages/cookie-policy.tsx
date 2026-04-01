@@ -1,10 +1,12 @@
 import { motion } from "framer-motion";
+import { PageSEO } from "@/components/PageSEO";
 
 export default function CookiePolicy() {
   const lastUpdated = "২০ জানুয়ারি, ২০২৫";
 
   return (
     <div className="min-h-screen py-12 md:py-20">
+      <PageSEO title="কুকি নীতি" canonical="/cookie-policy" />
       <div className="container mx-auto px-4 max-w-4xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

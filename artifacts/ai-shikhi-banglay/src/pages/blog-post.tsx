@@ -3,6 +3,7 @@ import { useRoute, Link } from "wouter";
 import { motion } from "framer-motion";
 import { ArrowLeft, Clock, Calendar, Loader2, Tag } from "lucide-react";
 import { api, type Post } from "@/lib/api";
+import { PageSEO } from "@/components/PageSEO";
 
 function formatDate(dateStr: string): string {
   const date = new Date(dateStr);
@@ -50,6 +51,12 @@ export default function BlogPost() {
 
   return (
     <div className="min-h-screen py-12 md:py-20">
+      <PageSEO
+        title={post.title}
+        canonical={`/blog/${post.slug}`}
+        description={post.excerpt || `${post.title} — AI শিখি বাংলায়`}
+        ogType="article"
+      />
       <div className="container mx-auto px-4 max-w-3xl">
         {/* Back Button */}
         <motion.div

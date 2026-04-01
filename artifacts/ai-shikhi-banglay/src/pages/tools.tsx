@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ExternalLink, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PageSEO } from "@/components/PageSEO";
 
 const tools = [
   {
@@ -80,6 +81,11 @@ export default function Tools() {
 
   return (
     <div className="min-h-screen py-12 md:py-20">
+      <PageSEO
+        title="AI টুলস"
+        canonical="/tools"
+        description="সেরা AI টুলসের তালিকা বাংলায়। ChatGPT, Gemini, Claude, Midjourney সহ সব জনপ্রিয় আর্টিফিশিয়াল ইন্টেলিজেন্স টুলস রিভিউ।"
+      />
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">সেরা <span className="text-primary">AI টুলস</span></h1>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <url>
+    <loc>https://aishikhibanglay.com/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="bn" href="https://aishikhibanglay.com/" />
+  </url>
+
+  <url>
+    <loc>https://aishikhibanglay.com/blog</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="bn" href="https://aishikhibanglay.com/blog" />
+  </url>
+
+  <url>
+    <loc>https://aishikhibanglay.com/tools</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="bn" href="https://aishikhibanglay.com/tools" />
+  </url>
+
+  <url>
+    <loc>https://aishikhibanglay.com/about</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="bn" href="https://aishikhibanglay.com/about" />
+  </url>
+
+  <url>
+    <loc>https://aishikhibanglay.com/contact</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="bn" href="https://aishikhibanglay.com/contact" />
+  </url>
+
+  <url>
+    <loc>https://aishikhibanglay.com/privacy-policy</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+    <xhtml:link rel="alternate" hreflang="bn" href="https://aishikhibanglay.com/privacy-policy" />
+  </url>
+
+  <url>
+    <loc>https://aishikhibanglay.com/terms-and-conditions</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+    <xhtml:link rel="alternate" hreflang="bn" href="https://aishikhibanglay.com/terms-and-conditions" />
+  </url>
+
+  <url>
+    <loc>https://aishikhibanglay.com/disclaimer</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="bn" href="https://aishikhibanglay.com/disclaimer" />
+  </url>
+
+  <url>
+    <loc>https://aishikhibanglay.com/cookie-policy</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="bn" href="https://aishikhibanglay.com/cookie-policy" />
+  </url>
+
+</urlset>

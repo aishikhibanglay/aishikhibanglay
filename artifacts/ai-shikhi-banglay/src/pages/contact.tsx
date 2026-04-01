@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Mail, MessageSquare, Send } from "lucide-react";
 import { SiYoutube, SiFacebook, SiX } from "react-icons/si";
 import { Button } from "@/components/ui/button";
+import { PageSEO } from "@/components/PageSEO";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -24,6 +25,11 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen py-12 md:py-20">
+      <PageSEO
+        title="যোগাযোগ"
+        canonical="/contact"
+        description="AI শিখি বাংলায়-এর সাথে যোগাযোগ করুন। আপনার প্রশ্ন, মতামত বা পরামর্শ জানাতে আমাদের সাথে সংযুক্ত হন।"
+      />
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto text-center mb-16">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 text-primary mb-6">
