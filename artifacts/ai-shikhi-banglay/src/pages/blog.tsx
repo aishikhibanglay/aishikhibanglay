@@ -98,7 +98,7 @@ export default function Blog() {
           </motion.p>
         </div>
 
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-6xl mx-auto">
 
           {/* Search Bar */}
           <motion.div
@@ -168,9 +168,9 @@ export default function Blog() {
             </div>
           )}
 
-          {/* Post List */}
+          {/* Post Grid */}
           {!loading && (
-            <div className="grid grid-cols-1 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               <AnimatePresence mode="popLayout">
                 {filtered.length > 0 ? (
                   filtered.map((post, idx) => (
@@ -182,48 +182,63 @@ export default function Blog() {
                       exit={{ opacity: 0, scale: 0.97 }}
                       transition={{ duration: 0.3, delay: idx * 0.05 }}
                       data-testid={`card-blog-post-${post.id}`}
-                      className="bg-card border border-border rounded-2xl overflow-hidden hover:border-primary/40 transition-colors group"
+                      className="bg-card border border-border rounded-xl overflow-hidden hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 transition-all duration-200 group flex flex-col"
                     >
-                      {post.coverImage && (
-                        <img
-                          src={post.coverImage}
-                          alt={post.title}
-                          className="w-full object-contain bg-black/5"
-                        />
-                      )}
-                      <div className="p-6 md:p-8">
-                        <div className="flex flex-wrap items-center gap-4 mb-4 text-sm">
-                          <span className={`px-3 py-1 rounded-full border font-medium ${getCategoryColor(post.category)}`}>
+                      {/* Cover image - full 16:9 display */}
+                      <Link href={`/blog/${post.slug}`} className="block">
+                        <div className="aspect-video w-full overflow-hidden bg-muted">
+                          {post.coverImage ? (
+                            <img
+                              src={post.coverImage}
+                              alt={post.title}
+                              className="w-full h-full object-contain"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center">
+                              <PenSquare className="w-8 h-8 text-muted-foreground/30" />
+                            </div>
+                          )}
+                        </div>
+                      </Link>
+
+                      {/* Card body */}
+                      <div className="p-4 flex flex-col flex-1">
+                        {/* Meta row */}
+                        <div className="flex items-center gap-2 mb-2.5 flex-wrap">
+                          <span className={`px-2 py-0.5 rounded-full border text-xs font-medium ${getCategoryColor(post.category)}`}>
                             {post.category}
                           </span>
+                          <div className="flex items-center gap-1 text-muted-foreground text-xs">
+                            <Clock className="w-3 h-3" />
+                            <span>{post.readTime} মিনিট</span>
+                          </div>
                           {(post.publishedAt ?? post.createdAt) && (
-                            <div className="flex items-center gap-1.5 text-muted-foreground">
-                              <Calendar className="w-4 h-4" />
+                            <div className="flex items-center gap-1 text-muted-foreground text-xs ml-auto">
+                              <Calendar className="w-3 h-3" />
                               <span>{formatDate(post.publishedAt ?? post.createdAt)}</span>
                             </div>
                           )}
-                          <div className="flex items-center gap-1.5 text-muted-foreground">
-                            <Clock className="w-4 h-4" />
-                            <span>{post.readTime} মিনিট পড়া</span>
-                          </div>
                         </div>
 
+                        {/* Title */}
                         <Link href={`/blog/${post.slug}`}>
-                          <h2 className="text-2xl md:text-3xl font-bold mb-4 group-hover:text-primary transition-colors cursor-pointer">
+                          <h2 className="text-base font-bold mb-2 leading-snug group-hover:text-primary transition-colors cursor-pointer line-clamp-2">
                             {post.title}
                           </h2>
                         </Link>
 
-                        <p className="text-muted-foreground text-lg mb-6 leading-relaxed">
+                        {/* Excerpt */}
+                        <p className="text-muted-foreground text-sm leading-relaxed line-clamp-2 flex-1 mb-3">
                           {post.excerpt}
                         </p>
 
+                        {/* Read more */}
                         <Link href={`/blog/${post.slug}`}>
                           <button
                             data-testid={`button-read-more-${post.id}`}
-                            className="flex items-center gap-2 text-primary font-medium hover:gap-3 transition-all"
+                            className="inline-flex items-center gap-1.5 text-primary text-sm font-medium hover:gap-2.5 transition-all"
                           >
-                            আরও পড়ুন <ArrowRight className="w-4 h-4" />
+                            আরও পড়ুন <ArrowRight className="w-3.5 h-3.5" />
                           </button>
                         </Link>
                       </div>
