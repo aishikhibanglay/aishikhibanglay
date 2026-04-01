@@ -188,7 +188,7 @@ export default function Blog() {
                         <img
                           src={post.coverImage}
                           alt={post.title}
-                          className="w-full h-48 object-cover"
+                          className="w-full object-contain bg-black/5"
                         />
                       )}
                       <div className="p-6 md:p-8">

@@ -209,7 +209,7 @@ export default function BlogPost() {
             <img
               src={post.coverImage}
               alt={post.title}
-              className="w-full h-64 md:h-80 object-cover"
+              className="w-full object-contain"
             />
           </motion.div>
         )}
