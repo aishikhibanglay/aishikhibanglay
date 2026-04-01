@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40" fill="none">
+  <!-- Glowing background -->
+  <rect width="40" height="40" rx="10" fill="#06b6d4" fill-opacity="0.15"/>
+  <rect width="40" height="40" rx="10" fill="none" stroke="#06b6d4" stroke-width="1.2" stroke-opacity="0.5"/>
+
+  <!-- Antenna -->
+  <line x1="20" y1="9" x2="20" y2="4" stroke="#06b6d4" stroke-width="1.5" stroke-linecap="round"/>
+  <circle cx="20" cy="3" r="2" fill="#06b6d4"/>
+
+  <!-- Signal waves on antenna -->
+  <path d="M17 5.5 C17 4 18.5 3.5 20 3.5" stroke="#06b6d4" stroke-width="0.8" stroke-opacity="0.5" stroke-linecap="round" fill="none"/>
+  <path d="M23 5.5 C23 4 21.5 3.5 20 3.5" stroke="#06b6d4" stroke-width="0.8" stroke-opacity="0.5" stroke-linecap="round" fill="none"/>
+
+  <!-- Robot head -->
+  <rect x="8" y="9" width="24" height="22" rx="5" fill="#06b6d4" fill-opacity="0.12" stroke="#06b6d4" stroke-width="1.4"/>
+
+  <!-- Brain grooves on forehead -->
+  <path d="M13 14 C13 12.5 14.5 12 16 13" stroke="#06b6d4" stroke-width="1" stroke-opacity="0.7" stroke-linecap="round" fill="none"/>
+  <path d="M27 14 C27 12.5 25.5 12 24 13" stroke="#06b6d4" stroke-width="1" stroke-opacity="0.7" stroke-linecap="round" fill="none"/>
+  <path d="M18.5 12.5 C18.5 11.5 19.5 11 20.5 11.5" stroke="#06b6d4" stroke-width="0.8" stroke-opacity="0.5" stroke-linecap="round" fill="none"/>
+
+  <!-- Eyes: outer glow + inner bright -->
+  <circle cx="15.5" cy="20" r="3.5" fill="#06b6d4" fill-opacity="0.2"/>
+  <circle cx="15.5" cy="20" r="2" fill="#06b6d4"/>
+  <circle cx="15.5" cy="20" r="0.7" fill="white" fill-opacity="0.9"/>
+
+  <circle cx="24.5" cy="20" r="3.5" fill="#06b6d4" fill-opacity="0.2"/>
+  <circle cx="24.5" cy="20" r="2" fill="#06b6d4"/>
+  <circle cx="24.5" cy="20" r="0.7" fill="white" fill-opacity="0.9"/>
+
+  <!-- Neural circuit between eyes -->
+  <line x1="18" y1="20" x2="22" y2="20" stroke="#06b6d4" stroke-width="0.7" stroke-dasharray="1.5 1.5" stroke-opacity="0.6"/>
+
+  <!-- Mouth: circuit style -->
+  <line x1="13" y1="26.5" x2="27" y2="26.5" stroke="#06b6d4" stroke-width="1.2" stroke-linecap="round"/>
+  <line x1="16" y1="26.5" x2="16" y2="24.5" stroke="#06b6d4" stroke-width="1" stroke-linecap="round"/>
+  <line x1="20" y1="26.5" x2="20" y2="24.5" stroke="#06b6d4" stroke-width="1" stroke-linecap="round"/>
+  <line x1="24" y1="26.5" x2="24" y2="24.5" stroke="#06b6d4" stroke-width="1" stroke-linecap="round"/>
+
+  <!-- Side sensors / ears -->
+  <rect x="3.5" y="16" width="4.5" height="8" rx="2.2" fill="#06b6d4" fill-opacity="0.6" stroke="#06b6d4" stroke-width="0.8"/>
+  <line x1="5.75" y1="18" x2="5.75" y2="22" stroke="white" stroke-width="0.6" stroke-opacity="0.5" stroke-linecap="round"/>
+
+  <rect x="32" y="16" width="4.5" height="8" rx="2.2" fill="#06b6d4" fill-opacity="0.6" stroke="#06b6d4" stroke-width="0.8"/>
+  <line x1="34.25" y1="18" x2="34.25" y2="22" stroke="white" stroke-width="0.6" stroke-opacity="0.5" stroke-linecap="round"/>
+</svg>

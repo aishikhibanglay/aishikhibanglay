@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { Menu, X, Brain, Youtube, Sun, Moon } from "lucide-react";
+import { Menu, X, Youtube, Sun, Moon } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useSiteSettings } from "@/lib/useSiteSettings";
@@ -37,10 +37,12 @@ export function Header() {
       }`}
     >
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-            <Brain className="w-5 h-5" />
-          </div>
+        <Link href="/" className="flex items-center gap-2.5 group">
+          <img
+            src={`${import.meta.env.BASE_URL}logo.svg`}
+            alt="AI শিখি বাংলায় লোগো"
+            className="w-9 h-9 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(6,182,212,0.7)] transition-all duration-200"
+          />
           <span className="font-bold text-xl tracking-tight text-foreground dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-white dark:to-white/70">
             AI শিখি <span className="text-primary">বাংলায়</span>
           </span>
