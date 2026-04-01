@@ -11,6 +11,8 @@ const DEFAULT_SETTINGS: Record<string, string> = {
   youtube_subscribe_url: "",
   facebook_url: "",
   twitter_url: "",
+  instagram_url: "",
+  tiktok_url: "",
   featured_youtube_video_id: "",
 };
 
@@ -30,6 +32,8 @@ const UpdateSettingsBody = zod.object({
   youtube_subscribe_url: zod.string().optional(),
   facebook_url: zod.string().optional(),
   twitter_url: zod.string().optional(),
+  instagram_url: zod.string().optional(),
+  tiktok_url: zod.string().optional(),
   featured_youtube_video_id: zod.string().optional(),
 });
 

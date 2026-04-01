@@ -12,10 +12,12 @@ import {
   Youtube,
   Facebook,
   Twitter,
+  Instagram,
   Link,
   Mail,
   Video,
   CheckCircle2,
+  Music2,
 } from "lucide-react";
 
 interface Settings {
@@ -23,6 +25,8 @@ interface Settings {
   youtube_subscribe_url: string;
   facebook_url: string;
   twitter_url: string;
+  instagram_url: string;
+  tiktok_url: string;
   featured_youtube_video_id: string;
 }
 
@@ -81,6 +85,8 @@ function SettingsForm() {
     youtube_subscribe_url: "",
     facebook_url: "",
     twitter_url: "",
+    instagram_url: "",
+    tiktok_url: "",
     featured_youtube_video_id: "",
   });
   const [subscribers, setSubscribers] = useState<{ id: number; email: string; subscribedAt: string }[]>([]);
@@ -102,6 +108,8 @@ function SettingsForm() {
             youtube_subscribe_url: data.youtube_subscribe_url ?? "",
             facebook_url: data.facebook_url ?? "",
             twitter_url: data.twitter_url ?? "",
+            instagram_url: data.instagram_url ?? "",
+            tiktok_url: data.tiktok_url ?? "",
             featured_youtube_video_id: data.featured_youtube_video_id ?? "",
           });
         }
@@ -229,6 +237,22 @@ function SettingsForm() {
                 value={settings.twitter_url}
                 onChange={(v) => setSettings((s) => ({ ...s, twitter_url: v }))}
                 placeholder="https://x.com/আপনার_হ্যান্ডেল"
+              />
+              <InputField
+                label="Instagram URL"
+                hint="উদাহরণ: https://www.instagram.com/YourProfile"
+                icon={Instagram}
+                value={settings.instagram_url}
+                onChange={(v) => setSettings((s) => ({ ...s, instagram_url: v }))}
+                placeholder="https://www.instagram.com/আপনার_প্রোফাইল"
+              />
+              <InputField
+                label="TikTok URL"
+                hint="উদাহরণ: https://www.tiktok.com/@YourHandle"
+                icon={Music2}
+                value={settings.tiktok_url}
+                onChange={(v) => setSettings((s) => ({ ...s, tiktok_url: v }))}
+                placeholder="https://www.tiktok.com/@আপনার_হ্যান্ডেল"
               />
             </div>
           )}

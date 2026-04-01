@@ -5,6 +5,8 @@ export interface SiteSettings {
   youtube_subscribe_url: string;
   facebook_url: string;
   twitter_url: string;
+  instagram_url: string;
+  tiktok_url: string;
   featured_youtube_video_id: string;
 }
 
@@ -13,6 +15,8 @@ const defaultSettings: SiteSettings = {
   youtube_subscribe_url: "",
   facebook_url: "",
   twitter_url: "",
+  instagram_url: "",
+  tiktok_url: "",
   featured_youtube_video_id: "",
 };
 

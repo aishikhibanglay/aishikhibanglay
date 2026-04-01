@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { SiYoutube, SiFacebook, SiX } from "react-icons/si";
+import { SiYoutube, SiFacebook, SiX, SiInstagram, SiTiktok } from "react-icons/si";
 import { Brain } from "lucide-react";
 import { useSiteSettings } from "@/lib/useSiteSettings";
 
@@ -67,6 +67,36 @@ export function Footer() {
               ) : (
                 <span className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground/30" title="X/Twitter লিংক এখনো সেট করা হয়নি">
                   <SiX className="w-4 h-4" />
+                </span>
+              )}
+              {settings.instagram_url ? (
+                <a
+                  href={settings.instagram_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-pink-500 hover:bg-pink-500/20 transition-all"
+                  data-testid="link-instagram-footer"
+                >
+                  <SiInstagram className="w-5 h-5" />
+                </a>
+              ) : (
+                <span className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground/30" title="Instagram লিংক এখনো সেট করা হয়নি">
+                  <SiInstagram className="w-5 h-5" />
+                </span>
+              )}
+              {settings.tiktok_url ? (
+                <a
+                  href={settings.tiktok_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-all"
+                  data-testid="link-tiktok-footer"
+                >
+                  <SiTiktok className="w-4 h-4" />
+                </a>
+              ) : (
+                <span className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground/30" title="TikTok লিংক এখনো সেট করা হয়নি">
+                  <SiTiktok className="w-4 h-4" />
                 </span>
               )}
             </div>
