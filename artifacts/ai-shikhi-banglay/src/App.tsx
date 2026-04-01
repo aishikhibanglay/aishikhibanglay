@@ -25,6 +25,7 @@ import CookieConsent from "./components/CookieConsent";
 import AdminLogin from "./pages/admin/login";
 import AdminDashboard from "./pages/admin/index";
 import PostEditorPage from "./pages/admin/post-editor";
+import AdminSettingsPage from "./pages/admin/settings";
 
 const queryClient = new QueryClient();
 
@@ -62,6 +63,7 @@ function AdminRouter() {
         path="/admin/posts/:id/edit"
         component={({ params }) => <PostEditorPage params={params} />}
       />
+      <Route path="/admin/settings" component={AdminSettingsPage} />
     </Switch>
   );
 }

@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, BookOpen, PenTool, Lightbulb, TrendingUp, Newspaper, PlaySquare, Play, Sparkles } from "lucide-react";
+import { ArrowRight, BookOpen, PenTool, Lightbulb, TrendingUp, Newspaper, PlaySquare, Play, Sparkles, Youtube } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link } from "wouter";
+import { useSiteSettings } from "@/lib/useSiteSettings";
 
 const categories = [
   {
@@ -43,7 +45,47 @@ const categories = [
   }
 ];
 
+function extractYoutubeId(urlOrId: string): string {
+  if (!urlOrId) return "";
+  const m = urlOrId.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/);
+  return m ? m[1] : urlOrId;
+}
+
 export default function Home() {
+  const { settings } = useSiteSettings();
+  const [email, setEmail] = useState("");
+  const [subscribeStatus, setSubscribeStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [subscribeMsg, setSubscribeMsg] = useState("");
+
+  const channelUrl = settings.youtube_channel_url || "#";
+  const subscribeUrl = settings.youtube_subscribe_url || settings.youtube_channel_url || "#";
+  const videoId = extractYoutubeId(settings.featured_youtube_video_id);
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    setSubscribeStatus("loading");
+    try {
+      const res = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setSubscribeStatus("success");
+        setSubscribeMsg(data.message || "সাবস্ক্রাইব সফল হয়েছে!");
+        setEmail("");
+      } else {
+        setSubscribeStatus("error");
+        setSubscribeMsg(data.error || "সমস্যা হয়েছে, আবার চেষ্টা করুন");
+      }
+    } catch {
+      setSubscribeStatus("error");
+      setSubscribeMsg("নেটওয়ার্ক সমস্যা, আবার চেষ্টা করুন");
+    }
+  };
+
   return (
     <div className="w-full">
       {/* Hero Section */}
@@ -146,21 +188,54 @@ export default function Home() {
                   <span>প্র্যাকটিক্যাল প্রোজেক্ট এবং উদাহরণ</span>
                 </li>
               </ul>
-              <Button size="lg" className="gap-2" data-testid="button-youtube-channel">
-                ইউটিউব চ্যানেল ভিজিট করুন
-              </Button>
+              <div className="flex gap-3">
+                <a
+                  href={channelUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-testid="button-youtube-channel"
+                >
+                  <Button size="lg" className="gap-2">
+                    <Youtube className="w-5 h-5" />
+                    ইউটিউব চ্যানেল ভিজিট করুন
+                  </Button>
+                </a>
+                {subscribeUrl !== channelUrl && (
+                  <a
+                    href={subscribeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Button size="lg" variant="outline" className="gap-2">
+                      সাবস্ক্রাইব করুন
+                    </Button>
+                  </a>
+                )}
+              </div>
             </div>
             
-            <div className="relative aspect-video rounded-2xl overflow-hidden border border-border bg-secondary flex items-center justify-center group shadow-2xl">
-              <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1000')] bg-cover bg-center opacity-40 mix-blend-overlay"></div>
-              <div className="absolute inset-0 bg-background/50 backdrop-blur-sm transition-all group-hover:backdrop-blur-0 group-hover:bg-transparent duration-500"></div>
-              
-              <div className="relative z-10 flex flex-col items-center">
-                <button className="w-20 h-20 rounded-full bg-primary text-primary-foreground flex items-center justify-center pl-2 hover:scale-110 transition-transform shadow-[0_0_40px_rgba(8,145,178,0.5)]">
-                  <Play className="w-8 h-8" />
-                </button>
-                <p className="mt-6 font-medium text-white shadow-sm px-4 py-2 bg-black/50 rounded-lg backdrop-blur-md border border-white/10">ভিডিও লোড হচ্ছে... (VIDEO_ID)</p>
-              </div>
+            <div className="relative aspect-video rounded-2xl overflow-hidden border border-border bg-secondary shadow-2xl">
+              {videoId ? (
+                <iframe
+                  src={`https://www.youtube-nocookie.com/embed/${videoId}`}
+                  title="Featured YouTube Video"
+                  allowFullScreen
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  className="w-full h-full"
+                />
+              ) : (
+                <>
+                  <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1000')] bg-cover bg-center opacity-40 mix-blend-overlay" />
+                  <div className="absolute inset-0 bg-background/50 backdrop-blur-sm flex flex-col items-center justify-center">
+                    <div className="w-20 h-20 rounded-full bg-primary/20 border-2 border-primary/30 flex items-center justify-center pl-1 mb-4">
+                      <Play className="w-8 h-8 text-primary" />
+                    </div>
+                    <p className="text-muted-foreground text-sm px-4 py-2 bg-black/50 rounded-lg border border-white/10 text-center">
+                      Admin সেটিংস থেকে YouTube ভিডিও যোগ করুন
+                    </p>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -174,17 +249,40 @@ export default function Home() {
             <p className="text-muted-foreground mb-8">
               AI এর দুনিয়ার সর্বশেষ খবর, টিপস এবং ট্রিকস পেতে আপনার ইমেইল দিয়ে যুক্ত হোন। স্প্যাম মুক্ত, শুধু প্রয়োজনীয় তথ্য!
             </p>
-            <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto" onSubmit={(e) => e.preventDefault()}>
-              <Input 
-                type="email" 
-                placeholder="আপনার ইমেইল এড্রেস..." 
-                className="h-12 bg-background"
-                required
-              />
-              <Button type="submit" className="h-12 px-8" data-testid="button-subscribe-newsletter">
-                সাবস্ক্রাইব
-              </Button>
-            </form>
+
+            {subscribeStatus === "success" ? (
+              <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-6 text-green-400 font-medium">
+                ✓ {subscribeMsg}
+              </div>
+            ) : (
+              <form
+                className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
+                onSubmit={handleSubscribe}
+              >
+                <Input
+                  type="email"
+                  placeholder="আপনার ইমেইল এড্রেস..."
+                  className="h-12 bg-background"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  disabled={subscribeStatus === "loading"}
+                />
+                <Button
+                  type="submit"
+                  className="h-12 px-8"
+                  disabled={subscribeStatus === "loading"}
+                  data-testid="button-subscribe-newsletter"
+                >
+                  {subscribeStatus === "loading" ? "হচ্ছে..." : "সাবস্ক্রাইব"}
+                </Button>
+              </form>
+            )}
+
+            {subscribeStatus === "error" && (
+              <p className="text-red-400 text-sm mt-3">{subscribeMsg}</p>
+            )}
+
             <p className="text-xs text-muted-foreground mt-4">যেকোনো সময় আনসাবস্ক্রাইব করতে পারবেন।</p>
           </div>
         </div>

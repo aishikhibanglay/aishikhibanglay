@@ -1,8 +1,11 @@
 import { Link } from "wouter";
 import { SiYoutube, SiFacebook, SiX } from "react-icons/si";
 import { Brain } from "lucide-react";
+import { useSiteSettings } from "@/lib/useSiteSettings";
 
 export function Footer() {
+  const { settings } = useSiteSettings();
+
   return (
     <footer className="bg-background border-t border-border pt-16 pb-8 mt-auto">
       <div className="container mx-auto px-4">
@@ -21,15 +24,51 @@ export function Footer() {
               ভবিষ্যতের প্রযুক্তির সাথে তাল মিলিয়ে চলতে আমাদের সাথেই থাকুন।
             </p>
             <div className="flex items-center gap-4">
-              <a href="#" className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/20 transition-all" data-testid="link-youtube-footer">
-                <SiYoutube className="w-5 h-5" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/20 transition-all" data-testid="link-facebook-footer">
-                <SiFacebook className="w-5 h-5" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/20 transition-all" data-testid="link-x-footer">
-                <SiX className="w-4 h-4" />
-              </a>
+              {settings.youtube_channel_url ? (
+                <a
+                  href={settings.youtube_channel_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-red-500 hover:bg-red-500/20 transition-all"
+                  data-testid="link-youtube-footer"
+                >
+                  <SiYoutube className="w-5 h-5" />
+                </a>
+              ) : (
+                <span className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground/30" title="YouTube লিংক এখনো সেট করা হয়নি">
+                  <SiYoutube className="w-5 h-5" />
+                </span>
+              )}
+              {settings.facebook_url ? (
+                <a
+                  href={settings.facebook_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-blue-500 hover:bg-blue-500/20 transition-all"
+                  data-testid="link-facebook-footer"
+                >
+                  <SiFacebook className="w-5 h-5" />
+                </a>
+              ) : (
+                <span className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground/30" title="Facebook লিংক এখনো সেট করা হয়নি">
+                  <SiFacebook className="w-5 h-5" />
+                </span>
+              )}
+              {settings.twitter_url ? (
+                <a
+                  href={settings.twitter_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/20 transition-all"
+                  data-testid="link-x-footer"
+                >
+                  <SiX className="w-4 h-4" />
+                </a>
+              ) : (
+                <span className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground/30" title="X/Twitter লিংক এখনো সেট করা হয়নি">
+                  <SiX className="w-4 h-4" />
+                </span>
+              )}
             </div>
           </div>
 
@@ -55,7 +94,7 @@ export function Footer() {
         </div>
 
         <div className="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-          <p>&copy; 2025 AI শিখি বাংলায়। সর্বস্বত্ব সংরক্ষিত।</p>
+          <p>&copy; {new Date().getFullYear()} AI শিখি বাংলায়। সর্বস্বত্ব সংরক্ষিত।</p>
           <p>তৈরি করা হয়েছে ভালোবাসার সাথে, বাংলাদেশের জন্য।</p>
         </div>
       </div>

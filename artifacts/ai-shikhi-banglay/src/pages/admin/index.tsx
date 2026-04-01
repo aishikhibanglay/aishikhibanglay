@@ -15,6 +15,8 @@ import {
   BarChart2,
   Edit,
   Eye,
+  Settings,
+  Mail,
 } from "lucide-react";
 
 function PostStatusBadge({ status }: { status: Post["status"] }) {
@@ -45,6 +47,7 @@ function AdminDashboard() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<number | null>(null);
+  const [subscriberCount, setSubscriberCount] = useState<number | null>(null);
 
   const loadPosts = async () => {
     try {
@@ -57,8 +60,21 @@ function AdminDashboard() {
     }
   };
 
+  const loadSubscribers = async () => {
+    try {
+      const res = await fetch("/api/admin/subscribers", { credentials: "include" });
+      if (res.ok) {
+        const data = await res.json();
+        setSubscriberCount(data.length);
+      }
+    } catch {
+      // ignore
+    }
+  };
+
   useEffect(() => {
     loadPosts();
+    loadSubscribers();
   }, []);
 
   const handleDelete = async (id: number, title: string) => {
@@ -67,7 +83,7 @@ function AdminDashboard() {
     try {
       await api.adminDeletePost(id);
       setPosts((prev) => prev.filter((p) => p.id !== id));
-    } catch (err) {
+    } catch {
       alert("পোস্ট মুছতে সমস্যা হয়েছে");
     } finally {
       setDeleting(null);
@@ -104,6 +120,14 @@ function AdminDashboard() {
               সাইট দেখুন
             </a>
             <span className="text-gray-600 text-sm">|</span>
+            <button
+              onClick={() => setLocation("/admin/settings")}
+              className="flex items-center gap-1.5 text-gray-400 hover:text-cyan-400 text-sm transition-colors"
+            >
+              <Settings className="w-4 h-4" />
+              সেটিংস
+            </button>
+            <span className="text-gray-600 text-sm">|</span>
             <span className="text-gray-400 text-sm">{username}</span>
             <button
               onClick={handleLogout}
@@ -118,7 +142,7 @@ function AdminDashboard() {
 
       <div className="max-w-6xl mx-auto px-4 py-6">
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-cyan-500/20 rounded-lg flex items-center justify-center">
@@ -152,6 +176,22 @@ function AdminDashboard() {
               </div>
             </div>
           </div>
+          <button
+            onClick={() => setLocation("/admin/settings")}
+            className="bg-gray-900 border border-gray-800 rounded-xl p-4 hover:border-cyan-500/50 transition-colors text-left"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center">
+                <Mail className="w-5 h-5 text-purple-400" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-white">
+                  {subscriberCount === null ? "—" : subscriberCount}
+                </p>
+                <p className="text-gray-500 text-xs">সাবস্ক্রাইবার</p>
+              </div>
+            </div>
+          </button>
         </div>
 
         {/* Posts List */}
@@ -212,6 +252,16 @@ function AdminDashboard() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0">
+                    {post.status === "published" && (
+                      <a
+                        href={`/blog/${post.slug}`}
+                        target="_blank"
+                        className="p-2 text-gray-400 hover:text-green-400 hover:bg-gray-700 rounded-lg transition-colors"
+                        title="পোস্ট দেখুন"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </a>
+                    )}
                     <button
                       onClick={() => setLocation(`/admin/posts/${post.id}/edit`)}
                       className="p-2 text-gray-400 hover:text-cyan-400 hover:bg-gray-700 rounded-lg transition-colors"

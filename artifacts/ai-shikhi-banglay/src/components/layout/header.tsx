@@ -1,12 +1,14 @@
 import { Link, useLocation } from "wouter";
-import { Menu, X, Brain } from "lucide-react";
+import { Menu, X, Brain, Youtube } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { useSiteSettings } from "@/lib/useSiteSettings";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [location] = useLocation();
   const [scrolled, setScrolled] = useState(false);
+  const { settings } = useSiteSettings();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,6 +25,8 @@ export function Header() {
     { name: "আমাদের সম্পর্কে", path: "/about" },
     { name: "যোগাযোগ", path: "/contact" },
   ];
+
+  const subscribeUrl = settings.youtube_subscribe_url || settings.youtube_channel_url || "#";
 
   return (
     <header 
@@ -53,9 +57,17 @@ export function Header() {
               {link.name}
             </Link>
           ))}
-          <Button className="ml-4" data-testid="button-subscribe-header">
-            সাবস্ক্রাইব করুন
-          </Button>
+          <a
+            href={subscribeUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-testid="button-subscribe-header"
+          >
+            <Button className="ml-4 gap-2">
+              <Youtube className="w-4 h-4" />
+              সাবস্ক্রাইব করুন
+            </Button>
+          </a>
         </nav>
 
         {/* Mobile Toggle */}
@@ -85,9 +97,17 @@ export function Header() {
                 {link.name}
               </Link>
             ))}
-            <Button className="mt-2 w-full" data-testid="button-subscribe-mobile">
-              সাবস্ক্রাইব করুন
-            </Button>
+            <a
+              href={subscribeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-testid="button-subscribe-mobile"
+            >
+              <Button className="mt-2 w-full gap-2">
+                <Youtube className="w-4 h-4" />
+                সাবস্ক্রাইব করুন
+              </Button>
+            </a>
           </nav>
         </div>
       )}

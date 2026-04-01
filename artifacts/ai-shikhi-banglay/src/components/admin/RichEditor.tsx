@@ -5,6 +5,7 @@ import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
 import Underline from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
+import Youtube from "@tiptap/extension-youtube";
 import {
   Bold,
   Italic,
@@ -25,6 +26,7 @@ import {
   Undo,
   Redo,
   Minus,
+  Youtube as YoutubeIcon,
 } from "lucide-react";
 
 interface RichEditorProps {
@@ -65,6 +67,15 @@ function Toolbar({ editor, onImageInsert }: { editor: Editor; onImageInsert?: ()
     const url = window.prompt("লিঙ্ক URL দিন:");
     if (url) {
       editor.chain().focus().setLink({ href: url }).run();
+    }
+  };
+
+  const addYoutube = () => {
+    const url = window.prompt(
+      "YouTube ভিডিও URL দিন:\n(উদাহরণ: https://www.youtube.com/watch?v=XXXXX)"
+    );
+    if (url) {
+      editor.chain().focus().setYoutubeVideo({ src: url, width: 640, height: 360 }).run();
     }
   };
 
@@ -201,7 +212,7 @@ function Toolbar({ editor, onImageInsert }: { editor: Editor; onImageInsert?: ()
 
       <div className="w-px bg-gray-600 mx-1" />
 
-      <ToolbarButton onClick={addLink} active={editor.isActive("link")} title="Add Link">
+      <ToolbarButton onClick={addLink} active={editor.isActive("link")} title="লিঙ্ক যোগ করুন">
         <LinkIcon className="w-4 h-4" />
       </ToolbarButton>
       {onImageInsert && (
@@ -209,6 +220,9 @@ function Toolbar({ editor, onImageInsert }: { editor: Editor; onImageInsert?: ()
           <ImageIcon className="w-4 h-4" />
         </ToolbarButton>
       )}
+      <ToolbarButton onClick={addYoutube} title="YouTube ভিডিও যোগ করুন">
+        <YoutubeIcon className="w-4 h-4 text-red-400" />
+      </ToolbarButton>
     </div>
   );
 }
@@ -222,6 +236,11 @@ export function RichEditor({ content, onChange, onImageInsert }: RichEditorProps
       Link.configure({ openOnClick: false, HTMLAttributes: { class: "text-cyan-400 underline" } }),
       Placeholder.configure({ placeholder: "এখানে আপনার পোস্টের বিষয়বস্তু লিখুন..." }),
       TextAlign.configure({ types: ["heading", "paragraph"] }),
+      Youtube.configure({
+        controls: true,
+        nocookie: true,
+        HTMLAttributes: { class: "w-full rounded-lg my-4" },
+      }),
     ],
     content,
     onUpdate: ({ editor }) => {
