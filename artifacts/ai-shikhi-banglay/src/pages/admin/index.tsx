@@ -14,6 +14,7 @@ import {
   Edit,
   Eye,
   Mail,
+  Users,
 } from "lucide-react";
 
 function PostStatusBadge({ status }: { status: Post["status"] }) {
@@ -44,8 +45,7 @@ function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<number | null>(null);
   const [subscriberCount, setSubscriberCount] = useState<number | null>(null);
-  const [subscribers, setSubscribers] = useState<{ id: number; email: string; subscribedAt: string }[]>([]);
-  const [showSubscribers, setShowSubscribers] = useState(false);
+  const [totalViews, setTotalViews] = useState<number | null>(null);
 
   const loadPosts = async () => {
     try {
@@ -58,13 +58,19 @@ function AdminDashboard() {
     }
   };
 
-  const loadSubscribers = async () => {
+  const loadStats = async () => {
     try {
-      const res = await fetch("/api/admin/subscribers", { credentials: "include" });
-      if (res.ok) {
-        const data = await res.json();
-        setSubscribers(data);
+      const [subRes, viewRes] = await Promise.all([
+        fetch("/api/admin/subscribers", { credentials: "include" }),
+        fetch("/api/admin/stats", { credentials: "include" }),
+      ]);
+      if (subRes.ok) {
+        const data = await subRes.json();
         setSubscriberCount(data.length);
+      }
+      if (viewRes.ok) {
+        const data = await viewRes.json();
+        setTotalViews(data.totalViews ?? 0);
       }
     } catch {
       // ignore
@@ -73,7 +79,7 @@ function AdminDashboard() {
 
   useEffect(() => {
     loadPosts();
-    loadSubscribers();
+    loadStats();
   }, []);
 
   const handleDelete = async (id: number, title: string) => {
@@ -130,65 +136,38 @@ function AdminDashboard() {
               </div>
             </div>
           </div>
-          <button
-            onClick={() => setShowSubscribers((v) => !v)}
-            className="bg-gray-900 border border-gray-800 rounded-xl p-4 hover:border-purple-500/50 transition-colors text-left"
-          >
+          {/* Visitor count card */}
+          <div className="bg-gray-900 border border-gray-800 rounded-xl p-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center">
-                <Mail className="w-5 h-5 text-purple-400" />
+              <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                <Users className="w-5 h-5 text-blue-400" />
               </div>
               <div>
                 <p className="text-2xl font-bold text-white">
-                  {subscriberCount === null ? "—" : subscriberCount}
+                  {totalViews === null ? "—" : totalViews.toLocaleString("bn-BD")}
                 </p>
-                <p className="text-gray-500 text-xs">সাবস্ক্রাইবার</p>
+                <p className="text-gray-500 text-xs">ভিজিটর</p>
               </div>
             </div>
-          </button>
+          </div>
         </div>
 
-        {/* Subscriber List Panel */}
-        {showSubscribers && (
-          <div className="bg-gray-900 border border-purple-500/30 rounded-xl overflow-hidden mb-6">
-            <div className="p-4 border-b border-gray-800 flex items-center justify-between">
-              <h2 className="text-white font-semibold flex items-center gap-2">
-                <Mail className="w-5 h-5 text-purple-400" />
-                সাবস্ক্রাইবার তালিকা
-                <span className="text-xs font-normal bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded-full">
-                  {subscribers.length} জন
-                </span>
-              </h2>
-              <button
-                onClick={() => setShowSubscribers(false)}
-                className="text-gray-500 hover:text-gray-300 text-sm transition-colors"
-              >
-                ✕ বন্ধ করুন
-              </button>
-            </div>
-            {subscribers.length === 0 ? (
-              <div className="p-8 text-center text-gray-500">
-                <Mail className="w-10 h-10 text-gray-700 mx-auto mb-2" />
-                <p>এখনো কোনো সাবস্ক্রাইবার নেই</p>
-              </div>
-            ) : (
-              <div className="divide-y divide-gray-800 max-h-80 overflow-y-auto">
-                {subscribers.map((sub, i) => (
-                  <div key={sub.id} className="px-4 py-3 flex items-center gap-3 hover:bg-gray-800/50 transition-colors">
-                    <span className="text-gray-600 text-xs w-6 text-right">{i + 1}</span>
-                    <div className="w-7 h-7 bg-purple-500/20 rounded-full flex items-center justify-center flex-shrink-0">
-                      <Mail className="w-3.5 h-3.5 text-purple-400" />
-                    </div>
-                    <span className="text-gray-200 text-sm flex-1">{sub.email}</span>
-                    <span className="text-gray-600 text-xs">
-                      {new Date(sub.subscribedAt).toLocaleDateString("bn-BD")}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
+        {/* Subscriber quick link */}
+        <button
+          onClick={() => setLocation("/admin/subscribers")}
+          className="w-full bg-gray-900 border border-gray-800 hover:border-purple-500/40 rounded-xl p-4 flex items-center gap-4 text-left transition-colors mb-6"
+        >
+          <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+            <Mail className="w-5 h-5 text-purple-400" />
           </div>
-        )}
+          <div className="flex-1">
+            <p className="text-white font-medium text-sm">সাবস্ক্রাইবার তালিকা</p>
+            <p className="text-gray-500 text-xs">
+              {subscriberCount === null ? "লোড হচ্ছে..." : `মোট ${subscriberCount} জন সাবস্ক্রাইব করেছেন`}
+            </p>
+          </div>
+          <span className="text-gray-600 text-xs">→ দেখুন</span>
+        </button>
 
         {/* Posts List */}
         <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">

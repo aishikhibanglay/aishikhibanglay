@@ -21,6 +21,7 @@ import BlogChatGPTGuide from "./pages/blog-chatgpt-guide";
 import BlogPost from "./pages/blog-post";
 import DynamicPage from "./pages/dynamic-page";
 import CookieConsent from "./components/CookieConsent";
+import { usePageViewTracker } from "./hooks/usePageViewTracker";
 
 // Admin Pages
 import AdminLogin from "./pages/admin/login";
@@ -30,10 +31,12 @@ import AdminSettingsPage from "./pages/admin/settings";
 import NavManagerPage from "./pages/admin/nav-manager";
 import PagesManagerPage from "./pages/admin/pages-manager";
 import PageEditorPage from "./pages/admin/page-editor";
+import SubscriberListPage from "./pages/admin/subscribers";
 
 const queryClient = new QueryClient();
 
 function PublicRouter() {
+  usePageViewTracker();
   return (
     <PageLayout>
       <Switch>
@@ -79,6 +82,7 @@ function AdminRouter() {
         path="/admin/pages/:id/edit"
         component={({ params }) => <PageEditorPage params={params} />}
       />
+      <Route path="/admin/subscribers" component={SubscriberListPage} />
     </Switch>
   );
 }

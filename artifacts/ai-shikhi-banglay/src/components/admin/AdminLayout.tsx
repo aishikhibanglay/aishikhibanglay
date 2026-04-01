@@ -12,6 +12,7 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
+  Mail,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -29,6 +30,7 @@ const NAV_ITEMS: NavItem[] = [
   { icon: <Layout className="w-5 h-5" />, label: "পেজ ম্যানেজার", href: "/admin/pages" },
   { icon: <Navigation className="w-5 h-5" />, label: "নেভিগেশন ম্যানেজার", href: "/admin/nav" },
   { icon: <Settings className="w-5 h-5" />, label: "সাইট সেটিংস", href: "/admin/settings" },
+  { icon: <Mail className="w-5 h-5" />, label: "সাবস্ক্রাইবার", href: "/admin/subscribers" },
 ];
 
 interface AdminLayoutProps {
