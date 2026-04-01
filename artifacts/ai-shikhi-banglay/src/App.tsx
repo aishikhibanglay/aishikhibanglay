@@ -17,6 +17,7 @@ import TermsAndConditions from "./pages/terms-and-conditions";
 import Disclaimer from "./pages/disclaimer";
 import CookiePolicy from "./pages/cookie-policy";
 import BlogChatGPTGuide from "./pages/blog-chatgpt-guide";
+import CookieConsent from "./components/CookieConsent";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +52,7 @@ function App() {
       <TooltipProvider>
         <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
           <Router />
+          <CookieConsent />
         </WouterRouter>
         <Toaster />
       </TooltipProvider>
