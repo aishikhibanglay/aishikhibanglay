@@ -14,6 +14,9 @@ const ErrorResponse = zod.object({ error: zod.string() });
 const router: IRouter = Router();
 
 router.get("/posts", async (req, res): Promise<void> => {
+  res.set("Cache-Control", "no-cache, no-store, must-revalidate");
+  res.set("Pragma", "no-cache");
+  res.set("Expires", "0");
   const { category, search } = req.query as { category?: string; search?: string };
 
   let posts;
@@ -48,6 +51,7 @@ router.get("/posts", async (req, res): Promise<void> => {
 });
 
 router.get("/posts/slug/:slug", async (req, res): Promise<void> => {
+  res.set("Cache-Control", "no-cache, no-store, must-revalidate");
   const slug = Array.isArray(req.params.slug) ? req.params.slug[0] : req.params.slug;
 
   const [post] = await db

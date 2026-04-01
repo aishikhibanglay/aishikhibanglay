@@ -27,10 +27,12 @@ const CATEGORIES = [
 function generateSlug(title: string): string {
   return title
     .toLowerCase()
-    .replace(/[^\w\s-]/g, "")
+    // Keep Bengali Unicode (U+0980–U+09FF), ASCII word chars, spaces, hyphens
+    .replace(/[^\u0980-\u09FF\w\s-]/g, "")
+    .trim()
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-")
-    .trim()
+    .replace(/^-+|-+$/g, "")
     .slice(0, 80);
 }
 
