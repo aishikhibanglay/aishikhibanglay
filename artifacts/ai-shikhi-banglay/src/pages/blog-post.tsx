@@ -1,13 +1,136 @@
 import { useState, useEffect } from "react";
 import { useRoute, Link } from "wouter";
 import { motion } from "framer-motion";
-import { ArrowLeft, Clock, Calendar, Loader2, Tag } from "lucide-react";
+import { ArrowLeft, ArrowRight, Clock, Calendar, Loader2, Tag } from "lucide-react";
 import { api, type Post } from "@/lib/api";
 import { PageSEO } from "@/components/PageSEO";
+
+const CATEGORY_COLORS: Record<string, string> = {
+  "টিউটোরিয়াল": "bg-blue-500/10 text-blue-400 border-blue-500/20",
+  "AI টিউটোরিয়াল": "bg-blue-500/10 text-blue-400 border-blue-500/20",
+  "টুলস": "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
+  "AI টুলস রিভিউ": "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
+  "Prompt": "bg-amber-500/10 text-amber-400 border-amber-500/20",
+  "Prompt গাইড": "bg-amber-500/10 text-amber-400 border-amber-500/20",
+  "আয়": "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+  "AI দিয়ে আয়": "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+  "নিউজ": "bg-purple-500/10 text-purple-400 border-purple-500/20",
+  "AI নিউজ": "bg-purple-500/10 text-purple-400 border-purple-500/20",
+};
+
+function getCategoryColor(category: string): string {
+  return CATEGORY_COLORS[category] ?? "bg-gray-500/10 text-gray-400 border-gray-500/20";
+}
 
 function formatDate(dateStr: string): string {
   const date = new Date(dateStr);
   return date.toLocaleDateString("bn-BD", { day: "numeric", month: "long", year: "numeric" });
+}
+
+function RelatedPosts({ currentPost }: { currentPost: Post }) {
+  const [related, setRelated] = useState<Post[]>([]);
+
+  useEffect(() => {
+    api.listPosts()
+      .then((all) => {
+        const sorted = [...all].sort(
+          (a, b) =>
+            new Date(b.publishedAt ?? b.createdAt).getTime() -
+            new Date(a.publishedAt ?? a.createdAt).getTime()
+        );
+        const sameCategory = sorted.filter(
+          (p) =>
+            p.id !== currentPost.id &&
+            p.status === "published" &&
+            p.category === currentPost.category
+        );
+        const picks = sameCategory.length >= 3
+          ? sameCategory.slice(0, 3)
+          : [
+              ...sameCategory,
+              ...sorted
+                .filter(
+                  (p) =>
+                    p.id !== currentPost.id &&
+                    p.status === "published" &&
+                    p.category !== currentPost.category
+                )
+                .slice(0, 3 - sameCategory.length),
+            ];
+        setRelated(picks);
+      })
+      .catch(() => {});
+  }, [currentPost.id, currentPost.category]);
+
+  if (related.length === 0) return null;
+
+  return (
+    <motion.section
+      initial={{ opacity: 0, y: 24 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.2 }}
+      className="mt-16 pt-12 border-t border-border"
+    >
+      <div className="flex items-center gap-3 mb-8">
+        <h2 className="text-2xl font-bold text-foreground">আরো পড়ুন</h2>
+        <span className={`px-3 py-1 rounded-full border text-xs font-medium ${getCategoryColor(currentPost.category)}`}>
+          {currentPost.category}
+        </span>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {related.map((post, idx) => (
+          <motion.article
+            key={post.id}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: idx * 0.08 }}
+            className="bg-card border border-border rounded-2xl overflow-hidden hover:border-primary/40 hover:shadow-md transition-all duration-200 group flex flex-col"
+          >
+            {post.coverImage ? (
+              <img
+                src={post.coverImage}
+                alt={post.title}
+                className="w-full h-36 object-cover"
+              />
+            ) : (
+              <div className="w-full h-36 bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center">
+                <Tag className="w-8 h-8 text-primary/30" />
+              </div>
+            )}
+
+            <div className="p-5 flex flex-col flex-1">
+              <div className="flex flex-wrap items-center gap-2 mb-3 text-xs">
+                <span className={`px-2.5 py-0.5 rounded-full border font-medium ${getCategoryColor(post.category)}`}>
+                  {post.category}
+                </span>
+                <div className="flex items-center gap-1 text-muted-foreground">
+                  <Clock className="w-3 h-3" />
+                  <span>{post.readTime} মিনিট</span>
+                </div>
+              </div>
+
+              <Link href={`/blog/${post.slug}`}>
+                <h3 className="text-base font-bold mb-2 leading-snug group-hover:text-primary transition-colors cursor-pointer line-clamp-2">
+                  {post.title}
+                </h3>
+              </Link>
+
+              <p className="text-muted-foreground text-sm mb-4 leading-relaxed line-clamp-2 flex-1">
+                {post.excerpt}
+              </p>
+
+              <Link href={`/blog/${post.slug}`}>
+                <button className="inline-flex items-center gap-1.5 text-primary text-sm font-medium hover:gap-2.5 transition-all">
+                  পড়ুন <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </Link>
+            </div>
+          </motion.article>
+        ))}
+      </div>
+    </motion.section>
+  );
 }
 
 export default function BlogPost() {
@@ -20,6 +143,8 @@ export default function BlogPost() {
   useEffect(() => {
     if (!slug) return;
     setLoading(true);
+    setPost(null);
+    setNotFound(false);
     api.getPostBySlug(slug)
       .then((data) => setPost(data))
       .catch(() => setNotFound(true))
@@ -138,7 +263,7 @@ export default function BlogPost() {
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
 
-        {/* Footer */}
+        {/* Footer nav */}
         <div className="mt-12 pt-8 border-t border-border flex justify-between items-center">
           <Link href="/blog">
             <button className="inline-flex items-center gap-2 text-primary hover:gap-3 transition-all font-medium">
@@ -147,6 +272,9 @@ export default function BlogPost() {
             </button>
           </Link>
         </div>
+
+        {/* Related Posts */}
+        <RelatedPosts currentPost={post} />
       </div>
     </div>
   );
