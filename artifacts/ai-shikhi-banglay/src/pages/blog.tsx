@@ -84,7 +84,7 @@ export default function Blog() {
                 </div>
               </div>
               
-              <Link href={`/blog/${post.id}`}>
+              <Link href={post.id === 1 ? "/blog/chatgpt-bangla-guide" : `/blog/${post.id}`}>
                 <h2 className="text-2xl md:text-3xl font-bold mb-4 group-hover:text-primary transition-colors cursor-pointer">
                   {post.title}
                 </h2>
@@ -94,7 +94,7 @@ export default function Blog() {
                 {post.excerpt}
               </p>
               
-              <Link href={`/blog/${post.id}`}>
+              <Link href={post.id === 1 ? "/blog/chatgpt-bangla-guide" : `/blog/${post.id}`}>
                 <button className="flex items-center gap-2 text-primary font-medium hover:gap-3 transition-all">
                   আরও পড়ুন <ArrowRight className="w-4 h-4" />
                 </button>

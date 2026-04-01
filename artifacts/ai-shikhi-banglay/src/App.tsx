@@ -16,6 +16,7 @@ import PrivacyPolicy from "./pages/privacy-policy";
 import TermsAndConditions from "./pages/terms-and-conditions";
 import Disclaimer from "./pages/disclaimer";
 import CookiePolicy from "./pages/cookie-policy";
+import BlogChatGPTGuide from "./pages/blog-chatgpt-guide";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +33,7 @@ function Router() {
         <Route path="/terms-and-conditions" component={TermsAndConditions} />
         <Route path="/disclaimer" component={Disclaimer} />
         <Route path="/cookie-policy" component={CookiePolicy} />
+        <Route path="/blog/chatgpt-bangla-guide" component={BlogChatGPTGuide} />
         <Route component={NotFound} />
       </Switch>
     </PageLayout>

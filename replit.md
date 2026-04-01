@@ -16,6 +16,24 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 - **API codegen**: Orval (from OpenAPI spec)
 - **Build**: esbuild (CJS bundle)
 
+## Artifacts
+
+### `artifacts/ai-shikhi-banglay` (`@workspace/ai-shikhi-banglay`)
+
+Bengali AI educational website "AI শিখি বাংলায়". React + Vite, dark theme, cyan/teal accents, wouter routing.
+
+Pages:
+- `/` — Homepage with hero, category cards, YouTube embed placeholder, newsletter signup, footer
+- `/blog` — Blog listing page (5 sample posts)
+- `/blog/chatgpt-bangla-guide` — Full ChatGPT guide blog post in Bengali
+- `/tools` — AI tools grid (ChatGPT, Gemini, Claude, Midjourney, Perplexity, ElevenLabs)
+- `/about` — About page
+- `/contact` — Contact form with social links
+- `/privacy-policy` — Full Bengali privacy policy (AdSense-ready)
+- `/terms-and-conditions` — Full Bengali terms & conditions
+- `/disclaimer` — Full Bengali disclaimer
+- `/cookie-policy` — Full Bengali cookie policy
+
 ## Structure
 
 ```text
