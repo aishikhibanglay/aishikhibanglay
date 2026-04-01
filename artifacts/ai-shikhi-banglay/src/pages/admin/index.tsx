@@ -13,7 +13,6 @@ import {
   BarChart2,
   Edit,
   Eye,
-  Mail,
   Users,
 } from "lucide-react";
 
@@ -44,7 +43,6 @@ function AdminDashboard() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<number | null>(null);
-  const [subscriberCount, setSubscriberCount] = useState<number | null>(null);
   const [totalViews, setTotalViews] = useState<number | null>(null);
 
   const loadPosts = async () => {
@@ -60,16 +58,9 @@ function AdminDashboard() {
 
   const loadStats = async () => {
     try {
-      const [subRes, viewRes] = await Promise.all([
-        fetch("/api/admin/subscribers", { credentials: "include" }),
-        fetch("/api/admin/stats", { credentials: "include" }),
-      ]);
-      if (subRes.ok) {
-        const data = await subRes.json();
-        setSubscriberCount(data.length);
-      }
-      if (viewRes.ok) {
-        const data = await viewRes.json();
+      const res = await fetch("/api/admin/stats", { credentials: "include" });
+      if (res.ok) {
+        const data = await res.json();
         setTotalViews(data.totalViews ?? 0);
       }
     } catch {
@@ -151,23 +142,6 @@ function AdminDashboard() {
             </div>
           </div>
         </div>
-
-        {/* Subscriber quick link */}
-        <button
-          onClick={() => setLocation("/admin/subscribers")}
-          className="w-full bg-gray-900 border border-gray-800 hover:border-purple-500/40 rounded-xl p-4 flex items-center gap-4 text-left transition-colors mb-6"
-        >
-          <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
-            <Mail className="w-5 h-5 text-purple-400" />
-          </div>
-          <div className="flex-1">
-            <p className="text-white font-medium text-sm">সাবস্ক্রাইবার তালিকা</p>
-            <p className="text-gray-500 text-xs">
-              {subscriberCount === null ? "লোড হচ্ছে..." : `মোট ${subscriberCount} জন সাবস্ক্রাইব করেছেন`}
-            </p>
-          </div>
-          <span className="text-gray-600 text-xs">→ দেখুন</span>
-        </button>
 
         {/* Posts List */}
         <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
