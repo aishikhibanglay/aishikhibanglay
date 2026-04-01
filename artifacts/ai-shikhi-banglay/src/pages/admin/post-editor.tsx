@@ -239,10 +239,8 @@ function PostEditorInner({ postId }: PostEditorProps) {
             <RichEditor
               content={form.content}
               onChange={handleContentChange}
-              onImageInsert={() => {
-                openInlineImageUploader((url) => {
-                  // Will be handled after uploader closes
-                });
+              onImageInsert={(insertFn) => {
+                openInlineImageUploader(insertFn);
               }}
             />
           </div>

@@ -32,7 +32,7 @@ import {
 interface RichEditorProps {
   content: string;
   onChange: (html: string) => void;
-  onImageInsert?: () => void;
+  onImageInsert?: (insertFn: (url: string) => void) => void;
 }
 
 function ToolbarButton({
@@ -216,7 +216,14 @@ function Toolbar({ editor, onImageInsert }: { editor: Editor; onImageInsert?: ()
         <LinkIcon className="w-4 h-4" />
       </ToolbarButton>
       {onImageInsert && (
-        <ToolbarButton onClick={onImageInsert} title="ছবি যোগ করুন">
+        <ToolbarButton
+          onClick={() =>
+            onImageInsert((url) => {
+              editor.chain().focus().setImage({ src: url }).run();
+            })
+          }
+          title="ছবি যোগ করুন"
+        >
           <ImageIcon className="w-4 h-4" />
         </ToolbarButton>
       )}
