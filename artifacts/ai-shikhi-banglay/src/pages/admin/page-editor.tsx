@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { useAdmin } from "@/hooks/useAdmin";
 import { AdminGuard } from "@/components/admin/AdminGuard";
+import { AdminLayout } from "@/components/admin/AdminLayout";
 import { useLocation } from "wouter";
 import { RichEditor } from "@/components/admin/RichEditor";
 import {
-  BookOpen, ArrowLeft, LogOut, Eye, Save, CheckCircle2, Globe, FileText
+  Eye, Save, CheckCircle2, Globe, FileText
 } from "lucide-react";
 
 interface PageEditorParams {
@@ -12,7 +12,6 @@ interface PageEditorParams {
 }
 
 function PageEditorContent({ params }: { params?: PageEditorParams }) {
-  const { username, logout } = useAdmin();
   const [, setLocation] = useLocation();
   const isEditing = !!params?.id;
 
@@ -59,8 +58,6 @@ function PageEditorContent({ params }: { params?: PageEditorParams }) {
     }
   };
 
-  const handleLogout = async () => { await logout(); setLocation("/admin/login"); };
-
   const handleSave = async (publishStatus?: "draft" | "published") => {
     if (!title.trim()) return;
     setSaving(true);
@@ -103,39 +100,15 @@ function PageEditorContent({ params }: { params?: PageEditorParams }) {
   };
 
   if (loading) {
-    return <div className="min-h-screen bg-gray-950 flex items-center justify-center text-gray-400">লোড হচ্ছে...</div>;
+    return (
+      <AdminLayout title={isEditing ? "পেজ সম্পাদনা" : "নতুন পেজ"}>
+        <div className="flex items-center justify-center py-20 text-gray-400">লোড হচ্ছে...</div>
+      </AdminLayout>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-gray-950">
-      <header className="bg-gray-900 border-b border-gray-800 sticky top-0 z-10">
-        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <BookOpen className="w-6 h-6 text-cyan-400" />
-            <div>
-              <h1 className="text-white font-bold text-sm">AI শিখি বাংলায়</h1>
-              <p className="text-gray-500 text-xs">{isEditing ? "পেজ সম্পাদনা" : "নতুন পেজ"}</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <button onClick={() => setLocation("/admin/pages")} className="flex items-center gap-1.5 text-gray-400 hover:text-cyan-400 text-sm transition-colors">
-              <ArrowLeft className="w-4 h-4" /> পেজ তালিকা
-            </button>
-            <span className="text-gray-600">|</span>
-            {isEditing && status === "published" && (
-              <a href={`/pages/${slug}`} target="_blank" className="flex items-center gap-1.5 text-gray-400 hover:text-cyan-400 text-sm transition-colors">
-                <Eye className="w-4 h-4" /> দেখুন
-              </a>
-            )}
-            <span className="text-gray-600">|</span>
-            <span className="text-gray-400 text-sm">{username}</span>
-            <button onClick={handleLogout} className="flex items-center gap-1.5 text-gray-400 hover:text-red-400 text-sm transition-colors">
-              <LogOut className="w-4 h-4" /> লগআউট
-            </button>
-          </div>
-        </div>
-      </header>
-
+    <AdminLayout title={isEditing ? "পেজ সম্পাদনা" : "নতুন পেজ"}>
       <div className="max-w-5xl mx-auto px-4 py-6 space-y-5">
         {/* Title */}
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
@@ -221,7 +194,7 @@ function PageEditorContent({ params }: { params?: PageEditorParams }) {
           </div>
         </div>
       </div>
-    </div>
+    </AdminLayout>
   );
 }
 

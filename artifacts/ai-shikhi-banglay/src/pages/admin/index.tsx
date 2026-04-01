@@ -1,14 +1,12 @@
 import { useState, useEffect } from "react";
-import { useAdmin } from "@/hooks/useAdmin";
 import { AdminGuard } from "@/components/admin/AdminGuard";
+import { AdminLayout } from "@/components/admin/AdminLayout";
 import { api, type Post } from "@/lib/api";
 import { useLocation } from "wouter";
 import {
   PenSquare,
   Trash2,
-  LogOut,
   Plus,
-  BookOpen,
   FileText,
   Globe,
   Clock,
@@ -44,7 +42,6 @@ function PostStatusBadge({ status }: { status: Post["status"] }) {
 }
 
 function AdminDashboard() {
-  const { username, logout } = useAdmin();
   const [, setLocation] = useLocation();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
@@ -95,56 +92,11 @@ function AdminDashboard() {
     }
   };
 
-  const handleLogout = async () => {
-    await logout();
-    setLocation("/admin/login");
-  };
-
   const published = posts.filter((p) => p.status === "published").length;
   const drafts = posts.filter((p) => p.status === "draft").length;
 
   return (
-    <div className="min-h-screen bg-gray-950">
-      {/* Header */}
-      <header className="bg-gray-900 border-b border-gray-800 sticky top-0 z-10">
-        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <BookOpen className="w-6 h-6 text-cyan-400" />
-            <div>
-              <h1 className="text-white font-bold text-sm">AI শিখি বাংলায়</h1>
-              <p className="text-gray-500 text-xs">Admin Panel</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <a
-              href="/"
-              target="_blank"
-              className="flex items-center gap-1.5 text-gray-400 hover:text-cyan-400 text-sm transition-colors"
-            >
-              <Eye className="w-4 h-4" />
-              সাইট দেখুন
-            </a>
-            <span className="text-gray-600 text-sm">|</span>
-            <button
-              onClick={() => setLocation("/admin/settings")}
-              className="flex items-center gap-1.5 text-gray-400 hover:text-cyan-400 text-sm transition-colors"
-            >
-              <Settings className="w-4 h-4" />
-              সেটিংস
-            </button>
-            <span className="text-gray-600 text-sm">|</span>
-            <span className="text-gray-400 text-sm">{username}</span>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-1.5 text-gray-400 hover:text-red-400 text-sm transition-colors"
-            >
-              <LogOut className="w-4 h-4" />
-              লগআউট
-            </button>
-          </div>
-        </div>
-      </header>
-
+    <AdminLayout title="ড্যাশবোর্ড">
       <div className="max-w-6xl mx-auto px-4 py-6">
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
@@ -371,7 +323,7 @@ function AdminDashboard() {
           )}
         </div>
       </div>
-    </div>
+    </AdminLayout>
   );
 }
 

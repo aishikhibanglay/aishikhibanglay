@@ -1,14 +1,10 @@
 import { useState, useEffect } from "react";
-import { useAdmin } from "@/hooks/useAdmin";
 import { AdminGuard } from "@/components/admin/AdminGuard";
-import { useLocation } from "wouter";
+import { AdminLayout } from "@/components/admin/AdminLayout";
 import { invalidateSettingsCache } from "@/lib/useSiteSettings";
 import {
-  BookOpen,
-  ArrowLeft,
-  LogOut,
-  Eye,
   Save,
+  Eye,
   Youtube,
   Facebook,
   Twitter,
@@ -122,8 +118,6 @@ function TextareaField({
 }
 
 function SettingsForm() {
-  const { username, logout } = useAdmin();
-  const [, setLocation] = useLocation();
   const [settings, setSettings] = useState<Settings>({
     youtube_channel_url: "",
     youtube_subscribe_url: "",
@@ -216,55 +210,10 @@ function SettingsForm() {
     }
   };
 
-  const handleLogout = async () => {
-    await logout();
-    setLocation("/admin/login");
-  };
-
   const previewVideoId = extractYoutubeId(settings.featured_youtube_video_id);
 
   return (
-    <div className="min-h-screen bg-gray-950">
-      {/* Header */}
-      <header className="bg-gray-900 border-b border-gray-800 sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <BookOpen className="w-6 h-6 text-cyan-400" />
-            <div>
-              <h1 className="text-white font-bold text-sm">AI শিখি বাংলায়</h1>
-              <p className="text-gray-500 text-xs">সাইট সেটিংস</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setLocation("/admin")}
-              className="flex items-center gap-1.5 text-gray-400 hover:text-cyan-400 text-sm transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              ড্যাশবোর্ড
-            </button>
-            <span className="text-gray-600 text-sm">|</span>
-            <a
-              href="/"
-              target="_blank"
-              className="flex items-center gap-1.5 text-gray-400 hover:text-cyan-400 text-sm transition-colors"
-            >
-              <Eye className="w-4 h-4" />
-              সাইট দেখুন
-            </a>
-            <span className="text-gray-600 text-sm">|</span>
-            <span className="text-gray-400 text-sm">{username}</span>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-1.5 text-gray-400 hover:text-red-400 text-sm transition-colors"
-            >
-              <LogOut className="w-4 h-4" />
-              লগআউট
-            </button>
-          </div>
-        </div>
-      </header>
-
+    <AdminLayout title="সাইট সেটিংস">
       <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
 
         {/* Social Links */}
@@ -556,7 +505,7 @@ function SettingsForm() {
         </div>
 
       </div>
-    </div>
+    </AdminLayout>
   );
 }
 

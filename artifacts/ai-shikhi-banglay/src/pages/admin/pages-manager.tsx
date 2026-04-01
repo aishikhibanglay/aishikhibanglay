@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { useAdmin } from "@/hooks/useAdmin";
 import { AdminGuard } from "@/components/admin/AdminGuard";
+import { AdminLayout } from "@/components/admin/AdminLayout";
 import { useLocation } from "wouter";
 import {
-  BookOpen, ArrowLeft, LogOut, Eye, Plus, Trash2, FileText, ExternalLink
+  Plus, Trash2, FileText, ExternalLink, Globe, Clock
 } from "lucide-react";
 
 interface Page {
@@ -17,7 +17,6 @@ interface Page {
 }
 
 function PagesManagerContent() {
-  const { username, logout } = useAdmin();
   const [, setLocation] = useLocation();
   const [pages, setPages] = useState<Page[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,8 +29,6 @@ function PagesManagerContent() {
 
   useEffect(() => { fetchPages(); }, []);
 
-  const handleLogout = async () => { await logout(); setLocation("/admin/login"); };
-
   const handleDelete = async (id: number, title: string) => {
     if (!confirm(`"${title}" পেজটি মুছে ফেলবেন?`)) return;
     const res = await fetch(`/api/admin/pages/${id}`, { method: "DELETE", credentials: "include" });
@@ -39,33 +36,7 @@ function PagesManagerContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950">
-      <header className="bg-gray-900 border-b border-gray-800 sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <BookOpen className="w-6 h-6 text-cyan-400" />
-            <div>
-              <h1 className="text-white font-bold text-sm">AI শিখি বাংলায়</h1>
-              <p className="text-gray-500 text-xs">পেজ ম্যানেজার</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <button onClick={() => setLocation("/admin")} className="flex items-center gap-1.5 text-gray-400 hover:text-cyan-400 text-sm transition-colors">
-              <ArrowLeft className="w-4 h-4" /> ড্যাশবোর্ড
-            </button>
-            <span className="text-gray-600">|</span>
-            <a href="/" target="_blank" className="flex items-center gap-1.5 text-gray-400 hover:text-cyan-400 text-sm transition-colors">
-              <Eye className="w-4 h-4" /> সাইট
-            </a>
-            <span className="text-gray-600">|</span>
-            <span className="text-gray-400 text-sm">{username}</span>
-            <button onClick={handleLogout} className="flex items-center gap-1.5 text-gray-400 hover:text-red-400 text-sm transition-colors">
-              <LogOut className="w-4 h-4" /> লগআউট
-            </button>
-          </div>
-        </div>
-      </header>
-
+    <AdminLayout title="পেজ ম্যানেজার">
       <div className="max-w-4xl mx-auto px-4 py-6">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-white text-xl font-bold">সকল পেজ</h2>
@@ -139,7 +110,7 @@ function PagesManagerContent() {
           </div>
         )}
       </div>
-    </div>
+    </AdminLayout>
   );
 }
 

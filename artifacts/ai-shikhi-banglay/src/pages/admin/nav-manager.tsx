@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { useAdmin } from "@/hooks/useAdmin";
 import { AdminGuard } from "@/components/admin/AdminGuard";
+import { AdminLayout } from "@/components/admin/AdminLayout";
 import { useLocation } from "wouter";
 import { invalidateNavItemsCache } from "@/lib/useNavItems";
 import {
-  BookOpen, ArrowLeft, LogOut, Eye, Plus, Trash2, Save, GripVertical, ExternalLink, ToggleLeft, ToggleRight
+  Plus, Trash2, Save, ExternalLink, ToggleLeft, ToggleRight, GripVertical, ChevronUp, Edit2
 } from "lucide-react";
 
 interface NavItem {
@@ -26,7 +26,6 @@ const SECTION_LABELS: Record<string, string> = {
 const SECTIONS = ["navbar", "footer_main", "footer_legal"] as const;
 
 function NavManagerContent() {
-  const { username, logout } = useAdmin();
   const [, setLocation] = useLocation();
   const [items, setItems] = useState<NavItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -43,8 +42,6 @@ function NavManagerContent() {
   };
 
   useEffect(() => { fetchItems(); }, []);
-
-  const handleLogout = async () => { await logout(); setLocation("/admin/login"); };
 
   const bySection = (section: string) =>
     items.filter((i) => i.section === section).sort((a, b) => a.position - b.position);
@@ -125,33 +122,7 @@ function NavManagerContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950">
-      <header className="bg-gray-900 border-b border-gray-800 sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <BookOpen className="w-6 h-6 text-cyan-400" />
-            <div>
-              <h1 className="text-white font-bold text-sm">AI শিখি বাংলায়</h1>
-              <p className="text-gray-500 text-xs">নেভিগেশন ম্যানেজার</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <button onClick={() => setLocation("/admin")} className="flex items-center gap-1.5 text-gray-400 hover:text-cyan-400 text-sm transition-colors">
-              <ArrowLeft className="w-4 h-4" /> ড্যাশবোর্ড
-            </button>
-            <span className="text-gray-600 text-sm">|</span>
-            <a href="/" target="_blank" className="flex items-center gap-1.5 text-gray-400 hover:text-cyan-400 text-sm transition-colors">
-              <Eye className="w-4 h-4" /> সাইট দেখুন
-            </a>
-            <span className="text-gray-600 text-sm">|</span>
-            <span className="text-gray-400 text-sm">{username}</span>
-            <button onClick={handleLogout} className="flex items-center gap-1.5 text-gray-400 hover:text-red-400 text-sm transition-colors">
-              <LogOut className="w-4 h-4" /> লগআউট
-            </button>
-          </div>
-        </div>
-      </header>
-
+    <AdminLayout title="নেভিগেশন ম্যানেজার">
       <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
         {loading ? (
           <p className="text-gray-400 text-center py-12">লোড হচ্ছে...</p>
@@ -297,7 +268,7 @@ function NavManagerContent() {
           })
         )}
       </div>
-    </div>
+    </AdminLayout>
   );
 }
 

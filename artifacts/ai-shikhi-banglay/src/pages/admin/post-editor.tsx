@@ -1,17 +1,16 @@
 import { useState, useEffect, useCallback } from "react";
 import { AdminGuard } from "@/components/admin/AdminGuard";
+import { AdminLayout } from "@/components/admin/AdminLayout";
 import { RichEditor } from "@/components/admin/RichEditor";
 import { ImageUploader } from "@/components/admin/ImageUploader";
 import { api, type Post, type CreatePostData } from "@/lib/api";
 import { useLocation } from "wouter";
 import {
-  ArrowLeft,
-  Save,
   Globe,
   Clock,
+  Save,
   ImageIcon,
   Trash2,
-  BookOpen,
   RefreshCw,
 } from "lucide-react";
 
@@ -149,54 +148,35 @@ function PostEditorInner({ postId }: PostEditorProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950">
-      {/* Header */}
-      <header className="bg-gray-900 border-b border-gray-800 sticky top-0 z-10">
-        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setLocation("/admin")}
-              className="p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </button>
-            <div className="flex items-center gap-2">
-              <BookOpen className="w-5 h-5 text-cyan-400" />
-              <span className="text-white font-medium text-sm">
-                {postId ? "পোস্ট সম্পাদনা" : "নতুন পোস্ট"}
-              </span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            {saved && (
-              <span className="text-green-400 text-sm flex items-center gap-1">
-                <RefreshCw className="w-3 h-3" /> সেভ হয়েছে
-              </span>
-            )}
-            <button
-              onClick={() => handleSave("draft")}
-              disabled={saving}
-              className="flex items-center gap-1.5 px-3 py-2 text-sm bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-lg transition-colors disabled:opacity-50"
-            >
-              <Clock className="w-4 h-4" />
-              ড্রাফট সেভ
-            </button>
-            <button
-              onClick={() => handleSave("published")}
-              disabled={saving}
-              className="flex items-center gap-1.5 px-4 py-2 text-sm bg-cyan-500 hover:bg-cyan-600 text-white font-medium rounded-lg transition-colors disabled:opacity-50"
-            >
-              {saving ? (
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              ) : (
-                <Globe className="w-4 h-4" />
-              )}
-              প্রকাশ করুন
-            </button>
-          </div>
-        </div>
-      </header>
+    <AdminLayout title={postId ? "পোস্ট সম্পাদনা" : "নতুন পোস্ট"}>
+      {/* Sticky action bar */}
+      <div className="bg-gray-900 border-b border-gray-800 sticky top-0 z-10 px-4 py-2.5 flex items-center justify-end gap-2">
+        {saved && (
+          <span className="text-green-400 text-sm flex items-center gap-1 mr-auto">
+            <RefreshCw className="w-3 h-3" /> সেভ হয়েছে
+          </span>
+        )}
+        <button
+          onClick={() => handleSave("draft")}
+          disabled={saving}
+          className="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-lg transition-colors disabled:opacity-50"
+        >
+          <Clock className="w-4 h-4" />
+          ড্রাফট সেভ
+        </button>
+        <button
+          onClick={() => handleSave("published")}
+          disabled={saving}
+          className="flex items-center gap-1.5 px-4 py-1.5 text-sm bg-cyan-500 hover:bg-cyan-600 text-white font-medium rounded-lg transition-colors disabled:opacity-50"
+        >
+          {saving ? (
+            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+          ) : (
+            <Globe className="w-4 h-4" />
+          )}
+          প্রকাশ করুন
+        </button>
+      </div>
 
       <div className="max-w-5xl mx-auto px-4 py-6 grid grid-cols-3 gap-6">
         {/* Main Content */}
@@ -378,7 +358,7 @@ function PostEditorInner({ postId }: PostEditorProps) {
           onClose={() => setShowImageUploader(false)}
         />
       )}
-    </div>
+    </AdminLayout>
   );
 }
 
