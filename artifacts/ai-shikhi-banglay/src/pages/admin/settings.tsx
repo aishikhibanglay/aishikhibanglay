@@ -28,6 +28,20 @@ interface Settings {
   instagram_url: string;
   tiktok_url: string;
   featured_youtube_video_id: string;
+  hero_badge: string;
+  hero_title: string;
+  hero_subtitle: string;
+  hero_cta_primary: string;
+  hero_cta_primary_href: string;
+  hero_cta_secondary: string;
+  hero_cta_secondary_href: string;
+  newsletter_title: string;
+  newsletter_subtitle: string;
+  footer_description: string;
+  footer_copyright: string;
+  footer_tagline: string;
+  footer_main_title: string;
+  footer_legal_title: string;
 }
 
 function extractYoutubeId(urlOrId: string): string {
@@ -77,6 +91,36 @@ function InputField({
   );
 }
 
+function TextareaField({
+  label,
+  hint,
+  value,
+  onChange,
+  placeholder,
+  rows = 2,
+}: {
+  label: string;
+  hint?: string;
+  value: string;
+  onChange: (v: string) => void;
+  placeholder: string;
+  rows?: number;
+}) {
+  return (
+    <div>
+      <label className="block text-sm font-medium text-gray-300 mb-1.5">{label}</label>
+      <textarea
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        rows={rows}
+        className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 text-sm resize-none"
+      />
+      {hint && <p className="text-xs text-gray-500 mt-1">{hint}</p>}
+    </div>
+  );
+}
+
 function SettingsForm() {
   const { username, logout } = useAdmin();
   const [, setLocation] = useLocation();
@@ -88,6 +132,20 @@ function SettingsForm() {
     instagram_url: "",
     tiktok_url: "",
     featured_youtube_video_id: "",
+    hero_badge: "",
+    hero_title: "",
+    hero_subtitle: "",
+    hero_cta_primary: "",
+    hero_cta_primary_href: "",
+    hero_cta_secondary: "",
+    hero_cta_secondary_href: "",
+    newsletter_title: "",
+    newsletter_subtitle: "",
+    footer_description: "",
+    footer_copyright: "",
+    footer_tagline: "",
+    footer_main_title: "",
+    footer_legal_title: "",
   });
   const [subscribers, setSubscribers] = useState<{ id: number; email: string; subscribedAt: string }[]>([]);
   const [loading, setLoading] = useState(true);
@@ -111,6 +169,20 @@ function SettingsForm() {
             instagram_url: data.instagram_url ?? "",
             tiktok_url: data.tiktok_url ?? "",
             featured_youtube_video_id: data.featured_youtube_video_id ?? "",
+            hero_badge: data.hero_badge ?? "",
+            hero_title: data.hero_title ?? "",
+            hero_subtitle: data.hero_subtitle ?? "",
+            hero_cta_primary: data.hero_cta_primary ?? "",
+            hero_cta_primary_href: data.hero_cta_primary_href ?? "",
+            hero_cta_secondary: data.hero_cta_secondary ?? "",
+            hero_cta_secondary_href: data.hero_cta_secondary_href ?? "",
+            newsletter_title: data.newsletter_title ?? "",
+            newsletter_subtitle: data.newsletter_subtitle ?? "",
+            footer_description: data.footer_description ?? "",
+            footer_copyright: data.footer_copyright ?? "",
+            footer_tagline: data.footer_tagline ?? "",
+            footer_main_title: data.footer_main_title ?? "",
+            footer_legal_title: data.footer_legal_title ?? "",
           });
         }
         if (subsRes.ok) {
@@ -290,6 +362,150 @@ function SettingsForm() {
               </div>
             </div>
           )}
+        </div>
+
+        {/* Landing Page Content */}
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+          <h2 className="text-white font-semibold text-base mb-1 flex items-center gap-2">
+            <Eye className="w-5 h-5 text-cyan-400" />
+            হোমপেজ কন্টেন্ট
+          </h2>
+          <p className="text-gray-500 text-xs mb-5">হিরো সেকশনের টেক্সট ও বাটন পরিবর্তন করুন</p>
+          <div className="space-y-4">
+            <InputField
+              label="ব্যাজ টেক্সট (Badge)"
+              hint='হিরোতে ছোট ব্যাজে দেখাবে, যেমন: "আপনার মাতৃভাষায় ভবিষ্যতের প্রযুক্তি"'
+              icon={Link}
+              value={settings.hero_badge}
+              onChange={(v) => setSettings((s) => ({ ...s, hero_badge: v }))}
+              placeholder="আপনার মাতৃভাষায় ভবিষ্যতের প্রযুক্তি"
+            />
+            <InputField
+              label="মূল শিরোনাম (Hero Title)"
+              hint='বড় হেডিং — শেষে "AI" রাখলে সেটা রঙিন দেখাবে'
+              icon={Link}
+              value={settings.hero_title}
+              onChange={(v) => setSettings((s) => ({ ...s, hero_title: v }))}
+              placeholder="বাংলায় শিখুন AI"
+            />
+            <TextareaField
+              label="হিরো বিবরণ (Subtitle)"
+              value={settings.hero_subtitle}
+              onChange={(v) => setSettings((s) => ({ ...s, hero_subtitle: v }))}
+              placeholder="কৃত্রিম বুদ্ধিমতার এই নতুন যুগে..."
+              rows={3}
+            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <InputField
+                label="প্রথম বাটনের টেক্সট"
+                hint=""
+                icon={Link}
+                value={settings.hero_cta_primary}
+                onChange={(v) => setSettings((s) => ({ ...s, hero_cta_primary: v }))}
+                placeholder="শেখা শুরু করুন"
+              />
+              <InputField
+                label="প্রথম বাটনের লিংক"
+                hint=""
+                icon={Link}
+                value={settings.hero_cta_primary_href}
+                onChange={(v) => setSettings((s) => ({ ...s, hero_cta_primary_href: v }))}
+                placeholder="/blog"
+              />
+              <InputField
+                label="দ্বিতীয় বাটনের টেক্সট"
+                hint=""
+                icon={Link}
+                value={settings.hero_cta_secondary}
+                onChange={(v) => setSettings((s) => ({ ...s, hero_cta_secondary: v }))}
+                placeholder="AI টুলস এক্সপ্লোর করুন"
+              />
+              <InputField
+                label="দ্বিতীয় বাটনের লিংক"
+                hint=""
+                icon={Link}
+                value={settings.hero_cta_secondary_href}
+                onChange={(v) => setSettings((s) => ({ ...s, hero_cta_secondary_href: v }))}
+                placeholder="/tools"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Newsletter Content */}
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+          <h2 className="text-white font-semibold text-base mb-1 flex items-center gap-2">
+            <Mail className="w-5 h-5 text-purple-400" />
+            নিউজলেটার সেকশন
+          </h2>
+          <p className="text-gray-500 text-xs mb-5">হোমপেজের সাবস্ক্রাইব সেকশনের টেক্সট</p>
+          <div className="space-y-4">
+            <InputField
+              label="নিউজলেটার শিরোনাম"
+              hint=""
+              icon={Mail}
+              value={settings.newsletter_title}
+              onChange={(v) => setSettings((s) => ({ ...s, newsletter_title: v }))}
+              placeholder="আপডেট পেতে সাবস্ক্রাইব করুন"
+            />
+            <TextareaField
+              label="নিউজলেটার বিবরণ"
+              value={settings.newsletter_subtitle}
+              onChange={(v) => setSettings((s) => ({ ...s, newsletter_subtitle: v }))}
+              placeholder="নতুন ব্লগ পোস্ট ও AI আপডেট সরাসরি আপনার ইমেইলে পাঠাবো।"
+            />
+          </div>
+        </div>
+
+        {/* Footer Content */}
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+          <h2 className="text-white font-semibold text-base mb-1 flex items-center gap-2">
+            <Link className="w-5 h-5 text-gray-400" />
+            ফুটার কন্টেন্ট
+          </h2>
+          <p className="text-gray-500 text-xs mb-5">ফুটারে দেখানো বিবরণ ও কপিরাইট টেক্সট</p>
+          <div className="space-y-4">
+            <TextareaField
+              label="ফুটার বিবরণ"
+              value={settings.footer_description}
+              onChange={(v) => setSettings((s) => ({ ...s, footer_description: v }))}
+              placeholder="আপনার মাতৃভাষায় আর্টিফিশিয়াল ইন্টেলিজেন্স শেখার..."
+            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <InputField
+                label="গুরুত্বপূর্ণ পেজ সেকশনের শিরোনাম"
+                hint=""
+                icon={Link}
+                value={settings.footer_main_title}
+                onChange={(v) => setSettings((s) => ({ ...s, footer_main_title: v }))}
+                placeholder="গুরুত্বপূর্ণ পেজ"
+              />
+              <InputField
+                label="আইনি তথ্য সেকশনের শিরোনাম"
+                hint=""
+                icon={Link}
+                value={settings.footer_legal_title}
+                onChange={(v) => setSettings((s) => ({ ...s, footer_legal_title: v }))}
+                placeholder="আইনি তথ্য"
+              />
+              <InputField
+                label="কপিরাইট টেক্সট"
+                hint=""
+                icon={Link}
+                value={settings.footer_copyright}
+                onChange={(v) => setSettings((s) => ({ ...s, footer_copyright: v }))}
+                placeholder="AI শিখি বাংলায়। সর্বস্বত্ব সংরক্ষিত।"
+              />
+              <InputField
+                label="ফুটার ট্যাগলাইন"
+                hint=""
+                icon={Link}
+                value={settings.footer_tagline}
+                onChange={(v) => setSettings((s) => ({ ...s, footer_tagline: v }))}
+                placeholder="তৈরি করা হয়েছে ভালোবাসার সাথে, বাংলাদেশের জন্য।"
+              />
+            </div>
+          </div>
         </div>
 
         {/* Save Button */}

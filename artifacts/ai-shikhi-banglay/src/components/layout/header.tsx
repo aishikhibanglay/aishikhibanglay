@@ -3,6 +3,7 @@ import { Menu, X, Youtube, Sun, Moon } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useSiteSettings } from "@/lib/useSiteSettings";
+import { useNavItems } from "@/lib/useNavItems";
 import { useTheme } from "@/lib/useTheme";
 
 export function Header() {
@@ -10,6 +11,7 @@ export function Header() {
   const [location] = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const { settings } = useSiteSettings();
+  const { bySection } = useNavItems();
   const { isDark, toggle } = useTheme();
 
   useEffect(() => {
@@ -20,14 +22,7 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navLinks = [
-    { name: "হোম", path: "/" },
-    { name: "ব্লগ", path: "/blog" },
-    { name: "AI টুলস", path: "/tools" },
-    { name: "আমাদের সম্পর্কে", path: "/about" },
-    { name: "যোগাযোগ", path: "/contact" },
-  ];
-
+  const navLinks = bySection("navbar");
   const subscribeUrl = settings.youtube_subscribe_url || settings.youtube_channel_url || "#";
 
   return (
@@ -50,17 +45,35 @@ export function Header() {
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-1">
-          {navLinks.map((link) => (
-            <Link 
-              key={link.path} 
-              href={link.path}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors hover:text-primary hover:bg-primary/10 ${
-                location === link.path ? "text-primary bg-primary/10" : "text-muted-foreground"
-              }`}
-            >
-              {link.name}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const isActive = location === link.href;
+            const linkProps = link.openInNewTab ? { target: "_blank", rel: "noopener noreferrer" } : {};
+            if (link.openInNewTab) {
+              return (
+                <a
+                  key={link.id}
+                  href={link.href}
+                  {...linkProps}
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors hover:text-primary hover:bg-primary/10 ${
+                    isActive ? "text-primary bg-primary/10" : "text-muted-foreground"
+                  }`}
+                >
+                  {link.label}
+                </a>
+              );
+            }
+            return (
+              <Link
+                key={link.id}
+                href={link.href}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors hover:text-primary hover:bg-primary/10 ${
+                  isActive ? "text-primary bg-primary/10" : "text-muted-foreground"
+                }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
 
           {/* Theme toggle */}
           <button
@@ -112,20 +125,39 @@ export function Header() {
       {isOpen && (
         <div className="md:hidden absolute top-16 left-0 right-0 bg-background border-b border-border shadow-lg animate-in fade-in slide-in-from-top-2">
           <nav className="flex flex-col p-4 gap-2">
-            {navLinks.map((link) => (
-              <Link 
-                key={link.path} 
-                href={link.path}
-                className={`px-4 py-3 rounded-md text-sm font-medium transition-colors ${
-                  location === link.path 
-                    ? "text-primary bg-primary/10" 
-                    : "text-muted-foreground hover:text-primary hover:bg-primary/5"
-                }`}
-                onClick={() => setIsOpen(false)}
-              >
-                {link.name}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const isActive = location === link.href;
+              if (link.openInNewTab) {
+                return (
+                  <a
+                    key={link.id}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`px-4 py-3 rounded-md text-sm font-medium transition-colors ${
+                      isActive ? "text-primary bg-primary/10" : "text-muted-foreground hover:text-primary hover:bg-primary/5"
+                    }`}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {link.label}
+                  </a>
+                );
+              }
+              return (
+                <Link
+                  key={link.id}
+                  href={link.href}
+                  className={`px-4 py-3 rounded-md text-sm font-medium transition-colors ${
+                    isActive 
+                      ? "text-primary bg-primary/10" 
+                      : "text-muted-foreground hover:text-primary hover:bg-primary/5"
+                  }`}
+                  onClick={() => setIsOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
             <a
               href={subscribeUrl}
               target="_blank"

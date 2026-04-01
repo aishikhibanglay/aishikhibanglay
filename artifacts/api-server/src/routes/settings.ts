@@ -14,6 +14,20 @@ const DEFAULT_SETTINGS: Record<string, string> = {
   instagram_url: "",
   tiktok_url: "",
   featured_youtube_video_id: "",
+  hero_badge: "আপনার মাতৃভাষায় ভবিষ্যতের প্রযুক্তি",
+  hero_title: "বাংলায় শিখুন AI",
+  hero_subtitle: "কৃত্রিম বুদ্ধিমতার এই নতুন যুগে পিছিয়ে থাকবেন না। খুব সহজেই নিজের ভাষায় শিখুন AI-এর খুঁটিনাটি এবং কাজে লাগান দৈনন্দিন জীবনে।",
+  hero_cta_primary: "শেখা শুরু করুন",
+  hero_cta_primary_href: "/blog",
+  hero_cta_secondary: "AI টুলস এক্সপ্লোর করুন",
+  hero_cta_secondary_href: "/tools",
+  newsletter_title: "আপডেট পেতে সাবস্ক্রাইব করুন",
+  newsletter_subtitle: "নতুন ব্লগ পোস্ট ও AI আপডেট সরাসরি আপনার ইমেইলে পাঠাবো।",
+  footer_description: "আপনার মাতৃভাষায় আর্টিফিশিয়াল ইন্টেলিজেন্স শেখার বিশ্বস্ত প্ল্যাটফর্ম। ভবিষ্যতের প্রযুক্তির সাথে তাল মিলিয়ে চলতে আমাদের সাথেই থাকুন।",
+  footer_copyright: "AI শিখি বাংলায়। সর্বস্বত্ব সংরক্ষিত।",
+  footer_tagline: "তৈরি করা হয়েছে ভালোবাসার সাথে, বাংলাদেশের জন্য।",
+  footer_main_title: "গুরুত্বপূর্ণ পেজ",
+  footer_legal_title: "আইনি তথ্য",
 };
 
 const router: IRouter = Router();
@@ -35,6 +49,20 @@ const UpdateSettingsBody = zod.object({
   instagram_url: zod.string().optional(),
   tiktok_url: zod.string().optional(),
   featured_youtube_video_id: zod.string().optional(),
+  hero_badge: zod.string().optional(),
+  hero_title: zod.string().optional(),
+  hero_subtitle: zod.string().optional(),
+  hero_cta_primary: zod.string().optional(),
+  hero_cta_primary_href: zod.string().optional(),
+  hero_cta_secondary: zod.string().optional(),
+  hero_cta_secondary_href: zod.string().optional(),
+  newsletter_title: zod.string().optional(),
+  newsletter_subtitle: zod.string().optional(),
+  footer_description: zod.string().optional(),
+  footer_copyright: zod.string().optional(),
+  footer_tagline: zod.string().optional(),
+  footer_main_title: zod.string().optional(),
+  footer_legal_title: zod.string().optional(),
 });
 
 router.put("/admin/settings", requireAdmin, async (req, res): Promise<void> => {

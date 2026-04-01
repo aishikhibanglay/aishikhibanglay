@@ -8,6 +8,20 @@ export interface SiteSettings {
   instagram_url: string;
   tiktok_url: string;
   featured_youtube_video_id: string;
+  hero_badge: string;
+  hero_title: string;
+  hero_subtitle: string;
+  hero_cta_primary: string;
+  hero_cta_primary_href: string;
+  hero_cta_secondary: string;
+  hero_cta_secondary_href: string;
+  newsletter_title: string;
+  newsletter_subtitle: string;
+  footer_description: string;
+  footer_copyright: string;
+  footer_tagline: string;
+  footer_main_title: string;
+  footer_legal_title: string;
 }
 
 const defaultSettings: SiteSettings = {
@@ -18,6 +32,20 @@ const defaultSettings: SiteSettings = {
   instagram_url: "",
   tiktok_url: "",
   featured_youtube_video_id: "",
+  hero_badge: "আপনার মাতৃভাষায় ভবিষ্যতের প্রযুক্তি",
+  hero_title: "বাংলায় শিখুন AI",
+  hero_subtitle: "কৃত্রিম বুদ্ধিমতার এই নতুন যুগে পিছিয়ে থাকবেন না। খুব সহজেই নিজের ভাষায় শিখুন AI-এর খুঁটিনাটি এবং কাজে লাগান দৈনন্দিন জীবনে।",
+  hero_cta_primary: "শেখা শুরু করুন",
+  hero_cta_primary_href: "/blog",
+  hero_cta_secondary: "AI টুলস এক্সপ্লোর করুন",
+  hero_cta_secondary_href: "/tools",
+  newsletter_title: "আপডেট পেতে সাবস্ক্রাইব করুন",
+  newsletter_subtitle: "নতুন ব্লগ পোস্ট ও AI আপডেট সরাসরি আপনার ইমেইলে পাঠাবো।",
+  footer_description: "আপনার মাতৃভাষায় আর্টিফিশিয়াল ইন্টেলিজেন্স শেখার বিশ্বস্ত প্ল্যাটফর্ম। ভবিষ্যতের প্রযুক্তির সাথে তাল মিলিয়ে চলতে আমাদের সাথেই থাকুন।",
+  footer_copyright: "AI শিখি বাংলায়। সর্বস্বত্ব সংরক্ষিত।",
+  footer_tagline: "তৈরি করা হয়েছে ভালোবাসার সাথে, বাংলাদেশের জন্য।",
+  footer_main_title: "গুরুত্বপূর্ণ পেজ",
+  footer_legal_title: "আইনি তথ্য",
 };
 
 let cachedSettings: SiteSettings | null = null;

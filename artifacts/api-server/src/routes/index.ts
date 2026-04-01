@@ -6,6 +6,8 @@ import adminPostsRouter from "./adminPosts";
 import storageRouter from "./storage";
 import settingsRouter from "./settings";
 import subscribersRouter from "./subscribers";
+import navItemsRouter from "./navItems";
+import pagesRouter from "./pages";
 import { requireAdmin } from "../middlewares/requireAdmin";
 
 const router: IRouter = Router();
@@ -15,6 +17,8 @@ router.use(healthRouter);
 router.use(postsRouter);
 router.use(settingsRouter);
 router.use(subscribersRouter);
+router.use(navItemsRouter);
+router.use(pagesRouter);
 
 // Auth routes (login/logout/me — mixed public + protected, self-contained)
 router.use(adminAuthRouter);

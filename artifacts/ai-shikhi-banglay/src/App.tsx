@@ -19,6 +19,7 @@ import Disclaimer from "./pages/disclaimer";
 import CookiePolicy from "./pages/cookie-policy";
 import BlogChatGPTGuide from "./pages/blog-chatgpt-guide";
 import BlogPost from "./pages/blog-post";
+import DynamicPage from "./pages/dynamic-page";
 import CookieConsent from "./components/CookieConsent";
 
 // Admin Pages
@@ -26,6 +27,9 @@ import AdminLogin from "./pages/admin/login";
 import AdminDashboard from "./pages/admin/index";
 import PostEditorPage from "./pages/admin/post-editor";
 import AdminSettingsPage from "./pages/admin/settings";
+import NavManagerPage from "./pages/admin/nav-manager";
+import PagesManagerPage from "./pages/admin/pages-manager";
+import PageEditorPage from "./pages/admin/page-editor";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +48,7 @@ function PublicRouter() {
         <Route path="/cookie-policy" component={CookiePolicy} />
         <Route path="/blog/chatgpt-bangla-guide" component={BlogChatGPTGuide} />
         <Route path="/blog/:slug" component={BlogPost} />
+        <Route path="/pages/:slug" component={DynamicPage} />
         <Route component={NotFound} />
       </Switch>
     </PageLayout>
@@ -64,6 +69,16 @@ function AdminRouter() {
         component={({ params }) => <PostEditorPage params={params} />}
       />
       <Route path="/admin/settings" component={AdminSettingsPage} />
+      <Route path="/admin/nav" component={NavManagerPage} />
+      <Route path="/admin/pages" component={PagesManagerPage} />
+      <Route
+        path="/admin/pages/new"
+        component={() => <PageEditorPage />}
+      />
+      <Route
+        path="/admin/pages/:id/edit"
+        component={({ params }) => <PageEditorPage params={params} />}
+      />
     </Switch>
   );
 }

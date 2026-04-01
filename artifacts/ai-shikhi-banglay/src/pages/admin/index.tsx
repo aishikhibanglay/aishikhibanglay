@@ -17,6 +17,8 @@ import {
   Eye,
   Settings,
   Mail,
+  Navigation,
+  Layout,
 } from "lucide-react";
 
 function PostStatusBadge({ status }: { status: Post["status"] }) {
@@ -190,6 +192,46 @@ function AdminDashboard() {
                 </p>
                 <p className="text-gray-500 text-xs">সাবস্ক্রাইবার</p>
               </div>
+            </div>
+          </button>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+          <button
+            onClick={() => setLocation("/admin/pages")}
+            className="bg-gray-900 border border-gray-800 hover:border-cyan-500/50 rounded-xl p-4 flex items-center gap-4 text-left transition-colors"
+          >
+            <div className="w-10 h-10 bg-cyan-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+              <Layout className="w-5 h-5 text-cyan-400" />
+            </div>
+            <div>
+              <p className="text-white font-medium text-sm">পেজ ম্যানেজার</p>
+              <p className="text-gray-500 text-xs">নতুন পেজ তৈরি ও সম্পাদনা</p>
+            </div>
+          </button>
+          <button
+            onClick={() => setLocation("/admin/nav")}
+            className="bg-gray-900 border border-gray-800 hover:border-cyan-500/50 rounded-xl p-4 flex items-center gap-4 text-left transition-colors"
+          >
+            <div className="w-10 h-10 bg-indigo-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+              <Navigation className="w-5 h-5 text-indigo-400" />
+            </div>
+            <div>
+              <p className="text-white font-medium text-sm">নেভিগেশন ম্যানেজার</p>
+              <p className="text-gray-500 text-xs">মেনু ও ফুটার লিংক</p>
+            </div>
+          </button>
+          <button
+            onClick={() => setLocation("/admin/settings")}
+            className="bg-gray-900 border border-gray-800 hover:border-cyan-500/50 rounded-xl p-4 flex items-center gap-4 text-left transition-colors"
+          >
+            <div className="w-10 h-10 bg-gray-700 rounded-lg flex items-center justify-center flex-shrink-0">
+              <Settings className="w-5 h-5 text-gray-400" />
+            </div>
+            <div>
+              <p className="text-white font-medium text-sm">সাইট সেটিংস</p>
+              <p className="text-gray-500 text-xs">সোশ্যাল, ল্যান্ডিং পেজ কন্টেন্ট</p>
             </div>
           </button>
         </div>

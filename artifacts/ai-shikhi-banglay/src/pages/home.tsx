@@ -106,23 +106,32 @@ export default function Home() {
             >
               <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6 border border-primary/20">
                 <Sparkles className="w-4 h-4" />
-                আপনার মাতৃভাষায় ভবিষ্যতের প্রযুক্তি
+                {settings.hero_badge || "আপনার মাতৃভাষায় ভবিষ্যতের প্রযুক্তি"}
               </span>
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight">
-                বাংলায় শিখুন <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-300">AI</span>
+                {settings.hero_title ? (
+                  <>
+                    {settings.hero_title.replace(/AI$/, "")}
+                    {settings.hero_title.endsWith("AI") && (
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-300">AI</span>
+                    )}
+                  </>
+                ) : (
+                  <>বাংলায় শিখুন <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-300">AI</span></>
+                )}
               </h1>
               <p className="text-lg md:text-xl text-muted-foreground mb-10 leading-relaxed">
-                কৃত্রিম বুদ্ধিমত্তার এই নতুন যুগে পিছিয়ে থাকবেন না। খুব সহজেই নিজের ভাষায় শিখুন AI-এর খুঁটিনাটি এবং কাজে লাগান দৈনন্দিন জীবনে।
+                {settings.hero_subtitle || "কৃত্রিম বুদ্ধিমত্তার এই নতুন যুগে পিছিয়ে থাকবেন না। খুব সহজেই নিজের ভাষায় শিখুন AI-এর খুঁটিনাটি এবং কাজে লাগান দৈনন্দিন জীবনে।"}
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Link href="/blog">
+                <Link href={settings.hero_cta_primary_href || "/blog"}>
                   <Button size="lg" className="w-full sm:w-auto gap-2 text-lg px-8 h-14" data-testid="button-start-learning">
-                    শেখা শুরু করুন <ArrowRight className="w-5 h-5" />
+                    {settings.hero_cta_primary || "শেখা শুরু করুন"} <ArrowRight className="w-5 h-5" />
                   </Button>
                 </Link>
-                <Link href="/tools">
+                <Link href={settings.hero_cta_secondary_href || "/tools"}>
                   <Button size="lg" variant="outline" className="w-full sm:w-auto gap-2 text-lg px-8 h-14" data-testid="button-browse-tools">
-                    AI টুলস এক্সপ্লোর করুন
+                    {settings.hero_cta_secondary || "AI টুলস এক্সপ্লোর করুন"}
                   </Button>
                 </Link>
               </div>
@@ -250,9 +259,9 @@ export default function Home() {
       <section className="py-20 border-t border-border bg-gradient-to-b from-background to-secondary/20">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-4">আমাদের নিউজলেটার সাবস্ক্রাইব করুন</h2>
+            <h2 className="text-3xl font-bold mb-4">{settings.newsletter_title || "আমাদের নিউজলেটার সাবস্ক্রাইব করুন"}</h2>
             <p className="text-muted-foreground mb-8">
-              AI এর দুনিয়ার সর্বশেষ খবর, টিপস এবং ট্রিকস পেতে আপনার ইমেইল দিয়ে যুক্ত হোন। স্প্যাম মুক্ত, শুধু প্রয়োজনীয় তথ্য!
+              {settings.newsletter_subtitle || "AI এর দুনিয়ার সর্বশেষ খবর, টিপস এবং ট্রিকস পেতে আপনার ইমেইল দিয়ে যুক্ত হোন। স্প্যাম মুক্ত, শুধু প্রয়োজনীয় তথ্য!"}
             </p>
 
             {subscribeStatus === "success" ? (

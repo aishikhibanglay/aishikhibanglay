@@ -37,9 +37,17 @@ Pages:
 
 Admin Panel (session-protected at `/admin/*`):
 - `/admin/login` — Login page (credentials: ADMIN_USERNAME / ADMIN_PASSWORD env vars)
-- `/admin` — Dashboard with post stats and post list
+- `/admin` — Dashboard with post stats, post list, and quick actions
 - `/admin/posts/new` — New post editor (TipTap rich text, image upload, category/slug/status sidebar)
 - `/admin/posts/:id/edit` — Edit existing post
+- `/admin/settings` — Site settings (social media links, YouTube, landing page content, newsletter, footer text)
+- `/admin/nav` — Navigation manager (add/edit/delete navbar & footer links, toggle visibility)
+- `/admin/pages` — Pages manager (list all custom pages)
+- `/admin/pages/new` — Create new custom page (TipTap editor, SEO meta, draft/publish)
+- `/admin/pages/:id/edit` — Edit existing custom page
+
+Public pages:
+- `/pages/:slug` — Dynamic page renderer for admin-created pages
 
 Admin features:
 - Session-based auth (express-session with in-memory store, SESSION_SECRET env var)
@@ -48,6 +56,10 @@ Admin features:
 - Post status: draft / published (publishedAt set on first publish)
 - Slug auto-generated from title, editable in sidebar
 - Read time field, category dropdown
+- Dynamic navbar/footer from DB (nav_items table)
+- Custom pages from DB (pages table)
+- Hero section, newsletter, footer content editable from settings
+- Instagram/TikTok social media support in footer
 
 ## Structure
 
