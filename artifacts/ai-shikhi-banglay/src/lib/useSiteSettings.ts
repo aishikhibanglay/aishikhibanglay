@@ -25,6 +25,7 @@ export interface SiteSettings {
   footer_tagline: string;
   footer_main_title: string;
   footer_legal_title: string;
+  custom_head_script: string;
 }
 
 const defaultSettings: SiteSettings = {
@@ -52,6 +53,7 @@ const defaultSettings: SiteSettings = {
   footer_tagline: "তৈরি করা হয়েছে ভালোবাসার সাথে, বাংলাদেশের জন্য।",
   footer_main_title: "গুরুত্বপূর্ণ পেজ",
   footer_legal_title: "আইনি তথ্য",
+  custom_head_script: "",
 };
 
 let cachedSettings: SiteSettings | null = null;

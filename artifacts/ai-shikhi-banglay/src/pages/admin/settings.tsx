@@ -75,6 +75,7 @@ interface Settings {
   footer_tagline: string;
   footer_main_title: string;
   footer_legal_title: string;
+  custom_head_script: string;
 }
 
 // ─── HELPERS ──────────────────────────────────────────────────────────────────
@@ -399,6 +400,7 @@ function SettingsForm() {
     footer_tagline: "",
     footer_main_title: "",
     footer_legal_title: "",
+    custom_head_script: "",
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -432,6 +434,7 @@ function SettingsForm() {
             footer_tagline: data.footer_tagline ?? "",
             footer_main_title: data.footer_main_title ?? "",
             footer_legal_title: data.footer_legal_title ?? "",
+            custom_head_script: data.custom_head_script ?? "",
           });
         }
       } catch {
@@ -787,6 +790,30 @@ function SettingsForm() {
                 placeholder="তৈরি করা হয়েছে ভালোবাসার সাথে, বাংলাদেশের জন্য।"
               />
             </div>
+          </div>
+        </div>
+
+        {/* ── Custom Head Script ── */}
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+          <h2 className="text-white font-semibold text-base mb-1 flex items-center gap-2">
+            <Globe className="w-5 h-5 text-gray-400" />
+            কাস্টম হেড স্ক্রিপ্ট
+          </h2>
+          <p className="text-gray-500 text-xs mb-4">
+            Google AdSense, Analytics বা অন্য যেকোনো script/meta tag এখানে paste করুন। সাইটের <code className="bg-gray-800 px-1 rounded text-cyan-400">&lt;head&gt;</code>-এ automatically যোগ হবে।
+          </p>
+          <div>
+            <label className="block text-xs text-gray-400 mb-1.5">স্ক্রিপ্ট কোড</label>
+            <textarea
+              value={settings.custom_head_script}
+              onChange={(e) => setSettings((s) => ({ ...s, custom_head_script: e.target.value }))}
+              rows={8}
+              placeholder={`<!-- উদাহরণ: Google AdSense -->\n<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXX" crossorigin="anonymous"></script>\n\n<!-- উদাহরণ: Google Analytics -->\n<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>`}
+              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2.5 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-cyan-500 transition-colors font-mono resize-y"
+            />
+            <p className="text-gray-600 text-xs mt-1.5">
+              ⚠️ শুধুমাত্র বিশ্বস্ত সোর্সের কোড paste করুন।
+            </p>
           </div>
         </div>
 

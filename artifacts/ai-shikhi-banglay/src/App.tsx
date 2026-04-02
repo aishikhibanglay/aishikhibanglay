@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { Switch, Route, Router as WouterRouter } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HelmetProvider } from "react-helmet-async";
@@ -10,6 +10,7 @@ import { AdminContext, useAdminState } from "@/hooks/useAdmin";
 import { DBBackedPage } from "./components/DBBackedPage";
 import CookieConsent from "./components/CookieConsent";
 import { usePageViewTracker } from "./hooks/usePageViewTracker";
+import { useSiteSettings } from "./lib/useSiteSettings";
 
 // Public pages — eager (always needed)
 import Home from "./pages/home";
@@ -116,11 +117,45 @@ function Router() {
   );
 }
 
+function CustomHeadScript() {
+  const { settings } = useSiteSettings();
+
+  useEffect(() => {
+    if (!settings.custom_head_script) return;
+
+    const container = document.createElement("div");
+    container.innerHTML = settings.custom_head_script;
+    const scripts = container.querySelectorAll("script");
+    const metas = container.querySelectorAll("meta, link");
+
+    const injected: HTMLElement[] = [];
+
+    metas.forEach((el) => {
+      const clone = el.cloneNode(true) as HTMLElement;
+      document.head.appendChild(clone);
+      injected.push(clone);
+    });
+
+    scripts.forEach((el) => {
+      const s = document.createElement("script");
+      Array.from(el.attributes).forEach((attr) => s.setAttribute(attr.name, attr.value));
+      if (!el.src) s.textContent = el.textContent;
+      document.head.appendChild(s);
+      injected.push(s);
+    });
+
+    return () => { injected.forEach((el) => el.remove()); };
+  }, [settings.custom_head_script]);
+
+  return null;
+}
+
 function AppInner() {
   const adminState = useAdminState();
 
   return (
     <AdminContext.Provider value={adminState}>
+      <CustomHeadScript />
       <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
         <Router />
       </WouterRouter>

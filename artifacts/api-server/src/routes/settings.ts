@@ -31,6 +31,7 @@ const DEFAULT_SETTINGS: Record<string, string> = {
   footer_tagline: "তৈরি করা হয়েছে ভালোবাসার সাথে, বাংলাদেশের জন্য।",
   footer_main_title: "গুরুত্বপূর্ণ পেজ",
   footer_legal_title: "আইনি তথ্য",
+  custom_head_script: "",
 };
 
 const router: IRouter = Router();
@@ -70,6 +71,7 @@ const UpdateSettingsBody = zod.object({
   footer_tagline: zod.string().optional(),
   footer_main_title: zod.string().optional(),
   footer_legal_title: zod.string().optional(),
+  custom_head_script: zod.string().optional(),
 });
 
 router.put("/admin/settings", requireAdmin, async (req, res): Promise<void> => {
