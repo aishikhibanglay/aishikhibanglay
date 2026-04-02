@@ -14,6 +14,7 @@ import { useSiteSettings } from "./lib/useSiteSettings";
 
 // Public pages — eager (always needed)
 import Home from "./pages/home";
+import Contact from "./pages/contact";
 
 // Public pages — lazy (loaded on demand)
 const Blog = lazy(() => import("./pages/blog"));
@@ -63,7 +64,7 @@ function PublicRouter() {
           <Route path="/blog" component={Blog} />
           <Route path="/tools" component={Tools} />
           <Route path="/about" component={() => <DBBackedPage slug="about" />} />
-          <Route path="/contact" component={() => <DBBackedPage slug="contact" />} />
+          <Route path="/contact" component={Contact} />
           <Route path="/privacy-policy" component={() => <DBBackedPage slug="privacy-policy" />} />
           <Route path="/terms-and-conditions" component={() => <DBBackedPage slug="terms-and-conditions" />} />
           <Route path="/disclaimer" component={() => <DBBackedPage slug="disclaimer" />} />

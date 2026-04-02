@@ -12,6 +12,7 @@ import analyticsRouter from "./analytics";
 import passwordResetRouter from "./passwordReset";
 import socialLinksRouter from "./socialLinks";
 import aiToolsRouter from "./aiTools";
+import contactRouter from "./contact";
 
 const router: IRouter = Router();
 
@@ -26,6 +27,7 @@ router.use(analyticsRouter);
 router.use(passwordResetRouter);
 router.use(socialLinksRouter);
 router.use(aiToolsRouter);
+router.use(contactRouter);
 
 // Auth routes (login/logout/me — mixed public + protected, self-contained)
 router.use(adminAuthRouter);
