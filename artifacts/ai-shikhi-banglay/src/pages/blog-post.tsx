@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Clock, Calendar, Loader2, Tag } from "lucide-react";
 import { api, type Post } from "@/lib/api";
 import { PageSEO } from "@/components/PageSEO";
+import { ShareButtons } from "@/components/ShareButtons";
 
 const CATEGORY_COLORS: Record<string, string> = {
   "টিউটোরিয়াল": "bg-blue-500/10 text-blue-400 border-blue-500/20",
@@ -263,8 +264,11 @@ export default function BlogPost() {
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
 
+        {/* Share Buttons */}
+        <ShareButtons title={post.title} />
+
         {/* Footer nav */}
-        <div className="mt-12 pt-8 border-t border-border flex justify-between items-center">
+        <div className="mt-8 flex justify-between items-center">
           <Link href="/blog">
             <button className="inline-flex items-center gap-2 text-primary hover:gap-3 transition-all font-medium">
               <ArrowLeft className="w-4 h-4" />
