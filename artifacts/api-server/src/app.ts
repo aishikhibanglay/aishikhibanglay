@@ -67,10 +67,15 @@ app.use(
 
 app.use("/api", router);
 
-app.use((err: Error & { code?: string; status?: number }, _req: Request, res: Response, _next: NextFunction) => {
+app.use((err: Error & { code?: string; status?: number; cause?: Error & { code?: string } }, _req: Request, res: Response, _next: NextFunction) => {
   const status = err.status ?? 500;
   logger.error({ err }, "Unhandled error");
-  res.status(status).json({ error: err.message ?? "Internal Server Error", code: err.code });
+  res.status(status).json({
+    error: err.message ?? "Internal Server Error",
+    code: err.code,
+    cause: err.cause?.message,
+    causeCode: err.cause?.code,
+  });
 });
 
 export default app;
