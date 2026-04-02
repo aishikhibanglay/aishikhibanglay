@@ -32,15 +32,40 @@ function SubscriberListPage() {
   }, []);
 
   const exportCSV = () => {
+    const escapeField = (val: string | number) => {
+      const str = String(val);
+      // Wrap in quotes if contains comma, quote, or newline
+      if (str.includes(",") || str.includes('"') || str.includes("\n")) {
+        return `"${str.replace(/"/g, '""')}"`;
+      }
+      return str;
+    };
+
+    const formatDate = (iso: string) => {
+      const d = new Date(iso);
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth() + 1).padStart(2, "0");
+      const dd = String(d.getDate()).padStart(2, "0");
+      const hh = String(d.getHours()).padStart(2, "0");
+      const min = String(d.getMinutes()).padStart(2, "0");
+      return `${yyyy}-${mm}-${dd} ${hh}:${min}`;
+    };
+
     const header = "id,email,subscribedAt\n";
     const rows = subscribers
-      .map((s) => `${s.id},${s.email},${new Date(s.subscribedAt).toLocaleString("bn-BD")}`)
+      .map(
+        (s) =>
+          `${escapeField(s.id)},${escapeField(s.email)},${escapeField(formatDate(s.subscribedAt))}`
+      )
       .join("\n");
-    const blob = new Blob([header + rows], { type: "text/csv;charset=utf-8;" });
+
+    // \uFEFF = UTF-8 BOM — makes Excel read the file with correct encoding
+    const bom = "\uFEFF";
+    const blob = new Blob([bom + header + rows], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "subscribers.csv";
+    a.download = `subscribers_${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   };
