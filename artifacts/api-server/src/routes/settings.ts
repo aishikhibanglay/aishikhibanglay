@@ -41,6 +41,7 @@ router.get("/settings", async (_req, res): Promise<void> => {
   for (const row of rows) {
     settings[row.key] = row.value;
   }
+  res.set("Cache-Control", "public, max-age=120, stale-while-revalidate=60");
   res.json(settings);
 });
 

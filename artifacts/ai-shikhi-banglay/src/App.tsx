@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { Switch, Route, Router as WouterRouter } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HelmetProvider } from "react-helmet-async";
@@ -6,89 +7,97 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { PageLayout } from "./components/layout/page-layout";
 import NotFound from "@/pages/not-found";
 import { AdminContext, useAdminState } from "@/hooks/useAdmin";
-
-// Pages
-import Home from "./pages/home";
-import Blog from "./pages/blog";
-import Tools from "./pages/tools";
-import BlogChatGPTGuide from "./pages/blog-chatgpt-guide";
-import BlogPost from "./pages/blog-post";
-import DynamicPage from "./pages/dynamic-page";
-import CookieConsent from "./components/CookieConsent";
 import { DBBackedPage } from "./components/DBBackedPage";
+import CookieConsent from "./components/CookieConsent";
 import { usePageViewTracker } from "./hooks/usePageViewTracker";
 
-// Admin Pages
-import AdminLogin from "./pages/admin/login";
-import AdminDashboard from "./pages/admin/index";
-import PostEditorPage from "./pages/admin/post-editor";
-import AdminSettingsPage from "./pages/admin/settings";
-import NavManagerPage from "./pages/admin/nav-manager";
-import PagesManagerPage from "./pages/admin/pages-manager";
-import PageEditorPage from "./pages/admin/page-editor";
-import SubscriberListPage from "./pages/admin/subscribers";
-import ResetPasswordPage from "./pages/admin/reset-password";
-import AdminSocialLinksPage from "./pages/admin/social-links";
-import AdminToolsManagerPage from "./pages/admin/tools-manager";
-import FooterManagerPage from "./pages/admin/footer-manager";
-import NavbarManagerPage from "./pages/admin/navbar-manager";
+// Public pages — eager (always needed)
+import Home from "./pages/home";
 
-const queryClient = new QueryClient();
+// Public pages — lazy (loaded on demand)
+const Blog = lazy(() => import("./pages/blog"));
+const Tools = lazy(() => import("./pages/tools"));
+const BlogChatGPTGuide = lazy(() => import("./pages/blog-chatgpt-guide"));
+const BlogPost = lazy(() => import("./pages/blog-post"));
+const DynamicPage = lazy(() => import("./pages/dynamic-page"));
+
+// Admin pages — all lazy (never needed on public routes)
+const AdminLogin = lazy(() => import("./pages/admin/login"));
+const AdminDashboard = lazy(() => import("./pages/admin/index"));
+const PostEditorPage = lazy(() => import("./pages/admin/post-editor"));
+const AdminSettingsPage = lazy(() => import("./pages/admin/settings"));
+const NavManagerPage = lazy(() => import("./pages/admin/nav-manager"));
+const PagesManagerPage = lazy(() => import("./pages/admin/pages-manager"));
+const PageEditorPage = lazy(() => import("./pages/admin/page-editor"));
+const SubscriberListPage = lazy(() => import("./pages/admin/subscribers"));
+const ResetPasswordPage = lazy(() => import("./pages/admin/reset-password"));
+const AdminSocialLinksPage = lazy(() => import("./pages/admin/social-links"));
+const AdminToolsManagerPage = lazy(() => import("./pages/admin/tools-manager"));
+const FooterManagerPage = lazy(() => import("./pages/admin/footer-manager"));
+const NavbarManagerPage = lazy(() => import("./pages/admin/navbar-manager"));
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 3 * 60 * 1000,
+      gcTime: 10 * 60 * 1000,
+      retry: 1,
+    },
+  },
+});
+
+const PageFallback = () => (
+  <div className="min-h-[60vh] flex items-center justify-center">
+    <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+  </div>
+);
 
 function PublicRouter() {
   usePageViewTracker();
   return (
     <PageLayout>
-      <Switch>
-        <Route path="/" component={Home} />
-        <Route path="/blog" component={Blog} />
-        <Route path="/tools" component={Tools} />
-        <Route path="/about" component={() => <DBBackedPage slug="about" />} />
-        <Route path="/contact" component={() => <DBBackedPage slug="contact" />} />
-        <Route path="/privacy-policy" component={() => <DBBackedPage slug="privacy-policy" />} />
-        <Route path="/terms-and-conditions" component={() => <DBBackedPage slug="terms-and-conditions" />} />
-        <Route path="/disclaimer" component={() => <DBBackedPage slug="disclaimer" />} />
-        <Route path="/cookie-policy" component={() => <DBBackedPage slug="cookie-policy" />} />
-        <Route path="/blog/chatgpt-bangla-guide" component={BlogChatGPTGuide} />
-        <Route path="/blog/:slug" component={BlogPost} />
-        <Route path="/pages/:slug" component={DynamicPage} />
-        <Route component={NotFound} />
-      </Switch>
+      <Suspense fallback={<PageFallback />}>
+        <Switch>
+          <Route path="/" component={Home} />
+          <Route path="/blog" component={Blog} />
+          <Route path="/tools" component={Tools} />
+          <Route path="/about" component={() => <DBBackedPage slug="about" />} />
+          <Route path="/contact" component={() => <DBBackedPage slug="contact" />} />
+          <Route path="/privacy-policy" component={() => <DBBackedPage slug="privacy-policy" />} />
+          <Route path="/terms-and-conditions" component={() => <DBBackedPage slug="terms-and-conditions" />} />
+          <Route path="/disclaimer" component={() => <DBBackedPage slug="disclaimer" />} />
+          <Route path="/cookie-policy" component={() => <DBBackedPage slug="cookie-policy" />} />
+          <Route path="/blog/chatgpt-bangla-guide" component={BlogChatGPTGuide} />
+          <Route path="/blog/:slug" component={BlogPost} />
+          <Route path="/pages/:slug" component={DynamicPage} />
+          <Route component={NotFound} />
+        </Switch>
+      </Suspense>
     </PageLayout>
   );
 }
 
 function AdminRouter() {
   return (
-    <Switch>
-      <Route path="/admin/login" component={AdminLogin} />
-      <Route path="/admin" component={AdminDashboard} />
-      <Route
-        path="/admin/posts/new"
-        component={() => <PostEditorPage />}
-      />
-      <Route
-        path="/admin/posts/:id/edit"
-        component={({ params }) => <PostEditorPage params={params} />}
-      />
-      <Route path="/admin/settings" component={AdminSettingsPage} />
-      <Route path="/admin/nav" component={NavManagerPage} />
-      <Route path="/admin/pages" component={PagesManagerPage} />
-      <Route
-        path="/admin/pages/new"
-        component={() => <PageEditorPage />}
-      />
-      <Route
-        path="/admin/pages/:id/edit"
-        component={({ params }) => <PageEditorPage params={params} />}
-      />
-      <Route path="/admin/subscribers" component={SubscriberListPage} />
-      <Route path="/admin/social-links" component={AdminSocialLinksPage} />
-      <Route path="/admin/tools" component={AdminToolsManagerPage} />
-      <Route path="/admin/footer" component={FooterManagerPage} />
-      <Route path="/admin/navbar" component={NavbarManagerPage} />
-      <Route path="/admin/reset-password" component={ResetPasswordPage} />
-    </Switch>
+    <Suspense fallback={<PageFallback />}>
+      <Switch>
+        <Route path="/admin/login" component={AdminLogin} />
+        <Route path="/admin" component={AdminDashboard} />
+        <Route path="/admin/posts/new" component={() => <PostEditorPage />} />
+        <Route path="/admin/posts/:id/edit" component={({ params }) => <PostEditorPage params={params} />} />
+        <Route path="/admin/settings" component={AdminSettingsPage} />
+        <Route path="/admin/nav" component={NavManagerPage} />
+        <Route path="/admin/pages" component={PagesManagerPage} />
+        <Route path="/admin/pages/new" component={() => <PageEditorPage />} />
+        <Route path="/admin/pages/:id/edit" component={({ params }) => <PageEditorPage params={params} />} />
+        <Route path="/admin/subscribers" component={SubscriberListPage} />
+        <Route path="/admin/social-links" component={AdminSocialLinksPage} />
+        <Route path="/admin/tools" component={AdminToolsManagerPage} />
+        <Route path="/admin/footer" component={FooterManagerPage} />
+        <Route path="/admin/navbar" component={NavbarManagerPage} />
+        <Route path="/admin/reset-password" component={ResetPasswordPage} />
+      </Switch>
+    </Suspense>
   );
 }
 

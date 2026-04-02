@@ -28,7 +28,7 @@ router.get("/pages/:slug", async (req, res): Promise<void> => {
     res.status(404).json({ error: "Page not found" });
     return;
   }
-  res.set("Cache-Control", "no-cache");
+  res.set("Cache-Control", "public, max-age=300, stale-while-revalidate=60");
   res.json(page);
 });
 

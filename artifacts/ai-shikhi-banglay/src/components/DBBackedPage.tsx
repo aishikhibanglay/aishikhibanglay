@@ -6,19 +6,32 @@ interface DBBackedPageProps {
   slug: string;
 }
 
+const CACHE_TTL = 5 * 60 * 1000;
+
+function getCached(slug: string) {
+  try {
+    const raw = sessionStorage.getItem(`page:${slug}`);
+    if (!raw) return null;
+    const { data, ts } = JSON.parse(raw);
+    if (Date.now() - ts > CACHE_TTL) { sessionStorage.removeItem(`page:${slug}`); return null; }
+    return data as { title: string; content: string; meta: string };
+  } catch { return null; }
+}
+
+function setCache(slug: string, data: { title: string; content: string; meta: string }) {
+  try { sessionStorage.setItem(`page:${slug}`, JSON.stringify({ data, ts: Date.now() })); } catch {}
+}
+
 export function DBBackedPage({ slug }: DBBackedPageProps) {
   const defaults = SYSTEM_PAGE_CONTENT[slug];
-  const [title, setTitle] = useState(defaults?.title ?? slug);
-  const [content, setContent] = useState(defaults?.html ?? "");
-  const [meta, setMeta] = useState(defaults?.meta ?? "");
-  const [loading, setLoading] = useState(true);
+
+  const cached = getCached(slug);
+  const [title, setTitle] = useState(cached?.title ?? defaults?.title ?? slug);
+  const [content, setContent] = useState(cached?.content ?? defaults?.html ?? "");
+  const [meta, setMeta] = useState(cached?.meta ?? defaults?.meta ?? "");
 
   useEffect(() => {
-    setLoading(true);
-    const d = SYSTEM_PAGE_CONTENT[slug];
-    setTitle(d?.title ?? slug);
-    setContent(d?.html ?? "");
-    setMeta(d?.meta ?? "");
+    if (cached) return;
 
     fetch(`/api/pages/${slug}`)
       .then((r) => {
@@ -27,22 +40,15 @@ export function DBBackedPage({ slug }: DBBackedPageProps) {
       })
       .then((page) => {
         if (page.status === "published") {
-          setTitle(page.title);
-          setContent(page.content);
-          setMeta(page.metaDescription || "");
+          const d = { title: page.title, content: page.content, meta: page.metaDescription || "" };
+          setTitle(d.title);
+          setContent(d.content);
+          setMeta(d.meta);
+          setCache(slug, d);
         }
-        setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(() => {});
   }, [slug]);
-
-  if (loading) {
-    return (
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="text-muted-foreground animate-pulse">লোড হচ্ছে...</div>
-      </div>
-    );
-  }
 
   return (
     <>

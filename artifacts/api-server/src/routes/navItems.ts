@@ -12,7 +12,7 @@ router.get("/nav-items", async (_req, res): Promise<void> => {
     .from(navItemsTable)
     .where(eq(navItemsTable.isActive, true))
     .orderBy(asc(navItemsTable.section), asc(navItemsTable.position));
-  res.set("Cache-Control", "no-cache");
+  res.set("Cache-Control", "public, max-age=120, stale-while-revalidate=60");
   res.json(items);
 });
 
