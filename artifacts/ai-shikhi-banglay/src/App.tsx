@@ -35,6 +35,8 @@ import SubscriberListPage from "./pages/admin/subscribers";
 import ResetPasswordPage from "./pages/admin/reset-password";
 import AdminSocialLinksPage from "./pages/admin/social-links";
 import AdminToolsManagerPage from "./pages/admin/tools-manager";
+import FooterManagerPage from "./pages/admin/footer-manager";
+import NavbarManagerPage from "./pages/admin/navbar-manager";
 
 const queryClient = new QueryClient();
 
@@ -88,6 +90,8 @@ function AdminRouter() {
       <Route path="/admin/subscribers" component={SubscriberListPage} />
       <Route path="/admin/social-links" component={AdminSocialLinksPage} />
       <Route path="/admin/tools" component={AdminToolsManagerPage} />
+      <Route path="/admin/footer" component={FooterManagerPage} />
+      <Route path="/admin/navbar" component={NavbarManagerPage} />
       <Route path="/admin/reset-password" component={ResetPasswordPage} />
     </Switch>
   );
