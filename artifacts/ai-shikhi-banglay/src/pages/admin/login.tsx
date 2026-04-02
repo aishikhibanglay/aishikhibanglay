@@ -164,13 +164,6 @@ function ResetForm({ onBack }: { onBack: () => void }) {
         </div>
       </div>
 
-      <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg px-4 py-3 mb-5">
-        <p className="text-amber-400 text-xs leading-relaxed">
-          Recovery Key হলো আপনার Replit Secrets-এ থাকা মূল <strong>ADMIN_PASSWORD</strong>।
-          এটি সবসময় কাজ করবে, এমনকি পাসওয়ার্ড পরিবর্তন করলেও।
-        </p>
-      </div>
-
       <form onSubmit={handleReset} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-2">Recovery Key</label>
