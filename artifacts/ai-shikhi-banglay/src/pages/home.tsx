@@ -375,7 +375,7 @@ export default function Home() {
                   </Button>
                 </Link>
                 <Link href={settings.hero_cta_secondary_href || "/tools"}>
-                  <Button size="lg" variant="outline" className="w-full sm:w-auto gap-2 text-base px-8 border-border/70 hover:border-border text-foreground/80 hover:text-foreground" data-testid="button-browse-tools">
+                  <Button size="lg" variant="outline" className="w-full sm:w-auto gap-2 text-base px-8 border-primary/60 hover:border-primary text-foreground/80 hover:text-foreground" data-testid="button-browse-tools">
                     {settings.hero_cta_secondary || "AI টুলস দেখুন"}
                   </Button>
                 </Link>
