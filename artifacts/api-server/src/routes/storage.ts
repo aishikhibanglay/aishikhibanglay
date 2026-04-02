@@ -1,6 +1,7 @@
-import { Router, type IRouter, type Request, type Response, type NextFunction } from "express";
+import { Router, type IRouter, type Request, type Response } from "express";
 import multer from "multer";
 import { ObjectStorageService } from "../lib/objectStorage";
+import { requireAdmin } from "../middlewares/requireAdmin";
 
 const router: IRouter = Router();
 const objectStorageService = new ObjectStorageService();
@@ -16,15 +17,6 @@ const upload = multer({
     }
   },
 });
-
-function requireAdmin(req: Request, res: Response, next: NextFunction) {
-  const sess = req.session as any;
-  if (!sess?.adminLoggedIn) {
-    res.status(401).json({ error: "Unauthorized" });
-    return;
-  }
-  next();
-}
 
 router.post(
   "/storage/upload",
