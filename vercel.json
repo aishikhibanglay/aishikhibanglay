@@ -1,6 +1,6 @@
 {
   "buildCommand": "pnpm install && pnpm --filter @workspace/api-server run build && pnpm --filter @workspace/ai-shikhi-banglay run build",
-  "outputDirectory": "artifacts/ai-shikhi-banglay/dist",
+  "outputDirectory": "artifacts/ai-shikhi-banglay/dist/public",
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api" },
     { "source": "/(.*)", "destination": "/index.html" }
