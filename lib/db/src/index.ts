@@ -10,7 +10,9 @@ if (!process.env.DATABASE_URL) {
   );
 }
 
-const isSupabase = process.env.DATABASE_URL.includes("supabase.co");
+const isSupabase =
+  process.env.DATABASE_URL.includes("supabase.co") ||
+  process.env.DATABASE_URL.includes("supabase.com");
 
 export const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
