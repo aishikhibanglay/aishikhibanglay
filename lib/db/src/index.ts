@@ -15,21 +15,38 @@ const isSupabase =
   dbUrl.includes("supabase.co") ||
   dbUrl.includes("supabase.com");
 
-// Log DB host (without password) for debugging
+// Parse URL manually to avoid %40 encoding ambiguity with pg's internal parser
+let poolConfig: pg.PoolConfig;
 try {
   const url = new URL(dbUrl);
-  console.log(`[DB] Connecting to: ${url.hostname}:${url.port || 5432} (SSL: ${isSupabase})`);
+  const user = decodeURIComponent(url.username);
+  const password = decodeURIComponent(url.password);
+  const host = url.hostname;
+  const port = Number(url.port) || 5432;
+  const database = url.pathname.replace(/^\//, "");
+
+  console.log(`[DB] host=${host}:${port} user=${user} db=${database} ssl=${isSupabase}`);
+
+  poolConfig = {
+    host,
+    port,
+    database,
+    user,
+    password,
+    ssl: isSupabase ? { rejectUnauthorized: false } : undefined,
+    connectionTimeoutMillis: 15000,
+  };
 } catch {
-  console.log("[DB] DATABASE_URL format issue");
+  console.log("[DB] URL parse failed, using connectionString fallback");
+  poolConfig = {
+    connectionString: dbUrl,
+    ssl: isSupabase ? { rejectUnauthorized: false } : undefined,
+    connectionTimeoutMillis: 15000,
+  };
 }
 
-export const pool = new Pool({
-  connectionString: dbUrl,
-  ssl: isSupabase ? { rejectUnauthorized: false } : undefined,
-  connectionTimeoutMillis: 15000,
-});
+export const pool = new Pool(poolConfig);
 
-// Test connection at startup and log actual error
 pool.connect().then((client) => {
   console.log("[DB] Connection successful ✓");
   client.release();
