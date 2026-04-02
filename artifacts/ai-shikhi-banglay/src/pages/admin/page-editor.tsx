@@ -3,8 +3,9 @@ import { AdminGuard } from "@/components/admin/AdminGuard";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { useLocation } from "wouter";
 import { RichEditor } from "@/components/admin/RichEditor";
+import { SYSTEM_PAGE_CONTENT } from "@/lib/systemPages";
 import {
-  Eye, Save, CheckCircle2, Globe, FileText
+  ArrowLeft, Save, CheckCircle2, Globe, FileText
 } from "lucide-react";
 
 interface PageEditorParams {
@@ -15,11 +16,17 @@ function PageEditorContent({ params }: { params?: PageEditorParams }) {
   const [, setLocation] = useLocation();
   const isEditing = !!params?.id;
 
-  const [title, setTitle] = useState("");
-  const [slug, setSlug] = useState("");
-  const [content, setContent] = useState("");
-  const [metaDescription, setMetaDescription] = useState("");
-  const [status, setStatus] = useState<"draft" | "published">("draft");
+  // Read ?system=slug query param (for system pages that don't have a DB entry yet)
+  const systemSlug = !isEditing
+    ? new URLSearchParams(window.location.search).get("system") ?? ""
+    : "";
+  const systemDefaults = systemSlug ? SYSTEM_PAGE_CONTENT[systemSlug] : null;
+
+  const [title, setTitle] = useState(systemDefaults?.title ?? "");
+  const [slug, setSlug] = useState(systemSlug || "");
+  const [content, setContent] = useState(systemDefaults?.html ?? "");
+  const [metaDescription, setMetaDescription] = useState(systemDefaults?.meta ?? "");
+  const [status, setStatus] = useState<"draft" | "published">("published");
   const [loading, setLoading] = useState(isEditing);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -53,7 +60,7 @@ function PageEditorContent({ params }: { params?: PageEditorParams }) {
 
   const handleTitleChange = (v: string) => {
     setTitle(v);
-    if (!isEditing || !slug) {
+    if (!isEditing && !systemSlug) {
       setSlug(generateSlug(v));
     }
   };
@@ -88,6 +95,7 @@ function PageEditorContent({ params }: { params?: PageEditorParams }) {
       if (res.ok) {
         const data = await res.json();
         if (!isEditing) {
+          // Replace URL so back button goes to /admin/pages, not loop
           setLocation(`/admin/pages/${data.id}/edit`);
         }
         if (publishStatus) setStatus(publishStatus);
@@ -99,17 +107,35 @@ function PageEditorContent({ params }: { params?: PageEditorParams }) {
     }
   };
 
+  const isSystemPage = !!systemSlug || (isEditing && SYSTEM_PAGE_CONTENT[slug]);
+
   if (loading) {
     return (
-      <AdminLayout title={isEditing ? "পেজ সম্পাদনা" : "নতুন পেজ"}>
+      <AdminLayout title="পেজ সম্পাদনা">
         <div className="flex items-center justify-center py-20 text-gray-400">লোড হচ্ছে...</div>
       </AdminLayout>
     );
   }
 
   return (
-    <AdminLayout title={isEditing ? "পেজ সম্পাদনা" : "নতুন পেজ"}>
+    <AdminLayout title={isEditing ? "পেজ সম্পাদনা" : (systemDefaults ? systemDefaults.title : "নতুন পেজ")}>
       <div className="max-w-5xl mx-auto px-4 py-6 space-y-5">
+
+        {/* Back button */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setLocation("/admin/pages")}
+            className="flex items-center gap-1.5 text-gray-500 hover:text-white text-sm transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" /> পেজ ম্যানেজার
+          </button>
+          {!isEditing && (
+            <span className="text-gray-700 text-xs">
+              — কোনো পরিবর্তন না করলে ফিরে যান, কিছুই সেভ হবে না।
+            </span>
+          )}
+        </div>
+
         {/* Title */}
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
           <label className="block text-gray-400 text-xs font-medium mb-2">পেজের শিরোনাম *</label>
@@ -121,13 +147,23 @@ function PageEditorContent({ params }: { params?: PageEditorParams }) {
           />
           <div className="mt-3 flex items-center gap-2">
             <span className="text-gray-500 text-xs">URL:</span>
-            <span className="text-gray-500 text-xs">/pages/</span>
-            <input
-              value={slug}
-              onChange={(e) => setSlug(e.target.value)}
-              className="text-cyan-400 text-xs bg-transparent focus:outline-none border-b border-transparent focus:border-cyan-500 min-w-[100px]"
-              placeholder="slug"
-            />
+            {isSystemPage ? (
+              <>
+                <span className="text-gray-500 text-xs">/</span>
+                <span className="text-cyan-400 text-xs">{slug}</span>
+                <span className="text-xs text-gray-600 ml-1">(পরিবর্তনযোগ্য নয়)</span>
+              </>
+            ) : (
+              <>
+                <span className="text-gray-500 text-xs">/pages/</span>
+                <input
+                  value={slug}
+                  onChange={(e) => setSlug(e.target.value)}
+                  className="text-cyan-400 text-xs bg-transparent focus:outline-none border-b border-transparent focus:border-cyan-500 min-w-[100px]"
+                  placeholder="slug"
+                />
+              </>
+            )}
           </div>
         </div>
 
@@ -161,7 +197,7 @@ function PageEditorContent({ params }: { params?: PageEditorParams }) {
 
         {/* Status & Save */}
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 flex-wrap">
             <div className="flex items-center gap-3">
               <span className="text-gray-400 text-sm font-medium">স্ট্যাটাস:</span>
               <label className="flex items-center gap-1.5 cursor-pointer text-sm text-gray-300">
@@ -174,6 +210,12 @@ function PageEditorContent({ params }: { params?: PageEditorParams }) {
               </label>
             </div>
             <div className="flex gap-2 ml-auto">
+              <button
+                onClick={() => setLocation("/admin/pages")}
+                className="flex items-center gap-1.5 bg-gray-800 hover:bg-gray-700 text-gray-300 px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-gray-700"
+              >
+                <ArrowLeft className="w-4 h-4" /> বাতিল
+              </button>
               <button
                 onClick={() => handleSave("draft")}
                 disabled={saving || !title.trim()}
