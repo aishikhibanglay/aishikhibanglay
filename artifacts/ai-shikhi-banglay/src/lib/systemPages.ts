@@ -5,6 +5,46 @@ export interface SystemPageData {
 }
 
 export const SYSTEM_PAGE_CONTENT: Record<string, SystemPageData> = {
+  "about": {
+    title: "আমাদের সম্পর্কে",
+    meta: "AI শিখি বাংলায় সম্পর্কে জানুন। আমাদের লক্ষ্য বাংলাভাষীদের কাছে AI শিক্ষাকে সহজলভ্য করা।",
+    html: `<p>"AI শিখি বাংলায়" হলো একটি শিক্ষামূলক প্ল্যাটফর্ম যার মূল লক্ষ্য হলো বাংলা ভাষাভাষী মানুষদের আর্টিফিশিয়াল ইন্টেলিজেন্স বা কৃত্রিম বুদ্ধিমত্তার সাথে পরিচয় করিয়ে দেওয়া।</p>
+
+<h2>আমাদের লক্ষ্য</h2>
+<p>আমরা চাই ভাষা যেন প্রযুক্তির শেখার পথে কোনো বাধা না হয়। বিশ্বের সবচেয়ে আধুনিক ও যুগান্তকারী প্রযুক্তি 'AI' যেন প্রতিটি বাঙালি নিজের মাতৃভাষায় শিখতে পারে এবং নিজের ক্যারিয়ার ও দৈনন্দিন জীবনে কাজে লাগাতে পারে, সেটিই আমাদের মূল লক্ষ্য।</p>
+
+<h2>কেন আমরা আলাদা?</h2>
+<p>আমরা শুধু তাত্ত্বিক জ্ঞান নয়, বরং প্র্যাকটিক্যাল প্রয়োগে বিশ্বাস করি। আমাদের প্রতিটি কন্টেন্ট এমনভাবে তৈরি করা হয় যেন একজন সম্পূর্ণ নতুন মানুষও খুব সহজে বিষয়গুলো বুঝতে পারে এবং ব্যবহার করতে পারে।</p>
+
+<h2>এটি কাদের জন্য?</h2>
+<ul>
+  <li><strong>শিক্ষার্থী:</strong> যারা ভবিষ্যতের প্রযুক্তির সাথে নিজেদের প্রস্তুত করতে চায়।</li>
+  <li><strong>প্রফেশনাল:</strong> যারা AI ব্যবহার করে কর্মক্ষেত্রে নিজের প্রোডাক্টিভিটি বাড়াতে চান।</li>
+  <li><strong>ফ্রিল্যান্সার:</strong> যারা নতুন স্কিল শিখে অনলাইনে নিজেদের আয় বাড়াতে চান।</li>
+</ul>
+
+<h2>যোগাযোগ করুন</h2>
+<p>আমাদের সাথে যোগাযোগ করতে: <a href="mailto:contact@aishikhibanglay.com">contact@aishikhibanglay.com</a></p>`,
+  },
+
+  "contact": {
+    title: "যোগাযোগ",
+    meta: "AI শিখি বাংলায়-এর সাথে যোগাযোগ করুন।",
+    html: `<p>আমাদের সাথে যোগাযোগ করতে নিচের মাধ্যমগুলো ব্যবহার করতে পারেন:</p>
+
+<h2>ইমেইল</h2>
+<p><a href="mailto:contact@aishikhibanglay.com">contact@aishikhibanglay.com</a></p>
+
+<h2>সোশ্যাল মিডিয়া</h2>
+<ul>
+  <li><strong>YouTube:</strong> <a href="https://www.youtube.com/@aishikhibanglay" target="_blank" rel="noopener noreferrer">@aishikhibanglay</a></li>
+  <li><strong>Facebook:</strong> <a href="https://www.facebook.com/aishikhibanglay" target="_blank" rel="noopener noreferrer">AI শিখি বাংলায়</a></li>
+</ul>
+
+<h2>আপনার মতামত জানান</h2>
+<p>আমাদের কন্টেন্ট সম্পর্কে কোনো পরামর্শ, প্রশ্ন বা মতামত থাকলে ইমেইল করুন। আমরা সবার বার্তার উত্তর দেওয়ার চেষ্টা করি।</p>`,
+  },
+
   "disclaimer": {
     title: "দাবিত্যাগ (Disclaimer)",
     meta: "AI শিখি বাংলায় ওয়েবসাইটের দাবিত্যাগ ও অস্বীকৃতি সংক্রান্ত নীতি।",
@@ -128,6 +168,8 @@ export const SYSTEM_PAGE_CONTENT: Record<string, SystemPageData> = {
 };
 
 export const SYSTEM_PAGE_LIST = [
+  { slug: "about", url: "/about" },
+  { slug: "contact", url: "/contact" },
   { slug: "disclaimer", url: "/disclaimer" },
   { slug: "privacy-policy", url: "/privacy-policy" },
   { slug: "terms-and-conditions", url: "/terms-and-conditions" },

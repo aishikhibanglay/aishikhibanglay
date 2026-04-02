@@ -11,16 +11,11 @@ import { AdminContext, useAdminState } from "@/hooks/useAdmin";
 import Home from "./pages/home";
 import Blog from "./pages/blog";
 import Tools from "./pages/tools";
-import About from "./pages/about";
-import Contact from "./pages/contact";
-import PrivacyPolicy from "./pages/privacy-policy";
-import TermsAndConditions from "./pages/terms-and-conditions";
-import Disclaimer from "./pages/disclaimer";
-import CookiePolicy from "./pages/cookie-policy";
 import BlogChatGPTGuide from "./pages/blog-chatgpt-guide";
 import BlogPost from "./pages/blog-post";
 import DynamicPage from "./pages/dynamic-page";
 import CookieConsent from "./components/CookieConsent";
+import { DBBackedPage } from "./components/DBBackedPage";
 import { usePageViewTracker } from "./hooks/usePageViewTracker";
 
 // Admin Pages
@@ -48,12 +43,12 @@ function PublicRouter() {
         <Route path="/" component={Home} />
         <Route path="/blog" component={Blog} />
         <Route path="/tools" component={Tools} />
-        <Route path="/about" component={About} />
-        <Route path="/contact" component={Contact} />
-        <Route path="/privacy-policy" component={PrivacyPolicy} />
-        <Route path="/terms-and-conditions" component={TermsAndConditions} />
-        <Route path="/disclaimer" component={Disclaimer} />
-        <Route path="/cookie-policy" component={CookiePolicy} />
+        <Route path="/about" component={() => <DBBackedPage slug="about" />} />
+        <Route path="/contact" component={() => <DBBackedPage slug="contact" />} />
+        <Route path="/privacy-policy" component={() => <DBBackedPage slug="privacy-policy" />} />
+        <Route path="/terms-and-conditions" component={() => <DBBackedPage slug="terms-and-conditions" />} />
+        <Route path="/disclaimer" component={() => <DBBackedPage slug="disclaimer" />} />
+        <Route path="/cookie-policy" component={() => <DBBackedPage slug="cookie-policy" />} />
         <Route path="/blog/chatgpt-bangla-guide" component={BlogChatGPTGuide} />
         <Route path="/blog/:slug" component={BlogPost} />
         <Route path="/pages/:slug" component={DynamicPage} />
