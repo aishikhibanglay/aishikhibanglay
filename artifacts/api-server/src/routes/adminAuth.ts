@@ -4,11 +4,41 @@ import {
   AdminLoginResponse,
   AdminLogoutResponse,
 } from "@workspace/api-zod";
+import { db, siteSettingsTable } from "@workspace/db";
+import { eq } from "drizzle-orm";
 import * as zod from "zod";
+import { requireAdmin } from "../middlewares/requireAdmin";
 
 const ErrorResponse = zod.object({ error: zod.string() });
 
 const router: IRouter = Router();
+
+async function getAdminCredentials(): Promise<{ username: string; password: string }> {
+  try {
+    const rows = await db
+      .select()
+      .from(siteSettingsTable)
+      .where(
+        eq(siteSettingsTable.key, "admin_username_override")
+      );
+    const pwRows = await db
+      .select()
+      .from(siteSettingsTable)
+      .where(eq(siteSettingsTable.key, "admin_password_override"));
+
+    const username =
+      rows[0]?.value || process.env.ADMIN_USERNAME || "admin";
+    const password =
+      pwRows[0]?.value || process.env.ADMIN_PASSWORD || "admin123";
+
+    return { username, password };
+  } catch {
+    return {
+      username: process.env.ADMIN_USERNAME ?? "admin",
+      password: process.env.ADMIN_PASSWORD ?? "admin123",
+    };
+  }
+}
 
 router.post("/admin/login", async (req, res): Promise<void> => {
   const parsed = AdminLoginBody.safeParse(req.body);
@@ -18,10 +48,9 @@ router.post("/admin/login", async (req, res): Promise<void> => {
   }
 
   const { username, password } = parsed.data;
-  const adminUsername = process.env.ADMIN_USERNAME ?? "admin";
-  const adminPassword = process.env.ADMIN_PASSWORD ?? "admin123";
+  const creds = await getAdminCredentials();
 
-  if (username !== adminUsername || password !== adminPassword) {
+  if (username !== creds.username || password !== creds.password) {
     res.status(401).json(ErrorResponse.parse({ error: "ইউজারনেম বা পাসওয়ার্ড সঠিক নয়" }));
     return;
   }
@@ -42,6 +71,51 @@ router.get("/admin/me", async (req, res): Promise<void> => {
     return;
   }
   res.json(AdminLoginResponse.parse({ username: req.session.adminUsername }));
+});
+
+const ChangeCredentialsBody = zod.object({
+  currentPassword: zod.string(),
+  newUsername: zod.string().min(3, "ইউজারনেম কমপক্ষে ৩ অক্ষর হতে হবে"),
+  newPassword: zod.string().min(6, "পাসওয়ার্ড কমপক্ষে ৬ অক্ষর হতে হবে"),
+});
+
+async function upsertSetting(key: string, value: string) {
+  const existing = await db
+    .select()
+    .from(siteSettingsTable)
+    .where(eq(siteSettingsTable.key, key));
+
+  if (existing.length > 0) {
+    await db
+      .update(siteSettingsTable)
+      .set({ value })
+      .where(eq(siteSettingsTable.key, key));
+  } else {
+    await db.insert(siteSettingsTable).values({ key, value });
+  }
+}
+
+router.post("/admin/change-credentials", requireAdmin, async (req, res): Promise<void> => {
+  const parsed = ChangeCredentialsBody.safeParse(req.body);
+  if (!parsed.success) {
+    const msg = parsed.error.errors[0]?.message ?? "Invalid input";
+    res.status(400).json({ error: msg });
+    return;
+  }
+
+  const { currentPassword, newUsername, newPassword } = parsed.data;
+  const creds = await getAdminCredentials();
+
+  if (currentPassword !== creds.password) {
+    res.status(401).json({ error: "বর্তমান পাসওয়ার্ড সঠিক নয়" });
+    return;
+  }
+
+  await upsertSetting("admin_username_override", newUsername);
+  await upsertSetting("admin_password_override", newPassword);
+
+  req.session.adminUsername = newUsername;
+  res.json({ ok: true, username: newUsername });
 });
 
 export default router;
