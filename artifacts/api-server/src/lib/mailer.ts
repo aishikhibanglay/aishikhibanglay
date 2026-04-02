@@ -1,28 +1,16 @@
-import nodemailer from "nodemailer";
-
-export function createTransporter() {
-  const host = process.env.SMTP_HOST ?? "smtp-mail.outlook.com";
-  const port = parseInt(process.env.SMTP_PORT ?? "587");
-  const user = process.env.SMTP_USER ?? "";
-  const pass = process.env.SMTP_PASS ?? "";
-
-  return nodemailer.createTransport({
-    host,
-    port,
-    secure: false,
-    auth: { user, pass },
-    tls: { ciphers: "SSLv3" },
-  });
-}
+import { Resend } from "resend";
 
 export async function sendPasswordResetEmail(toEmail: string, resetLink: string) {
-  const transporter = createTransporter();
-  const fromName = "AI শিখি বাংলায়";
-  const fromEmail = process.env.SMTP_USER ?? "";
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    throw new Error("RESEND_API_KEY is not configured");
+  }
 
-  await transporter.sendMail({
-    from: `"${fromName}" <${fromEmail}>`,
-    to: toEmail,
+  const resend = new Resend(apiKey);
+
+  const { error } = await resend.emails.send({
+    from: "AI শিখি বাংলায় <onboarding@resend.dev>",
+    to: [toEmail],
     subject: "Admin Panel — পাসওয়ার্ড রিসেট লিংক",
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px; background: #0f172a; color: #e2e8f0; border-radius: 12px;">
@@ -48,4 +36,8 @@ export async function sendPasswordResetEmail(toEmail: string, resetLink: string)
       </div>
     `,
   });
+
+  if (error) {
+    throw new Error(error.message);
+  }
 }

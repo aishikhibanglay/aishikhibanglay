@@ -31,9 +31,6 @@ timeoutMs = 20000
 ADMIN_USERNAME = "admin"
 ADMIN_PASSWORD = "aishikhi2024"
 ADMIN_EMAIL = "aishikhibanglay@gmail.com"
-SMTP_HOST = "smtp-mail.outlook.com"
-SMTP_PORT = "587"
-SMTP_USER = "noexploitpath@outlook.com"
 
 [nix]
 channel = "stable-25_05"
