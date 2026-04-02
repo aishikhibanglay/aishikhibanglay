@@ -56,7 +56,14 @@ router.post("/admin/login", async (req, res): Promise<void> => {
   }
 
   req.session.adminUsername = username;
-  res.json(AdminLoginResponse.parse({ username }));
+  // Explicitly save session before responding (required in serverless environments)
+  req.session.save((err) => {
+    if (err) {
+      res.status(500).json(ErrorResponse.parse({ error: "Session save failed" }));
+      return;
+    }
+    res.json(AdminLoginResponse.parse({ username }));
+  });
 });
 
 router.post("/admin/logout", async (req, res): Promise<void> => {
