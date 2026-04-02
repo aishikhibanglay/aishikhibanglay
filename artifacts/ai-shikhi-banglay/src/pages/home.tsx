@@ -162,7 +162,15 @@ function formatBanglaCount(n: number): string {
 // ─── Multi-video player component ─────────────────────────────────────────────
 function VideoPlayer({ mainVideoId, extraVideoIds }: { mainVideoId: string; extraVideoIds: string[] }) {
   const allIds = [mainVideoId, ...extraVideoIds].filter(Boolean);
-  const [activeId, setActiveId] = useState(allIds[0] ?? "");
+
+  // null = user hasn't clicked anything → always follow mainVideoId
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const activeId = selectedId ?? allIds[0] ?? "";
+
+  // Reset manual selection if video list changes (e.g. settings load)
+  useEffect(() => {
+    setSelectedId(null);
+  }, [mainVideoId]);
 
   if (allIds.length === 0) {
     return (
@@ -184,23 +192,29 @@ function VideoPlayer({ mainVideoId, extraVideoIds }: { mainVideoId: string; extr
     <div className="space-y-3">
       {/* Main player */}
       <div className="relative aspect-video rounded-2xl overflow-hidden border border-border bg-secondary shadow-2xl">
-        <iframe
-          key={activeId}
-          src={`https://www.youtube-nocookie.com/embed/${activeId}?rel=0&modestbranding=1`}
-          title="YouTube Video"
-          allowFullScreen
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          className="w-full h-full"
-        />
+        {activeId ? (
+          <iframe
+            key={activeId}
+            src={`https://www.youtube-nocookie.com/embed/${activeId}?rel=0&modestbranding=1`}
+            title="YouTube Video"
+            allowFullScreen
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            className="w-full h-full"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <Play className="w-10 h-10 text-muted-foreground/40" />
+          </div>
+        )}
       </div>
 
       {/* Thumbnail row — only if there are multiple videos */}
       {allIds.length > 1 && (
-        <div className="grid grid-cols-4 gap-2">
+        <div className={`grid gap-2 ${allIds.length <= 3 ? `grid-cols-${allIds.length}` : "grid-cols-4"}`}>
           {allIds.map((id) => (
             <button
               key={id}
-              onClick={() => setActiveId(id)}
+              onClick={() => setSelectedId(id)}
               className={`relative aspect-video rounded-lg overflow-hidden border-2 transition-all ${
                 activeId === id
                   ? "border-primary shadow-[0_0_12px_rgba(6,182,212,0.4)]"
@@ -213,14 +227,13 @@ function VideoPlayer({ mainVideoId, extraVideoIds }: { mainVideoId: string; extr
                 className="w-full h-full object-cover"
                 loading="lazy"
               />
-              {/* Play overlay */}
               <div className={`absolute inset-0 flex items-center justify-center transition-opacity ${
-                activeId === id ? "bg-primary/20" : "bg-black/30 hover:bg-black/20"
+                activeId === id ? "bg-primary/20" : "bg-black/40 hover:bg-black/20"
               }`}>
-                <div className={`w-5 h-5 rounded-full flex items-center justify-center pl-0.5 ${
-                  activeId === id ? "bg-primary" : "bg-white/20"
+                <div className={`w-6 h-6 rounded-full flex items-center justify-center pl-0.5 ${
+                  activeId === id ? "bg-primary" : "bg-white/30"
                 }`}>
-                  <Play className="w-2.5 h-2.5 text-white" />
+                  <Play className="w-3 h-3 text-white" />
                 </div>
               </div>
             </button>
