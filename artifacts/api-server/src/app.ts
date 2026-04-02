@@ -11,6 +11,11 @@ const app: Express = express();
 const isProd = process.env.NODE_ENV === "production";
 const PgSession = connectPgSimple(session);
 
+// Trust Vercel's reverse proxy so secure cookies work over HTTPS
+if (isProd) {
+  app.set("trust proxy", 1);
+}
+
 app.use(
   pinoHttp({
     logger,
