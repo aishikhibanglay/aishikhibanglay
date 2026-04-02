@@ -10,6 +10,7 @@ export interface SiteSettings {
   instagram_url: string;
   tiktok_url: string;
   featured_youtube_video_id: string;
+  featured_youtube_videos: string;
   hero_badge: string;
   hero_title: string;
   hero_subtitle: string;
@@ -36,6 +37,7 @@ const defaultSettings: SiteSettings = {
   instagram_url: "",
   tiktok_url: "",
   featured_youtube_video_id: "",
+  featured_youtube_videos: "",
   hero_badge: "আপনার মাতৃভাষায় ভবিষ্যতের প্রযুক্তি",
   hero_title: "বাংলায় শিখুন AI",
   hero_subtitle: "কৃত্রিম বুদ্ধিমতার এই নতুন যুগে পিছিয়ে থাকবেন না। খুব সহজেই নিজের ভাষায় শিখুন AI-এর খুঁটিনাটি এবং কাজে লাগান দৈনন্দিন জীবনে।",

@@ -60,6 +60,7 @@ interface Settings {
   youtube_channel_url: string;
   youtube_subscribe_url: string;
   featured_youtube_video_id: string;
+  featured_youtube_videos: string;
   hero_badge: string;
   hero_title: string;
   hero_subtitle: string;
@@ -383,6 +384,7 @@ function SettingsForm() {
     youtube_channel_url: "",
     youtube_subscribe_url: "",
     featured_youtube_video_id: "",
+    featured_youtube_videos: "",
     hero_badge: "",
     hero_title: "",
     hero_subtitle: "",
@@ -415,6 +417,7 @@ function SettingsForm() {
             youtube_channel_url: data.youtube_channel_url ?? "",
             youtube_subscribe_url: data.youtube_subscribe_url ?? "",
             featured_youtube_video_id: data.featured_youtube_video_id ?? "",
+            featured_youtube_videos: data.featured_youtube_videos ?? "",
             hero_badge: data.hero_badge ?? "",
             hero_title: data.hero_title ?? "",
             hero_subtitle: data.hero_subtitle ?? "",
@@ -624,6 +627,23 @@ function SettingsForm() {
               </div>
             </div>
           )}
+
+          <div className="mt-5 pt-5 border-t border-gray-800">
+            <label className="block text-sm font-medium text-gray-300 mb-1.5">
+              <Video className="w-4 h-4 inline mr-1.5 -mt-0.5" />
+              আরও ভিডিও (thumbnail gallery)
+            </label>
+            <textarea
+              value={settings.featured_youtube_videos}
+              onChange={(e) => setSettings((s) => ({ ...s, featured_youtube_videos: e.target.value }))}
+              placeholder="একাধিক YouTube URL বা Video ID কমা দিয়ে আলাদা করুন&#10;উদাহরণ: dQw4w9WgXcQ, https://youtu.be/abc123, xyz789"
+              rows={3}
+              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 text-sm resize-none"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              এই ভিডিওগুলো মেইন ভিডিওর নিচে thumbnail হিসেবে দেখাবে — ক্লিক করলে সেই ভিডিও চলবে। সর্বোচ্চ ৩-৪টা দিন।
+            </p>
+          </div>
         </div>
 
         {/* ── Landing Page Content ── */}

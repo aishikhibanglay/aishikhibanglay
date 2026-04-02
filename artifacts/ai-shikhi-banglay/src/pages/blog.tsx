@@ -40,7 +40,11 @@ export default function Blog() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
-  const [activeFilter, setActiveFilter] = useState("");
+  // Read ?category= from URL on initial load
+  const [activeFilter, setActiveFilter] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("category") ?? "";
+  });
 
   useEffect(() => {
     api.listPosts()
