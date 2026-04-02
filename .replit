@@ -30,7 +30,7 @@ timeoutMs = 20000
 [userenv.shared]
 ADMIN_USERNAME = "admin"
 ADMIN_PASSWORD = "aishikhi2024"
-ADMIN_EMAIL = "aishikhibanglay@gmail.com"
+ADMIN_EMAIL = "shahadat.ticketmaster.com@gmail.com"
 
 [nix]
 channel = "stable-25_05"
