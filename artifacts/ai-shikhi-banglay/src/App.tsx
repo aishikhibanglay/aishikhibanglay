@@ -17,6 +17,7 @@ import Home from "./pages/home";
 import Contact from "./pages/contact";
 
 // Public pages — lazy (loaded on demand)
+const FAQ = lazy(() => import("./pages/faq"));
 const Blog = lazy(() => import("./pages/blog"));
 const Tools = lazy(() => import("./pages/tools"));
 const BlogChatGPTGuide = lazy(() => import("./pages/blog-chatgpt-guide"));
@@ -63,6 +64,7 @@ function PublicRouter() {
           <Route path="/" component={Home} />
           <Route path="/blog" component={Blog} />
           <Route path="/tools" component={Tools} />
+          <Route path="/faq" component={FAQ} />
           <Route path="/about" component={() => <DBBackedPage slug="about" />} />
           <Route path="/contact" component={Contact} />
           <Route path="/privacy-policy" component={() => <DBBackedPage slug="privacy-policy" />} />
