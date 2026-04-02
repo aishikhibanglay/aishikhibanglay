@@ -9,6 +9,7 @@ import subscribersRouter from "./subscribers";
 import navItemsRouter from "./navItems";
 import pagesRouter from "./pages";
 import analyticsRouter from "./analytics";
+import passwordResetRouter from "./passwordReset";
 import { requireAdmin } from "../middlewares/requireAdmin";
 
 const router: IRouter = Router();
@@ -21,6 +22,7 @@ router.use(subscribersRouter);
 router.use(navItemsRouter);
 router.use(pagesRouter);
 router.use(analyticsRouter);
+router.use(passwordResetRouter);
 
 // Auth routes (login/logout/me — mixed public + protected, self-contained)
 router.use(adminAuthRouter);
