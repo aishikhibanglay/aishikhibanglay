@@ -14,6 +14,7 @@ import {
   ChevronRight,
   Mail,
   Share2,
+  Wrench,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -30,6 +31,7 @@ const NAV_ITEMS: NavItem[] = [
   { icon: <Plus className="w-5 h-5" />, label: "নতুন পোস্ট", href: "/admin/posts/new" },
   { icon: <Layout className="w-5 h-5" />, label: "পেজ ম্যানেজার", href: "/admin/pages" },
   { icon: <Navigation className="w-5 h-5" />, label: "নেভিগেশন ম্যানেজার", href: "/admin/nav" },
+  { icon: <Wrench className="w-5 h-5" />, label: "AI টুলস", href: "/admin/tools" },
   { icon: <Settings className="w-5 h-5" />, label: "সাইট সেটিংস", href: "/admin/settings" },
   { icon: <Share2 className="w-5 h-5" />, label: "সোশ্যাল লিঙ্ক", href: "/admin/social-links" },
   { icon: <Mail className="w-5 h-5" />, label: "সাবস্ক্রাইবার", href: "/admin/subscribers" },
