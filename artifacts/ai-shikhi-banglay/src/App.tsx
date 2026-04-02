@@ -33,6 +33,7 @@ import PagesManagerPage from "./pages/admin/pages-manager";
 import PageEditorPage from "./pages/admin/page-editor";
 import SubscriberListPage from "./pages/admin/subscribers";
 import ResetPasswordPage from "./pages/admin/reset-password";
+import AdminSocialLinksPage from "./pages/admin/social-links";
 
 const queryClient = new QueryClient();
 
@@ -84,6 +85,7 @@ function AdminRouter() {
         component={({ params }) => <PageEditorPage params={params} />}
       />
       <Route path="/admin/subscribers" component={SubscriberListPage} />
+      <Route path="/admin/social-links" component={AdminSocialLinksPage} />
       <Route path="/admin/reset-password" component={ResetPasswordPage} />
     </Switch>
   );
