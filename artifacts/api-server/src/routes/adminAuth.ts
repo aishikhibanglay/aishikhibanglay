@@ -118,4 +118,32 @@ router.post("/admin/change-credentials", requireAdmin, async (req, res): Promise
   res.json({ ok: true, username: newUsername });
 });
 
+const ResetWithRecoveryBody = zod.object({
+  recoveryKey: zod.string(),
+  newUsername: zod.string().min(3, "ইউজারনেম কমপক্ষে ৩ অক্ষর হতে হবে"),
+  newPassword: zod.string().min(6, "পাসওয়ার্ড কমপক্ষে ৬ অক্ষর হতে হবে"),
+});
+
+router.post("/admin/reset-password", async (req, res): Promise<void> => {
+  const parsed = ResetWithRecoveryBody.safeParse(req.body);
+  if (!parsed.success) {
+    const msg = parsed.error.errors[0]?.message ?? "Invalid input";
+    res.status(400).json({ error: msg });
+    return;
+  }
+
+  const { recoveryKey, newUsername, newPassword } = parsed.data;
+  const masterKey = process.env.ADMIN_PASSWORD ?? "admin123";
+
+  if (recoveryKey !== masterKey) {
+    res.status(401).json({ error: "Recovery key সঠিক নয়" });
+    return;
+  }
+
+  await upsertSetting("admin_username_override", newUsername);
+  await upsertSetting("admin_password_override", newPassword);
+
+  res.json({ ok: true });
+});
+
 export default router;
