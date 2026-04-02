@@ -7,7 +7,7 @@ import {
   SiTiktok,
   SiGithub,
 } from "react-icons/si";
-import { Globe, Linkedin, Brain } from "lucide-react";
+import { Globe, Linkedin } from "lucide-react";
 import { useSiteSettings } from "@/lib/useSiteSettings";
 import { useNavItems, type NavItem } from "@/lib/useNavItems";
 import { useSocialLinks } from "@/lib/useSocialLinks";
@@ -61,6 +61,9 @@ function FooterLink({ item }: { item: NavItem }) {
   );
 }
 
+const DEFAULT_LOGO = "/logo.svg";
+const DEFAULT_BRAND = "AI শিখি বাংলায়";
+
 export function Footer() {
   const { settings } = useSiteSettings();
   const { bySection } = useNavItems();
@@ -69,17 +72,28 @@ export function Footer() {
   const mainLinks  = bySection("footer_main");
   const legalLinks = bySection("footer_legal");
 
+  const brandName = settings.brand_name || DEFAULT_BRAND;
+  const logoUrl = settings.logo_url || DEFAULT_LOGO;
+
+  const parts = brandName.trim().split(" ");
+  const lastWord = parts.pop() ?? "";
+  const firstPart = parts.join(" ");
+
   return (
     <footer className="bg-background border-t border-border pt-16 pb-8 mt-auto">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
           <div className="md:col-span-2">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary">
-                <Brain className="w-5 h-5" />
-              </div>
+              <img
+                src={logoUrl}
+                alt={`${brandName} লোগো`}
+                className="w-8 h-8 rounded-lg object-contain"
+                onError={(e) => { (e.currentTarget as HTMLImageElement).src = DEFAULT_LOGO; }}
+              />
               <span className="font-bold text-xl tracking-tight">
-                AI শিখি <span className="text-primary">বাংলায়</span>
+                {firstPart && <>{firstPart} </>}
+                <span className="text-primary">{lastWord}</span>
               </span>
             </Link>
             <p className="text-muted-foreground mb-6 max-w-sm leading-relaxed">

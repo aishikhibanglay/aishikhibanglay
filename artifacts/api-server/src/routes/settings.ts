@@ -7,6 +7,8 @@ import * as zod from "zod";
 const ErrorResponse = zod.object({ error: zod.string() });
 
 const DEFAULT_SETTINGS: Record<string, string> = {
+  brand_name: "AI শিখি বাংলায়",
+  logo_url: "",
   youtube_channel_url: "",
   youtube_subscribe_url: "",
   facebook_url: "",
@@ -42,6 +44,8 @@ router.get("/settings", async (_req, res): Promise<void> => {
 });
 
 const UpdateSettingsBody = zod.object({
+  brand_name: zod.string().optional(),
+  logo_url: zod.string().optional(),
   youtube_channel_url: zod.string().optional(),
   youtube_subscribe_url: zod.string().optional(),
   facebook_url: zod.string().optional(),

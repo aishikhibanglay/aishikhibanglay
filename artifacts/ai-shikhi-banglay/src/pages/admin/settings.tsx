@@ -3,6 +3,7 @@ import { AdminGuard } from "@/components/admin/AdminGuard";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { invalidateSettingsCache } from "@/lib/useSiteSettings";
 import { invalidateSocialLinksCache } from "@/lib/useSocialLinks";
+import { ImageUploader } from "@/components/admin/ImageUploader";
 import {
   Save,
   Eye,
@@ -23,6 +24,9 @@ import {
   Globe,
   Linkedin,
   Ghost,
+  Image,
+  Type,
+  Upload,
 } from "lucide-react";
 
 // ─── SOCIAL LINK ICONS ────────────────────────────────────────────────────────
@@ -51,6 +55,8 @@ interface SocialLink {
 }
 
 interface Settings {
+  brand_name: string;
+  logo_url: string;
   youtube_channel_url: string;
   youtube_subscribe_url: string;
   featured_youtube_video_id: string;
@@ -372,6 +378,8 @@ function SocialLinksManager() {
 // ─── MAIN FORM ────────────────────────────────────────────────────────────────
 function SettingsForm() {
   const [settings, setSettings] = useState<Settings>({
+    brand_name: "",
+    logo_url: "",
     youtube_channel_url: "",
     youtube_subscribe_url: "",
     featured_youtube_video_id: "",
@@ -393,6 +401,7 @@ function SettingsForm() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [showLogoUploader, setShowLogoUploader] = useState(false);
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -401,6 +410,8 @@ function SettingsForm() {
         if (res.ok) {
           const data = await res.json();
           setSettings({
+            brand_name: data.brand_name ?? "",
+            logo_url: data.logo_url ?? "",
             youtube_channel_url: data.youtube_channel_url ?? "",
             youtube_subscribe_url: data.youtube_subscribe_url ?? "",
             featured_youtube_video_id: data.featured_youtube_video_id ?? "",
@@ -453,6 +464,101 @@ function SettingsForm() {
   return (
     <AdminLayout title="সাইট সেটিংস">
       <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
+
+        {/* ── Brand & Logo ── */}
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+          <h2 className="text-white font-semibold text-base mb-1 flex items-center gap-2">
+            <Image className="w-5 h-5 text-cyan-400" />
+            ব্র্যান্ড ও লোগো
+          </h2>
+          <p className="text-gray-500 text-xs mb-5">
+            এখানে পরিবর্তন করলে Header, Footer এবং Browser Tab-এর favicon — সব জায়গায় একসাথে বদলে যাবে।
+          </p>
+          {loading ? (
+            <p className="text-gray-500 text-sm">লোড হচ্ছে...</p>
+          ) : (
+            <div className="flex flex-col md:flex-row gap-6">
+              {/* Logo upload */}
+              <div className="flex-shrink-0">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <Image className="w-4 h-4 inline mr-1.5 -mt-0.5" />
+                  সাইট লোগো
+                </label>
+                <div className="flex items-start gap-3">
+                  <div className="w-16 h-16 rounded-xl border border-gray-700 bg-gray-800 flex items-center justify-center overflow-hidden flex-shrink-0">
+                    {settings.logo_url ? (
+                      <img
+                        src={settings.logo_url}
+                        alt="লোগো প্রিভিউ"
+                        className="w-full h-full object-contain p-1"
+                        onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                      />
+                    ) : (
+                      <img src="/logo.svg" alt="ডিফল্ট লোগো" className="w-full h-full object-contain p-1" />
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <button
+                      onClick={() => setShowLogoUploader(true)}
+                      className="flex items-center gap-1.5 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-cyan-400 text-xs px-3 py-2 rounded-lg transition-colors"
+                    >
+                      <Upload className="w-3.5 h-3.5" /> লোগো আপলোড করুন
+                    </button>
+                    {settings.logo_url && (
+                      <button
+                        onClick={() => setSettings((s) => ({ ...s, logo_url: "" }))}
+                        className="flex items-center gap-1.5 text-gray-500 hover:text-red-400 text-xs px-3 py-2 rounded-lg transition-colors"
+                      >
+                        <X className="w-3.5 h-3.5" /> ডিফল্ট লোগো ব্যবহার করুন
+                      </button>
+                    )}
+                    <p className="text-gray-600 text-xs">PNG, SVG, JPG সাপোর্টেড<br/>পরিষ্কার দেখানোর জন্য transparent PNG বা SVG ভালো</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Brand name */}
+              <div className="flex-1">
+                <InputField
+                  label="ব্র্যান্ড নাম"
+                  hint='Header ও Footer-এ দেখাবে। শেষ শব্দটি সাইটের প্রাইমারি রঙে দেখাবে — যেমন: "AI শিখি বাংলায়" লিখলে "বাংলায়" রঙিন হবে।'
+                  icon={Type}
+                  value={settings.brand_name}
+                  onChange={(v) => setSettings((s) => ({ ...s, brand_name: v }))}
+                  placeholder="AI শিখি বাংলায়"
+                />
+                {/* Live preview */}
+                {settings.brand_name && (
+                  <div className="mt-3 flex items-center gap-2 bg-gray-800 rounded-lg px-3 py-2">
+                    <span className="text-xs text-gray-500">প্রিভিউ:</span>
+                    {(() => {
+                      const parts = (settings.brand_name || "").trim().split(" ");
+                      const last = parts.pop() ?? "";
+                      const first = parts.join(" ");
+                      return (
+                        <span className="font-bold text-sm text-white">
+                          {first && <>{first} </>}
+                          <span className="text-cyan-400">{last}</span>
+                        </span>
+                      );
+                    })()}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* ── Logo Upload Modal ── */}
+        {showLogoUploader && (
+          <ImageUploader
+            onUploaded={(url) => {
+              setSettings((s) => ({ ...s, logo_url: url }));
+              setShowLogoUploader(false);
+            }}
+            onClose={() => setShowLogoUploader(false)}
+          />
+        )}
 
         {/* ── Social Links (dynamic) ── */}
         <SocialLinksManager />

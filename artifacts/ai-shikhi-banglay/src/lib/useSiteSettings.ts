@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 
 export interface SiteSettings {
+  brand_name: string;
+  logo_url: string;
   youtube_channel_url: string;
   youtube_subscribe_url: string;
   facebook_url: string;
@@ -25,6 +27,8 @@ export interface SiteSettings {
 }
 
 const defaultSettings: SiteSettings = {
+  brand_name: "AI শিখি বাংলায়",
+  logo_url: "",
   youtube_channel_url: "",
   youtube_subscribe_url: "",
   facebook_url: "",

@@ -6,6 +6,9 @@ import { useSiteSettings } from "@/lib/useSiteSettings";
 import { useNavItems } from "@/lib/useNavItems";
 import { useTheme } from "@/lib/useTheme";
 
+const DEFAULT_LOGO = `${import.meta.env.BASE_URL}logo.svg`;
+const DEFAULT_BRAND = "AI শিখি বাংলায়";
+
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [location] = useLocation();
@@ -15,15 +18,27 @@ export function Header() {
   const { isDark, toggle } = useTheme();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
+    const handleScroll = () => { setScrolled(window.scrollY > 20); };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Auto-update favicon when logo changes
+  useEffect(() => {
+    if (!settings.logo_url) return;
+    const existing = document.querySelectorAll<HTMLLinkElement>("link[rel='icon'], link[rel='apple-touch-icon']");
+    existing.forEach((el) => { el.href = settings.logo_url; });
+  }, [settings.logo_url]);
+
   const navLinks = bySection("navbar");
   const subscribeUrl = settings.youtube_subscribe_url || settings.youtube_channel_url || "#";
+  const brandName = settings.brand_name || DEFAULT_BRAND;
+  const logoUrl = settings.logo_url || DEFAULT_LOGO;
+
+  // Split brand name for styling: last word gets primary colour
+  const parts = brandName.trim().split(" ");
+  const lastWord = parts.pop() ?? "";
+  const firstPart = parts.join(" ");
 
   return (
     <header 
@@ -34,12 +49,14 @@ export function Header() {
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5 group">
           <img
-            src={`${import.meta.env.BASE_URL}logo.svg`}
-            alt="AI শিখি বাংলায় লোগো"
+            src={logoUrl}
+            alt={`${brandName} লোগো`}
             className="w-9 h-9 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(6,182,212,0.7)] transition-all duration-200"
+            onError={(e) => { (e.currentTarget as HTMLImageElement).src = DEFAULT_LOGO; }}
           />
           <span className="font-bold text-xl tracking-tight text-foreground dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-white dark:to-white/70">
-            AI শিখি <span className="text-primary">বাংলায়</span>
+            {firstPart && <>{firstPart} </>}
+            <span className="text-primary">{lastWord}</span>
           </span>
         </Link>
 
@@ -75,16 +92,12 @@ export function Header() {
             );
           })}
 
-          {/* Theme toggle */}
           <button
             onClick={toggle}
             aria-label={isDark ? "লাইট মোড চালু করুন" : "ডার্ক মোড চালু করুন"}
             className="ml-1 w-9 h-9 flex items-center justify-center rounded-md text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all duration-200"
           >
-            {isDark
-              ? <Sun className="w-4 h-4" />
-              : <Moon className="w-4 h-4" />
-            }
+            {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </button>
 
           <a
@@ -107,10 +120,7 @@ export function Header() {
             aria-label={isDark ? "লাইট মোড" : "ডার্ক মোড"}
             className="w-9 h-9 flex items-center justify-center rounded-md text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all duration-200"
           >
-            {isDark
-              ? <Sun className="w-4 h-4" />
-              : <Moon className="w-4 h-4" />
-            }
+            {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </button>
           <button 
             className="p-2 text-muted-foreground hover:text-primary transition-colors"
