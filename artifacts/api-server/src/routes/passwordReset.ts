@@ -37,12 +37,22 @@ router.post("/admin/forgot-password", async (req, res): Promise<void> => {
 
   await db.insert(passwordResetTokensTable).values({ token, expiresAt });
 
-  const domain =
-    req.headers["x-forwarded-host"]?.toString() ||
-    req.headers["host"] ||
-    BASE_URL;
-  const proto = req.headers["x-forwarded-proto"] ?? "https";
-  const resetLink = `${proto}://${domain}/admin/reset-password?token=${token}`;
+  // Use Replit's public domain (works in both dev and deployed)
+  const replitDomains = process.env.REPLIT_DOMAINS ?? "";
+  const replitDevDomain = process.env.REPLIT_DEV_DOMAIN ?? "";
+  const primaryDomain = replitDomains.split(",")[0]?.trim() || replitDevDomain;
+
+  let baseUrl = BASE_URL;
+  if (primaryDomain) {
+    baseUrl = `https://${primaryDomain}`;
+  } else {
+    // fallback: read from forwarded headers
+    const host = req.headers["x-forwarded-host"]?.toString() || req.headers["host"] || "localhost";
+    const proto = req.headers["x-forwarded-proto"] ?? "http";
+    baseUrl = `${proto}://${host}`;
+  }
+
+  const resetLink = `${baseUrl}/admin/reset-password?token=${token}`;
 
   try {
     await sendPasswordResetEmail(ADMIN_EMAIL, resetLink);
