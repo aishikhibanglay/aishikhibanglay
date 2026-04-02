@@ -271,3 +271,25 @@
     inset: -1px;
   }
 }
+
+/* ── Custom animation utilities ── */
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.animate-float-slow {
+  animation: float-slow 4s ease-in-out infinite;
+}
+.animate-spin-slow {
+  animation: spin-slow 30s linear infinite;
+  transform-origin: center;
+}
