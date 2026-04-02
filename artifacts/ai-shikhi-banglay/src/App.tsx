@@ -38,6 +38,7 @@ const AdminSocialLinksPage = lazy(() => import("./pages/admin/social-links"));
 const AdminToolsManagerPage = lazy(() => import("./pages/admin/tools-manager"));
 const FooterManagerPage = lazy(() => import("./pages/admin/footer-manager"));
 const NavbarManagerPage = lazy(() => import("./pages/admin/navbar-manager"));
+const FaqManagerPage = lazy(() => import("./pages/admin/faq-manager"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -99,6 +100,7 @@ function AdminRouter() {
         <Route path="/admin/tools" component={AdminToolsManagerPage} />
         <Route path="/admin/footer" component={FooterManagerPage} />
         <Route path="/admin/navbar" component={NavbarManagerPage} />
+        <Route path="/admin/faq" component={FaqManagerPage} />
         <Route path="/admin/reset-password" component={ResetPasswordPage} />
       </Switch>
     </Suspense>
