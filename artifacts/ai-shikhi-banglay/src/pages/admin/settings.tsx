@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { AdminGuard } from "@/components/admin/AdminGuard";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { invalidateSettingsCache } from "@/lib/useSiteSettings";
+import { invalidateSocialLinksCache } from "@/lib/useSocialLinks";
 import {
   Save,
   Eye,
@@ -14,15 +15,44 @@ import {
   Video,
   CheckCircle2,
   Music2,
+  Plus,
+  Trash2,
+  Pencil,
+  X,
+  GripVertical,
+  Globe,
+  Linkedin,
+  Ghost,
 } from "lucide-react";
+
+// ─── SOCIAL LINK ICONS ────────────────────────────────────────────────────────
+const ICON_OPTIONS = [
+  { value: "youtube",   label: "YouTube",   Icon: Youtube },
+  { value: "facebook",  label: "Facebook",  Icon: Facebook },
+  { value: "twitter",   label: "X (Twitter)", Icon: Twitter },
+  { value: "instagram", label: "Instagram", Icon: Instagram },
+  { value: "tiktok",    label: "TikTok",    Icon: Music2 },
+  { value: "linkedin",  label: "LinkedIn",  Icon: Linkedin },
+  { value: "github",    label: "GitHub",    Icon: Ghost },
+  { value: "link",      label: "অন্যান্য",   Icon: Globe },
+];
+
+function getSocialIcon(icon: string) {
+  return ICON_OPTIONS.find((o) => o.value === icon)?.Icon ?? Globe;
+}
+
+// ─── TYPES ────────────────────────────────────────────────────────────────────
+interface SocialLink {
+  id: number;
+  label: string;
+  url: string;
+  icon: string;
+  displayOrder: number;
+}
 
 interface Settings {
   youtube_channel_url: string;
   youtube_subscribe_url: string;
-  facebook_url: string;
-  twitter_url: string;
-  instagram_url: string;
-  tiktok_url: string;
   featured_youtube_video_id: string;
   hero_badge: string;
   hero_title: string;
@@ -40,34 +70,20 @@ interface Settings {
   footer_legal_title: string;
 }
 
+// ─── HELPERS ──────────────────────────────────────────────────────────────────
 function extractYoutubeId(urlOrId: string): string {
   if (!urlOrId) return "";
-  const patterns = [
-    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/,
-  ];
-  for (const pat of patterns) {
-    const m = urlOrId.match(pat);
-    if (m) return m[1];
-  }
-  return urlOrId;
+  const pat = /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/;
+  const m = urlOrId.match(pat);
+  return m ? m[1] : urlOrId;
 }
 
+// ─── FORM COMPONENTS ──────────────────────────────────────────────────────────
 function InputField({
-  label,
-  hint,
-  icon: Icon,
-  value,
-  onChange,
-  placeholder,
-  type = "text",
+  label, hint, icon: Icon, value, onChange, placeholder, type = "text",
 }: {
-  label: string;
-  hint: string;
-  icon: React.ElementType;
-  value: string;
-  onChange: (v: string) => void;
-  placeholder: string;
-  type?: string;
+  label: string; hint: string; icon: React.ElementType;
+  value: string; onChange: (v: string) => void; placeholder: string; type?: string;
 }) {
   return (
     <div>
@@ -88,19 +104,10 @@ function InputField({
 }
 
 function TextareaField({
-  label,
-  hint,
-  value,
-  onChange,
-  placeholder,
-  rows = 2,
+  label, hint, value, onChange, placeholder, rows = 2,
 }: {
-  label: string;
-  hint?: string;
-  value: string;
-  onChange: (v: string) => void;
-  placeholder: string;
-  rows?: number;
+  label: string; hint?: string; value: string;
+  onChange: (v: string) => void; placeholder: string; rows?: number;
 }) {
   return (
     <div>
@@ -117,14 +124,256 @@ function TextareaField({
   );
 }
 
+// ─── SOCIAL LINK FORM (add / edit) ────────────────────────────────────────────
+function SocialLinkForm({
+  initial,
+  onSave,
+  onCancel,
+}: {
+  initial?: Partial<SocialLink>;
+  onSave: (data: Omit<SocialLink, "id">) => void;
+  onCancel: () => void;
+}) {
+  const [label, setLabel] = useState(initial?.label ?? "");
+  const [url, setUrl] = useState(initial?.url ?? "");
+  const [icon, setIcon] = useState(initial?.icon ?? "link");
+  const [order, setOrder] = useState(String(initial?.displayOrder ?? 0));
+
+  const IconPreview = getSocialIcon(icon);
+
+  return (
+    <div className="bg-gray-800 border border-gray-700 rounded-xl p-4 space-y-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {/* Label */}
+        <div>
+          <label className="block text-xs font-medium text-gray-400 mb-1">লেবেল</label>
+          <input
+            value={label}
+            onChange={(e) => setLabel(e.target.value)}
+            placeholder="যেমন: আমাদের YouTube"
+            className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-cyan-500"
+          />
+        </div>
+        {/* URL */}
+        <div>
+          <label className="block text-xs font-medium text-gray-400 mb-1">URL</label>
+          <input
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            placeholder="https://..."
+            className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-cyan-500"
+          />
+        </div>
+        {/* Icon */}
+        <div>
+          <label className="block text-xs font-medium text-gray-400 mb-1">আইকন</label>
+          <div className="flex items-center gap-2">
+            <IconPreview className="w-4 h-4 text-cyan-400 flex-shrink-0" />
+            <select
+              value={icon}
+              onChange={(e) => setIcon(e.target.value)}
+              className="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-cyan-500"
+            >
+              {ICON_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>{o.label}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+        {/* Order */}
+        <div>
+          <label className="block text-xs font-medium text-gray-400 mb-1">ক্রম (Order)</label>
+          <input
+            type="number"
+            value={order}
+            onChange={(e) => setOrder(e.target.value)}
+            placeholder="0"
+            className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-cyan-500"
+          />
+        </div>
+      </div>
+      <div className="flex justify-end gap-2 pt-1">
+        <button
+          onClick={onCancel}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-700 text-gray-400 hover:text-white text-sm transition-colors"
+        >
+          <X className="w-3.5 h-3.5" /> বাতিল
+        </button>
+        <button
+          onClick={() =>
+            onSave({ label, url, icon, displayOrder: Number(order) })
+          }
+          disabled={!label.trim() || !url.trim()}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-500 hover:bg-cyan-600 disabled:opacity-50 text-white text-sm font-medium transition-colors"
+        >
+          <Save className="w-3.5 h-3.5" /> সেভ করুন
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ─── SOCIAL LINKS MANAGER ─────────────────────────────────────────────────────
+function SocialLinksManager() {
+  const [links, setLinks] = useState<SocialLink[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [adding, setAdding] = useState(false);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [deleting, setDeleting] = useState<number | null>(null);
+
+  const fetchLinks = async () => {
+    try {
+      const res = await fetch("/api/social-links");
+      if (res.ok) setLinks(await res.json());
+    } catch {
+      // ignore
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { fetchLinks(); }, []);
+
+  const handleAdd = async (data: Omit<SocialLink, "id">) => {
+    const res = await fetch("/api/admin/social-links", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(data),
+    });
+    if (res.ok) {
+      setAdding(false);
+      invalidateSocialLinksCache();
+      await fetchLinks();
+    }
+  };
+
+  const handleEdit = async (id: number, data: Omit<SocialLink, "id">) => {
+    const res = await fetch(`/api/admin/social-links/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(data),
+    });
+    if (res.ok) {
+      setEditingId(null);
+      invalidateSocialLinksCache();
+      await fetchLinks();
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    if (!confirm("এই social link টি মুছে ফেলবেন?")) return;
+    setDeleting(id);
+    const res = await fetch(`/api/admin/social-links/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    if (res.ok) {
+      invalidateSocialLinksCache();
+      await fetchLinks();
+    }
+    setDeleting(null);
+  };
+
+  return (
+    <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+      <div className="flex items-center justify-between mb-5">
+        <h2 className="text-white font-semibold text-base flex items-center gap-2">
+          <Link className="w-5 h-5 text-cyan-400" />
+          সোশ্যাল মিডিয়া লিঙ্ক
+        </h2>
+        {!adding && (
+          <button
+            onClick={() => setAdding(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/20 text-sm font-medium transition-colors"
+          >
+            <Plus className="w-4 h-4" /> নতুন লিঙ্ক
+          </button>
+        )}
+      </div>
+
+      {loading ? (
+        <p className="text-gray-500 text-sm">লোড হচ্ছে...</p>
+      ) : (
+        <div className="space-y-3">
+          {/* Add Form */}
+          {adding && (
+            <SocialLinkForm
+              onSave={handleAdd}
+              onCancel={() => setAdding(false)}
+            />
+          )}
+
+          {/* Existing Links */}
+          {links.length === 0 && !adding && (
+            <div className="text-center py-8 text-gray-500 text-sm">
+              <Globe className="w-8 h-8 mx-auto mb-2 opacity-40" />
+              কোনো সোশ্যাল লিঙ্ক নেই। &ldquo;নতুন লিঙ্ক&rdquo; বাটন চাপুন।
+            </div>
+          )}
+
+          {links.map((link) =>
+            editingId === link.id ? (
+              <SocialLinkForm
+                key={link.id}
+                initial={link}
+                onSave={(data) => handleEdit(link.id, data)}
+                onCancel={() => setEditingId(null)}
+              />
+            ) : (
+              <div
+                key={link.id}
+                className="flex items-center gap-3 bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 group"
+              >
+                <GripVertical className="w-4 h-4 text-gray-600 flex-shrink-0" />
+                {(() => {
+                  const Icon = getSocialIcon(link.icon);
+                  return <Icon className="w-4 h-4 text-cyan-400 flex-shrink-0" />;
+                })()}
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-white font-medium truncate">{link.label}</p>
+                  <a
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-gray-500 hover:text-cyan-400 truncate block transition-colors"
+                  >
+                    {link.url}
+                  </a>
+                </div>
+                <span className="text-xs text-gray-600 flex-shrink-0">#{link.displayOrder}</span>
+                <div className="flex items-center gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button
+                    onClick={() => setEditingId(link.id)}
+                    className="p-1.5 rounded-lg hover:bg-cyan-500/20 text-gray-400 hover:text-cyan-400 transition-colors"
+                    title="এডিট করুন"
+                  >
+                    <Pencil className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(link.id)}
+                    disabled={deleting === link.id}
+                    className="p-1.5 rounded-lg hover:bg-red-500/20 text-gray-400 hover:text-red-400 transition-colors disabled:opacity-50"
+                    title="মুছে ফেলুন"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+            )
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── MAIN FORM ────────────────────────────────────────────────────────────────
 function SettingsForm() {
   const [settings, setSettings] = useState<Settings>({
     youtube_channel_url: "",
     youtube_subscribe_url: "",
-    facebook_url: "",
-    twitter_url: "",
-    instagram_url: "",
-    tiktok_url: "",
     featured_youtube_video_id: "",
     hero_badge: "",
     hero_title: "",
@@ -141,27 +390,19 @@ function SettingsForm() {
     footer_main_title: "",
     footer_legal_title: "",
   });
-  const [subscribers, setSubscribers] = useState<{ id: number; email: string; subscribedAt: string }[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    const fetchAll = async () => {
+    const fetchSettings = async () => {
       try {
-        const [settingsRes, subsRes] = await Promise.all([
-          fetch("/api/settings"),
-          fetch("/api/admin/subscribers", { credentials: "include" }),
-        ]);
-        if (settingsRes.ok) {
-          const data = await settingsRes.json();
+        const res = await fetch("/api/settings");
+        if (res.ok) {
+          const data = await res.json();
           setSettings({
             youtube_channel_url: data.youtube_channel_url ?? "",
             youtube_subscribe_url: data.youtube_subscribe_url ?? "",
-            facebook_url: data.facebook_url ?? "",
-            twitter_url: data.twitter_url ?? "",
-            instagram_url: data.instagram_url ?? "",
-            tiktok_url: data.tiktok_url ?? "",
             featured_youtube_video_id: data.featured_youtube_video_id ?? "",
             hero_badge: data.hero_badge ?? "",
             hero_title: data.hero_title ?? "",
@@ -179,16 +420,13 @@ function SettingsForm() {
             footer_legal_title: data.footer_legal_title ?? "",
           });
         }
-        if (subsRes.ok) {
-          setSubscribers(await subsRes.json());
-        }
       } catch {
         // ignore
       } finally {
         setLoading(false);
       }
     };
-    fetchAll();
+    fetchSettings();
   }, []);
 
   const handleSave = async () => {
@@ -216,20 +454,23 @@ function SettingsForm() {
     <AdminLayout title="সাইট সেটিংস">
       <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
 
-        {/* Social Links */}
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-          <h2 className="text-white font-semibold text-base mb-5 flex items-center gap-2">
-            <Link className="w-5 h-5 text-cyan-400" />
-            সোশ্যাল মিডিয়া লিঙ্ক
-          </h2>
+        {/* ── Social Links (dynamic) ── */}
+        <SocialLinksManager />
 
+        {/* ── YouTube-specific settings ── */}
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+          <h2 className="text-white font-semibold text-base mb-1 flex items-center gap-2">
+            <Youtube className="w-5 h-5 text-red-400" />
+            YouTube সেটিংস
+          </h2>
+          <p className="text-gray-500 text-xs mb-5">নেভিগেশনের সাবস্ক্রাইব বাটন ও হোমপেজের চ্যানেল লিঙ্কের জন্য</p>
           {loading ? (
             <p className="text-gray-500 text-sm">লোড হচ্ছে...</p>
           ) : (
             <div className="space-y-4">
               <InputField
                 label="YouTube চ্যানেল URL"
-                hint="উদাহরণ: https://www.youtube.com/@YourChannelName — হোমপেজ ও ফুটারে দেখাবে"
+                hint="হোমপেজ ও ফুটারে YouTube আইকনের লিঙ্ক হিসেবে ব্যবহৃত হবে"
                 icon={Youtube}
                 value={settings.youtube_channel_url}
                 onChange={(v) => setSettings((s) => ({ ...s, youtube_channel_url: v }))}
@@ -237,49 +478,17 @@ function SettingsForm() {
               />
               <InputField
                 label="YouTube সাবস্ক্রাইব URL"
-                hint="উদাহরণ: https://www.youtube.com/@YourChannelName?sub_confirmation=1 — নেভিগেশন বারের 'সাবস্ক্রাইব করুন' বাটন এখানে যাবে"
+                hint="নেভিগেশন বারের 'সাবস্ক্রাইব করুন' বাটন এই লিঙ্কে যাবে"
                 icon={Youtube}
                 value={settings.youtube_subscribe_url}
                 onChange={(v) => setSettings((s) => ({ ...s, youtube_subscribe_url: v }))}
                 placeholder="https://www.youtube.com/@আপনার_চ্যানেল?sub_confirmation=1"
               />
-              <InputField
-                label="Facebook পেজ URL"
-                hint="উদাহরণ: https://www.facebook.com/YourPage"
-                icon={Facebook}
-                value={settings.facebook_url}
-                onChange={(v) => setSettings((s) => ({ ...s, facebook_url: v }))}
-                placeholder="https://www.facebook.com/আপনার_পেজ"
-              />
-              <InputField
-                label="X (Twitter) URL"
-                hint="উদাহরণ: https://x.com/YourHandle"
-                icon={Twitter}
-                value={settings.twitter_url}
-                onChange={(v) => setSettings((s) => ({ ...s, twitter_url: v }))}
-                placeholder="https://x.com/আপনার_হ্যান্ডেল"
-              />
-              <InputField
-                label="Instagram URL"
-                hint="উদাহরণ: https://www.instagram.com/YourProfile"
-                icon={Instagram}
-                value={settings.instagram_url}
-                onChange={(v) => setSettings((s) => ({ ...s, instagram_url: v }))}
-                placeholder="https://www.instagram.com/আপনার_প্রোফাইল"
-              />
-              <InputField
-                label="TikTok URL"
-                hint="উদাহরণ: https://www.tiktok.com/@YourHandle"
-                icon={Music2}
-                value={settings.tiktok_url}
-                onChange={(v) => setSettings((s) => ({ ...s, tiktok_url: v }))}
-                placeholder="https://www.tiktok.com/@আপনার_হ্যান্ডেল"
-              />
             </div>
           )}
         </div>
 
-        {/* Featured YouTube Video */}
+        {/* ── Featured YouTube Video ── */}
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
           <h2 className="text-white font-semibold text-base mb-1 flex items-center gap-2">
             <Video className="w-5 h-5 text-red-400" />
@@ -288,7 +497,6 @@ function SettingsForm() {
           <p className="text-gray-500 text-xs mb-5">
             হোমপেজের "ভিডিও দেখে শিখতে ভালোবাসেন?" সেকশনে এই YouTube ভিডিওটি দেখাবে
           </p>
-
           <InputField
             label="YouTube ভিডিও URL বা Video ID"
             hint='উদাহরণ: https://www.youtube.com/watch?v=dQw4w9WgXcQ অথবা শুধু Video ID: dQw4w9WgXcQ'
@@ -297,7 +505,6 @@ function SettingsForm() {
             onChange={(v) => setSettings((s) => ({ ...s, featured_youtube_video_id: v }))}
             placeholder="https://www.youtube.com/watch?v=..."
           />
-
           {previewVideoId && (
             <div className="mt-4">
               <p className="text-xs text-gray-500 mb-2">প্রিভিউ:</p>
@@ -313,7 +520,7 @@ function SettingsForm() {
           )}
         </div>
 
-        {/* Landing Page Content */}
+        {/* ── Landing Page Content ── */}
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
           <h2 className="text-white font-semibold text-base mb-1 flex items-center gap-2">
             <Eye className="w-5 h-5 text-cyan-400" />
@@ -323,7 +530,7 @@ function SettingsForm() {
           <div className="space-y-4">
             <InputField
               label="ব্যাজ টেক্সট (Badge)"
-              hint='হিরোতে ছোট ব্যাজে দেখাবে, যেমন: "আপনার মাতৃভাষায় ভবিষ্যতের প্রযুক্তি"'
+              hint='হিরোতে ছোট ব্যাজে দেখাবে'
               icon={Link}
               value={settings.hero_badge}
               onChange={(v) => setSettings((s) => ({ ...s, hero_badge: v }))}
@@ -381,7 +588,7 @@ function SettingsForm() {
           </div>
         </div>
 
-        {/* Newsletter Content */}
+        {/* ── Newsletter Content ── */}
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
           <h2 className="text-white font-semibold text-base mb-1 flex items-center gap-2">
             <Mail className="w-5 h-5 text-purple-400" />
@@ -406,7 +613,7 @@ function SettingsForm() {
           </div>
         </div>
 
-        {/* Footer Content */}
+        {/* ── Footer Content ── */}
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
           <h2 className="text-white font-semibold text-base mb-1 flex items-center gap-2">
             <Link className="w-5 h-5 text-gray-400" />
@@ -457,7 +664,7 @@ function SettingsForm() {
           </div>
         </div>
 
-        {/* Save Button */}
+        {/* ── Save Button ── */}
         <div className="flex justify-end">
           <button
             onClick={handleSave}
@@ -477,33 +684,6 @@ function SettingsForm() {
             )}
           </button>
         </div>
-
-        {/* Subscribers */}
-        <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
-          <div className="p-4 border-b border-gray-800 flex items-center justify-between">
-            <h2 className="text-white font-semibold flex items-center gap-2">
-              <Mail className="w-5 h-5 text-purple-400" />
-              নিউজলেটার সাবস্ক্রাইবার ({subscribers.length})
-            </h2>
-          </div>
-          {subscribers.length === 0 ? (
-            <div className="p-8 text-center text-gray-500 text-sm">
-              এখনো কেউ সাবস্ক্রাইব করেননি
-            </div>
-          ) : (
-            <div className="divide-y divide-gray-800">
-              {subscribers.map((sub) => (
-                <div key={sub.id} className="px-4 py-3 flex items-center justify-between">
-                  <span className="text-gray-200 text-sm">{sub.email}</span>
-                  <span className="text-gray-500 text-xs">
-                    {new Date(sub.subscribedAt).toLocaleDateString("bn-BD")}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
       </div>
     </AdminLayout>
   );

@@ -5,3 +5,4 @@ export * from "./pages";
 export * from "./nav_items";
 export * from "./page_views";
 export * from "./password_reset_tokens";
+export * from "./social_links";

@@ -1,8 +1,45 @@
 import { Link } from "wouter";
-import { SiYoutube, SiFacebook, SiX, SiInstagram, SiTiktok } from "react-icons/si";
-import { Brain } from "lucide-react";
+import {
+  SiYoutube,
+  SiFacebook,
+  SiX,
+  SiInstagram,
+  SiTiktok,
+  SiGithub,
+} from "react-icons/si";
+import { Globe, Linkedin, Brain } from "lucide-react";
 import { useSiteSettings } from "@/lib/useSiteSettings";
 import { useNavItems, type NavItem } from "@/lib/useNavItems";
+import { useSocialLinks } from "@/lib/useSocialLinks";
+
+// Map icon key → react element
+function SocialIconEl({ icon, className }: { icon: string; className?: string }) {
+  const cls = className ?? "w-5 h-5";
+  switch (icon) {
+    case "youtube":   return <SiYoutube className={cls} />;
+    case "facebook":  return <SiFacebook className={cls} />;
+    case "twitter":   return <SiX className={cls} />;
+    case "instagram": return <SiInstagram className={cls} />;
+    case "tiktok":    return <SiTiktok className={cls} />;
+    case "linkedin":  return <Linkedin className={cls} />;
+    case "github":    return <SiGithub className={cls} />;
+    default:          return <Globe className={cls} />;
+  }
+}
+
+// Hover colour per icon
+function hoverClass(icon: string) {
+  switch (icon) {
+    case "youtube":   return "hover:text-red-500 hover:bg-red-500/20";
+    case "facebook":  return "hover:text-blue-500 hover:bg-blue-500/20";
+    case "twitter":   return "hover:text-foreground hover:bg-primary/20";
+    case "instagram": return "hover:text-pink-500 hover:bg-pink-500/20";
+    case "tiktok":    return "hover:text-foreground hover:bg-secondary/80";
+    case "linkedin":  return "hover:text-blue-400 hover:bg-blue-400/20";
+    case "github":    return "hover:text-foreground hover:bg-secondary/80";
+    default:          return "hover:text-cyan-400 hover:bg-cyan-400/20";
+  }
+}
 
 function FooterLink({ item }: { item: NavItem }) {
   if (item.openInNewTab) {
@@ -27,36 +64,10 @@ function FooterLink({ item }: { item: NavItem }) {
 export function Footer() {
   const { settings } = useSiteSettings();
   const { bySection } = useNavItems();
+  const { links: socialLinks } = useSocialLinks();
 
-  const mainLinks = bySection("footer_main");
+  const mainLinks  = bySection("footer_main");
   const legalLinks = bySection("footer_legal");
-
-  const socialIcon = (
-    url: string | undefined,
-    icon: React.ReactNode,
-    hoverClass: string,
-    title: string,
-    testId?: string
-  ) => {
-    if (url) {
-      return (
-        <a
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground ${hoverClass} transition-all`}
-          data-testid={testId}
-        >
-          {icon}
-        </a>
-      );
-    }
-    return (
-      <span className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground/30" title={title}>
-        {icon}
-      </span>
-    );
-  };
 
   return (
     <footer className="bg-background border-t border-border pt-16 pb-8 mt-auto">
@@ -74,13 +85,24 @@ export function Footer() {
             <p className="text-muted-foreground mb-6 max-w-sm leading-relaxed">
               {settings.footer_description}
             </p>
-            <div className="flex items-center gap-4 flex-wrap">
-              {socialIcon(settings.youtube_channel_url, <SiYoutube className="w-5 h-5" />, "hover:text-red-500 hover:bg-red-500/20", "YouTube লিংক এখনো সেট করা হয়নি", "link-youtube-footer")}
-              {socialIcon(settings.facebook_url, <SiFacebook className="w-5 h-5" />, "hover:text-blue-500 hover:bg-blue-500/20", "Facebook লিংক এখনো সেট করা হয়নি", "link-facebook-footer")}
-              {socialIcon(settings.twitter_url, <SiX className="w-4 h-4" />, "hover:text-primary hover:bg-primary/20", "X/Twitter লিংক এখনো সেট করা হয়নি", "link-x-footer")}
-              {socialIcon(settings.instagram_url, <SiInstagram className="w-5 h-5" />, "hover:text-pink-500 hover:bg-pink-500/20", "Instagram লিংক এখনো সেট করা হয়নি", "link-instagram-footer")}
-              {socialIcon(settings.tiktok_url, <SiTiktok className="w-4 h-4" />, "hover:text-foreground hover:bg-secondary/80", "TikTok লিংক এখনো সেট করা হয়নি", "link-tiktok-footer")}
-            </div>
+
+            {/* Dynamic social links */}
+            {socialLinks.length > 0 && (
+              <div className="flex items-center gap-3 flex-wrap">
+                {socialLinks.map((link) => (
+                  <a
+                    key={link.id}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={link.label}
+                    className={`w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground ${hoverClass(link.icon)} transition-all`}
+                  >
+                    <SocialIconEl icon={link.icon} />
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
 
           <div>
