@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import { Switch, Route, Router as WouterRouter } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HelmetProvider } from "react-helmet-async";
+import { Analytics } from "@vercel/analytics/react";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { PageLayout } from "./components/layout/page-layout";
@@ -137,6 +138,7 @@ function App() {
           <AppInner />
         </TooltipProvider>
       </QueryClientProvider>
+      <Analytics />
     </HelmetProvider>
   );
 }
