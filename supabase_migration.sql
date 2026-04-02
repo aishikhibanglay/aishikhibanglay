@@ -292,7 +292,7 @@ INSERT INTO public.site_settings VALUES (8, 'hero_badge', 'আপনার ম�
 INSERT INTO public.site_settings VALUES (9, 'hero_title', 'বাংলায় শিখুন AI', '2026-04-02 11:10:33.584+00');
 INSERT INTO public.site_settings VALUES (10, 'hero_subtitle', 'কৃত্রিম বুদ্ধিমতার এই নতুন যুগে পিছিয়ে থাকবেন না। খুব সহজেই নিজের ভাষায় শিখুন AI-এর খুঁটিনাটি এবং কাজে লাগান দৈনন্দিন জীবনে।', '2026-04-02 11:10:33.586+00');
 INSERT INTO public.site_settings VALUES (6, 'admin_username_override', 'admin', '2026-04-02 08:29:12.757+00');
-INSERT INTO public.site_settings VALUES (7, 'admin_password_override', 'Stg236564@', '2026-04-02 08:29:12.76+00');
+INSERT INTO public.site_settings VALUES (7, 'admin_password_override', 'CHANGE_ME_IN_SUPABASE');
 INSERT INTO public.site_settings VALUES (11, 'hero_cta_primary', 'শেখা শুরু করুন', '2026-04-02 11:10:33.589+00');
 INSERT INTO public.site_settings VALUES (12, 'hero_cta_primary_href', '/blog', '2026-04-02 11:10:33.592+00');
 INSERT INTO public.site_settings VALUES (13, 'hero_cta_secondary', 'AI টুলস এক্সপ্লোর করুন', '2026-04-02 11:10:33.595+00');
@@ -341,3 +341,14 @@ ALTER TABLE ONLY public.subscribers
     ADD CONSTRAINT subscribers_email_unique UNIQUE (email);
 ALTER TABLE ONLY public.subscribers
     ADD CONSTRAINT subscribers_pkey PRIMARY KEY (id);
+
+-- Reset sequences to avoid primary key conflicts on new inserts
+SELECT setval('public.ai_tools_id_seq', 6, true);
+SELECT setval('public.nav_items_id_seq', 13, true);
+SELECT setval('public.page_views_id_seq', 109, true);
+SELECT setval('public.pages_id_seq', 1, false);
+SELECT setval('public.password_reset_tokens_id_seq', 5, true);
+SELECT setval('public.posts_id_seq', 3, true);
+SELECT setval('public.site_settings_id_seq', 24, true);
+SELECT setval('public.social_links_id_seq', 3, true);
+SELECT setval('public.subscribers_id_seq', 3, true);
