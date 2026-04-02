@@ -12,7 +12,6 @@ import analyticsRouter from "./analytics";
 import passwordResetRouter from "./passwordReset";
 import socialLinksRouter from "./socialLinks";
 import aiToolsRouter from "./aiTools";
-import { requireAdmin } from "../middlewares/requireAdmin";
 
 const router: IRouter = Router();
 
@@ -33,7 +32,6 @@ router.use(adminAuthRouter);
 
 // Protected admin routes
 router.use(adminPostsRouter);
-router.use("/storage/uploads", requireAdmin);
-router.use(storageRouter);
+router.use(storageRouter); // POST /storage/upload — auth handled inside router
 
 export default router;

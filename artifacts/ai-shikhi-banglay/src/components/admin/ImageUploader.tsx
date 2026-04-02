@@ -3,7 +3,7 @@ import { api } from "@/lib/api";
 import { Upload, X, Loader2, CheckCircle } from "lucide-react";
 
 interface ImageUploaderProps {
-  onUploaded: (objectPath: string) => void;
+  onUploaded: (url: string) => void;
   onClose: () => void;
 }
 
@@ -29,21 +29,10 @@ export function ImageUploader({ onUploaded, onClose }: ImageUploaderProps) {
       reader.readAsDataURL(file);
 
       try {
-        const { uploadURL, objectPath } = await api.requestUploadUrl(
-          file.name,
-          file.size,
-          file.type
-        );
-
-        await fetch(uploadURL, {
-          method: "PUT",
-          body: file,
-          headers: { "Content-Type": file.type },
-        });
-
+        const url = await api.uploadImage(file);
         setSuccess(true);
         setTimeout(() => {
-          onUploaded(`/api/storage${objectPath}`);
+          onUploaded(url);
           onClose();
         }, 800);
       } catch (err) {

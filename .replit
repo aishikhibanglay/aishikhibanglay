@@ -31,6 +31,7 @@ timeoutMs = 20000
 ADMIN_USERNAME = "admin"
 ADMIN_PASSWORD = "aishikhi2024"
 ADMIN_EMAIL = "shahadat.ticketmaster.com@gmail.com"
+SUPABASE_URL = "https://kebzwfclpcxzrjpkyqxj.supabase.co"
 
 [nix]
 channel = "stable-25_05"

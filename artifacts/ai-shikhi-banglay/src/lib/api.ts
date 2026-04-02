@@ -1,4 +1,4 @@
-const BASE = "/api";
+const BASE = (import.meta.env.VITE_API_URL ?? "") + "/api";
 
 async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE}${path}`, {
@@ -45,12 +45,22 @@ export const api = {
   adminDeletePost: (id: number) =>
     apiFetch<void>(`/admin/posts/${id}`, { method: "DELETE" }),
 
-  // Storage
-  requestUploadUrl: (name: string, size: number, contentType: string) =>
-    apiFetch<{ uploadURL: string; objectPath: string }>("/storage/uploads/request-url", {
+  // Storage — upload image directly (Supabase Storage)
+  uploadImage: async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await fetch(`${BASE}/storage/upload`, {
       method: "POST",
-      body: JSON.stringify({ name, size, contentType }),
-    }),
+      credentials: "include",
+      body: formData,
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: "Upload failed" }));
+      throw new Error(err.error ?? "Upload failed");
+    }
+    const { url } = await res.json();
+    return url;
+  },
 };
 
 export interface Post {
