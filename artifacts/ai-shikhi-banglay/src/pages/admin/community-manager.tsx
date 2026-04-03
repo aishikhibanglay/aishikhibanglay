@@ -139,8 +139,8 @@ function PostsTab() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const load = () => adminFetch("/api/admin/community/posts").then((r) => r.json()).then(setPosts).finally(() => setLoading(false));
-  useEffect(load, []);
+  const load = () => { adminFetch("/api/admin/community/posts").then((r) => r.json()).then(setPosts).finally(() => setLoading(false)); };
+  useEffect(() => { load(); }, []);
 
   const deletePost = async (id: number) => {
     if (!confirm("এই পোস্ট মুছবেন?")) return;
@@ -228,8 +228,8 @@ function FaqTab() {
   const [editing, setEditing] = useState<{ [id: number]: { q: string; a: string } }>({});
   const [adding, setAdding] = useState(false);
 
-  const load = () => adminFetch("/api/admin/community/faq").then((r) => r.json()).then(setItems).finally(() => setLoading(false));
-  useEffect(load, []);
+  const load = () => { adminFetch("/api/admin/community/faq").then((r) => r.json()).then(setItems).finally(() => setLoading(false)); };
+  useEffect(() => { load(); }, []);
 
   const add = async () => {
     if (!newQ.trim() || !newA.trim()) return;
