@@ -32,6 +32,19 @@ const DEFAULT_SETTINGS: Record<string, string> = {
   footer_main_title: "গুরুত্বপূর্ণ পেজ",
   footer_legal_title: "আইনি তথ্য",
   custom_head_script: "",
+  // Blog page settings
+  blog_title: "আমাদের ব্লগ",
+  blog_subtitle: "AI দুনিয়ার সর্বশেষ খবর, টিউটোরিয়াল এবং গাইডলাইন বাংলায় পড়তে আমাদের ব্লগগুলো এক্সপ্লোর করুন।",
+  blog_categories: JSON.stringify(["টিউটোরিয়াল", "টুলস", "Prompt", "আয়", "নিউজ"]),
+  // Blog sidebar settings
+  blog_sidebar_popular_enabled: "true",
+  blog_sidebar_popular_title: "🔥 জনপ্রিয় পোস্ট",
+  blog_sidebar_popular_count: "5",
+  blog_sidebar_categories_enabled: "true",
+  blog_sidebar_categories_title: "📂 ক্যাটাগরি",
+  blog_sidebar_newsletter_enabled: "true",
+  blog_sidebar_newsletter_title: "📬 নিউজলেটার",
+  blog_sidebar_newsletter_subtitle: "নতুন পোস্ট সরাসরি ইমেইলে পান",
 };
 
 const router: IRouter = Router();
@@ -72,6 +85,17 @@ const UpdateSettingsBody = zod.object({
   footer_main_title: zod.string().optional(),
   footer_legal_title: zod.string().optional(),
   custom_head_script: zod.string().optional(),
+  blog_title: zod.string().optional(),
+  blog_subtitle: zod.string().optional(),
+  blog_categories: zod.string().optional(),
+  blog_sidebar_popular_enabled: zod.string().optional(),
+  blog_sidebar_popular_title: zod.string().optional(),
+  blog_sidebar_popular_count: zod.string().optional(),
+  blog_sidebar_categories_enabled: zod.string().optional(),
+  blog_sidebar_categories_title: zod.string().optional(),
+  blog_sidebar_newsletter_enabled: zod.string().optional(),
+  blog_sidebar_newsletter_title: zod.string().optional(),
+  blog_sidebar_newsletter_subtitle: zod.string().optional(),
 });
 
 router.put("/admin/settings", requireAdmin, async (req, res): Promise<void> => {
