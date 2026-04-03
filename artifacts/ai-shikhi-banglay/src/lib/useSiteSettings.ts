@@ -26,6 +26,17 @@ export interface SiteSettings {
   footer_main_title: string;
   footer_legal_title: string;
   custom_head_script: string;
+  blog_title: string;
+  blog_subtitle: string;
+  blog_categories: string;
+  blog_sidebar_popular_enabled: string;
+  blog_sidebar_popular_title: string;
+  blog_sidebar_popular_count: string;
+  blog_sidebar_categories_enabled: string;
+  blog_sidebar_categories_title: string;
+  blog_sidebar_newsletter_enabled: string;
+  blog_sidebar_newsletter_title: string;
+  blog_sidebar_newsletter_subtitle: string;
 }
 
 const defaultSettings: SiteSettings = {
@@ -54,6 +65,17 @@ const defaultSettings: SiteSettings = {
   footer_main_title: "গুরুত্বপূর্ণ পেজ",
   footer_legal_title: "আইনি তথ্য",
   custom_head_script: "",
+  blog_title: "আমাদের ব্লগ",
+  blog_subtitle: "AI দুনিয়ার সর্বশেষ খবর, টিউটোরিয়াল এবং গাইডলাইন বাংলায় পড়তে আমাদের ব্লগগুলো এক্সপ্লোর করুন।",
+  blog_categories: JSON.stringify(["টিউটোরিয়াল", "টুলস", "Prompt", "আয়", "নিউজ"]),
+  blog_sidebar_popular_enabled: "true",
+  blog_sidebar_popular_title: "🔥 জনপ্রিয় পোস্ট",
+  blog_sidebar_popular_count: "5",
+  blog_sidebar_categories_enabled: "true",
+  blog_sidebar_categories_title: "📂 ক্যাটাগরি",
+  blog_sidebar_newsletter_enabled: "true",
+  blog_sidebar_newsletter_title: "📬 নিউজলেটার",
+  blog_sidebar_newsletter_subtitle: "নতুন পোস্ট সরাসরি ইমেইলে পান",
 };
 
 let cachedSettings: SiteSettings | null = null;
