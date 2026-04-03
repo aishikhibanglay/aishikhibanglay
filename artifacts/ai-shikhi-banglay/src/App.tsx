@@ -23,6 +23,11 @@ const Tools = lazy(() => import("./pages/tools"));
 const BlogChatGPTGuide = lazy(() => import("./pages/blog-chatgpt-guide"));
 const BlogPost = lazy(() => import("./pages/blog-post"));
 const DynamicPage = lazy(() => import("./pages/dynamic-page"));
+const About = lazy(() => import("./pages/about"));
+const PrivacyPolicy = lazy(() => import("./pages/privacy-policy"));
+const TermsAndConditions = lazy(() => import("./pages/terms-and-conditions"));
+const Disclaimer = lazy(() => import("./pages/disclaimer"));
+const CookiePolicy = lazy(() => import("./pages/cookie-policy"));
 
 // Admin pages — all lazy (never needed on public routes)
 const AdminLogin = lazy(() => import("./pages/admin/login"));
@@ -66,12 +71,12 @@ function PublicRouter() {
           <Route path="/blog" component={Blog} />
           <Route path="/tools" component={Tools} />
           <Route path="/faq" component={FAQ} />
-          <Route path="/about" component={() => <DBBackedPage slug="about" />} />
+          <Route path="/about" component={About} />
           <Route path="/contact" component={Contact} />
-          <Route path="/privacy-policy" component={() => <DBBackedPage slug="privacy-policy" />} />
-          <Route path="/terms-and-conditions" component={() => <DBBackedPage slug="terms-and-conditions" />} />
-          <Route path="/disclaimer" component={() => <DBBackedPage slug="disclaimer" />} />
-          <Route path="/cookie-policy" component={() => <DBBackedPage slug="cookie-policy" />} />
+          <Route path="/privacy-policy" component={PrivacyPolicy} />
+          <Route path="/terms-and-conditions" component={TermsAndConditions} />
+          <Route path="/disclaimer" component={Disclaimer} />
+          <Route path="/cookie-policy" component={CookiePolicy} />
           <Route path="/blog/chatgpt-bangla-guide" component={BlogChatGPTGuide} />
           <Route path="/blog/:slug" component={BlogPost} />
           <Route path="/pages/:slug" component={DynamicPage} />
