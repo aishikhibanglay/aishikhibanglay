@@ -381,7 +381,7 @@ export default function CommunityPage() {
   const [showAuth, setShowAuth] = useState(false);
   const [authTab, setAuthTab] = useState<"login" | "register">("login");
   const [showNewPost, setShowNewPost] = useState(false);
-  const searchTimeout = useRef<ReturnType<typeof setTimeout>>();
+  const searchTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const fetchPosts = async (q?: string) => {
     setLoadingPosts(true);
