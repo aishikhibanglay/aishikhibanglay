@@ -17,6 +17,7 @@ import {
   Wrench,
   HelpCircle,
   Newspaper,
+  Users,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -39,6 +40,7 @@ const NAV_ITEMS: NavItem[] = [
   { icon: <Newspaper className="w-5 h-5" />, label: "ব্লগ সেটিংস", href: "/admin/blog-settings" },
   { icon: <HelpCircle className="w-5 h-5" />, label: "FAQ ম্যানেজার", href: "/admin/faq" },
   { icon: <Mail className="w-5 h-5" />, label: "সাবস্ক্রাইবার", href: "/admin/subscribers" },
+  { icon: <Users className="w-5 h-5" />, label: "Community", href: "/admin/community" },
 ];
 
 interface AdminLayoutProps {
