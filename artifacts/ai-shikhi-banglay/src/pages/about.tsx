@@ -1,7 +1,30 @@
-import { motion } from "framer-motion";
-import { Brain, Youtube, Users, Target, Zap } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { PageSEO } from "@/components/PageSEO";
+
+function Eyebrow({ text }: { text: string }) {
+  return (
+    <div className="flex items-center gap-2 text-primary text-[10px] font-mono uppercase tracking-[3px] mb-3.5">
+      <span className="w-5 h-0.5 bg-primary inline-block flex-shrink-0" />
+      {text}
+    </div>
+  );
+}
+
+function MetaTag({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="text-xs font-mono px-3 py-1 rounded border border-border bg-card text-muted-foreground">
+      {children}
+    </span>
+  );
+}
+
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="mb-10">
+      <h2 className="border-l-[3px] border-primary pl-3.5 font-bold text-lg mb-3.5 text-foreground">{title}</h2>
+      {children}
+    </div>
+  );
+}
 
 export default function About() {
   return (
@@ -11,103 +34,135 @@ export default function About() {
         canonical="/about"
         description="AI শিখি বাংলায় সম্পর্কে জানুন। আমাদের লক্ষ্য বাংলাভাষীদের কাছে AI শিক্ষাকে সহজলভ্য করা।"
       />
-      <div className="container mx-auto px-4">
-        {/* Header Section */}
-        <div className="max-w-4xl mx-auto text-center mb-20">
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-primary/10 text-primary mb-8">
-            <Brain className="w-10 h-10" />
-          </div>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-            আমাদের <span className="text-primary">সম্পর্কে</span>
-          </h1>
-          <p className="text-xl text-muted-foreground leading-relaxed">
-            "AI শিখি বাংলায়" হলো একটি শিক্ষামূলক প্ল্যাটফর্ম যার মূল লক্ষ্য হলো বাংলা ভাষাভাষী মানুষদের আর্টিফিশিয়াল ইন্টেলিজেন্স বা কৃত্রিম বুদ্ধিমত্তার সাথে পরিচয় করিয়ে দেওয়া।
+      <div className="container mx-auto px-4 max-w-3xl">
+        <Eyebrow text="আমাদের সম্পর্কে" />
+        <h1 className="text-[clamp(26px,4vw,40px)] font-bold leading-tight mb-2.5">
+          বাংলায় AI শেখার<br />
+          <span className="text-primary">প্রথম পূর্ণাঙ্গ প্ল্যাটফর্ম</span>
+        </h1>
+        <div className="flex gap-3 flex-wrap mb-9 pb-7 border-b border-border">
+          <MetaTag>📍 ঢাকা, বাংলাদেশ</MetaTag>
+          <MetaTag>🗓️ প্রতিষ্ঠাকাল: ২০২৩</MetaTag>
+          <MetaTag>🌐 aishikhibanglay.com</MetaTag>
+        </div>
+
+        {/* About Hero */}
+        <div className="relative bg-gradient-to-br from-card to-card/60 border border-border rounded-2xl p-8 md:p-10 mb-10 overflow-hidden">
+          <div className="absolute -top-10 -right-10 w-44 h-44 rounded-full bg-primary/10 pointer-events-none" />
+          <div className="text-primary text-[11px] font-mono uppercase tracking-[2px] mb-4">✦ আমাদের গল্প</div>
+          <h2 className="font-bold text-[clamp(22px,3.5vw,34px)] leading-snug text-foreground mb-4">
+            একটি স্বপ্ন থেকে<br />একটি আন্দোলন
+          </h2>
+          <p className="text-[15px] leading-[1.9] text-muted-foreground">
+            ২০২৩ সালে যখন AI revolution শুরু হলো, তখন বাংলাদেশের অধিকাংশ মানুষ ভাষার বাধার কারণে এই সুযোগ থেকে বঞ্চিত ছিল। সব ভালো resource ইংরেজিতে — বাংলায় প্রায় কিছুই নেই। এই শূন্যতা পূরণ করতেই জন্ম হলো "AI শিখি বাংলায়"-এর।
+          </p>
+          <p className="text-[15px] leading-[1.9] text-muted-foreground mt-3">
+            আমাদের বিশ্বাস — ভাষা কখনো শেখার বাধা হওয়া উচিত না। প্রযুক্তির সুবিধা সবার কাছে পৌঁছানো উচিত — শুধু ইংরেজি জানা মানুষের কাছে নয়।
           </p>
         </div>
 
-        {/* Mission Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto mb-24">
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            className="bg-card border border-border p-8 rounded-3xl relative overflow-hidden"
-          >
-            <div className="absolute top-0 right-0 p-6 opacity-5 pointer-events-none">
-              <Target className="w-32 h-32" />
+        {/* Stats */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 mb-10">
+          {[
+            { v: "১০,০০০+", l: "সক্রিয় শিক্ষার্থী" },
+            { v: "৫০+", l: "কোর্স ও ওয়ার্কশপ" },
+            { v: "৯৮%", l: "সন্তুষ্ট শিক্ষার্থী" },
+            { v: "৬৪টি", l: "জেলার শিক্ষার্থী" },
+          ].map((s) => (
+            <div key={s.v} className="bg-card border border-border rounded-xl p-5 text-center">
+              <div className="text-[28px] font-bold text-primary leading-tight mb-1">{s.v}</div>
+              <div className="text-[12.5px] text-muted-foreground">{s.l}</div>
             </div>
-            <h2 className="text-2xl font-bold mb-4 flex items-center gap-3">
-              <Target className="w-6 h-6 text-primary" /> আমাদের লক্ষ্য
-            </h2>
-            <p className="text-muted-foreground leading-relaxed text-lg">
-              আমরা চাই ভাষা যেন প্রযুক্তির শেখার পথে কোনো বাধা না হয়। বিশ্বের সবচেয়ে আধুনিক ও যুগান্তকারী প্রযুক্তি 'AI' যেন প্রতিটি বাঙালি নিজের মাতৃভাষায় শিখতে পারে এবং নিজের ক্যারিয়ার ও দৈনন্দিন জীবনে কাজে লাগাতে পারে, সেটিই আমাদের মূল লক্ষ্য।
-            </p>
-          </motion.div>
-
-          <motion.div 
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="bg-card border border-border p-8 rounded-3xl relative overflow-hidden"
-          >
-            <div className="absolute top-0 right-0 p-6 opacity-5 pointer-events-none">
-              <Zap className="w-32 h-32" />
-            </div>
-            <h2 className="text-2xl font-bold mb-4 flex items-center gap-3">
-              <Zap className="w-6 h-6 text-primary" /> কেন আমরা আলাদা?
-            </h2>
-            <p className="text-muted-foreground leading-relaxed text-lg">
-              আমরা শুধু তাত্ত্বিক জ্ঞান নয়, বরং প্র্যাকটিক্যাল প্রয়োগে বিশ্বাস করি। আমাদের প্রতিটি কন্টেন্ট এমনভাবে তৈরি করা হয় যেন একজন সম্পূর্ণ নতুন মানুষও খুব সহজে বিষয়গুলো বুঝতে পারে এবং ব্যবহার করতে পারে।
-            </p>
-          </motion.div>
+          ))}
         </div>
 
-        {/* Audience Section */}
-        <div className="max-w-4xl mx-auto mb-24 text-center">
-          <h2 className="text-3xl font-bold mb-10">এটি কাদের জন্য?</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            <div className="p-6 rounded-2xl bg-secondary/50 border border-border">
-              <div className="w-12 h-12 bg-primary/20 text-primary rounded-xl flex items-center justify-center mx-auto mb-4">
-                <Users className="w-6 h-6" />
+        {/* Mission & Vision */}
+        <Section title="আমাদের মিশন ও ভিশন">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            {[
+              { i: "🎯", h: "মিশন", p: "প্রতিটি বাংলাভাষী মানুষকে AI-literate করে তোলা — যাতে তারা ভবিষ্যতের digital বিশ্বে আত্মবিশ্বাসের সাথে টিকে থাকতে পারে।" },
+              { i: "🌟", h: "ভিশন", p: "২০২৭ সালের মধ্যে ১ মিলিয়ন বাংলাদেশিকে AI শিক্ষায় দক্ষ করে তোলা এবং বাংলাদেশকে AI-ready nation হিসেবে গড়ে তোলা।" },
+              { i: "💡", h: "মূল্যবোধ", p: "সহজলভ্যতা, সততা, মানসম্পন্ন শিক্ষা, এবং কমিউনিটির প্রতি দায়বদ্ধতা — এই চারটি মূল্যবোধ আমাদের পথ দেখায়।" },
+              { i: "🤝", h: "প্রতিশ্রুতি", p: "সর্বদা সর্বোচ্চ মানের কন্টেন্ট, সৎ তথ্য, এবং শিক্ষার্থীদের সাফল্যকে আমাদের সাফল্য হিসেবে দেখা।" },
+            ].map((m) => (
+              <div key={m.h} className="bg-card border border-border rounded-xl p-5">
+                <div className="text-2xl mb-2.5">{m.i}</div>
+                <h4 className="text-sm font-bold text-foreground mb-2">{m.h}</h4>
+                <p className="text-[13px] leading-[1.75] text-muted-foreground">{m.p}</p>
               </div>
-              <h3 className="text-lg font-bold mb-2">শিক্ষার্থী</h3>
-              <p className="text-muted-foreground text-sm">যারা ভবিষ্যতের প্রযুক্তির সাথে নিজেদের প্রস্তুত করতে চায়।</p>
-            </div>
-            <div className="p-6 rounded-2xl bg-secondary/50 border border-border">
-              <div className="w-12 h-12 bg-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <Brain className="w-6 h-6" />
-              </div>
-              <h3 className="text-lg font-bold mb-2">প্রফেশনাল</h3>
-              <p className="text-muted-foreground text-sm">যারা AI ব্যবহার করে কর্মক্ষেত্রে নিজের প্রোডাক্টিভিটি বাড়াতে চান।</p>
-            </div>
-            <div className="p-6 rounded-2xl bg-secondary/50 border border-border">
-              <div className="w-12 h-12 bg-purple-500/20 text-purple-400 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <Zap className="w-6 h-6" />
-              </div>
-              <h3 className="text-lg font-bold mb-2">ফ্রি্ল্যান্সার</h3>
-              <p className="text-muted-foreground text-sm">যারা নতুন স্কিল শিখে অনলাইনে নিজেদের আয় বাড়াতে চান।</p>
-            </div>
+            ))}
           </div>
-        </div>
+        </Section>
 
-        {/* YouTube Section */}
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="max-w-4xl mx-auto bg-gradient-to-r from-red-500/10 via-background to-background border border-red-500/20 rounded-3xl p-8 md:p-12 text-center relative overflow-hidden"
-        >
-          <div className="relative z-10">
-            <Youtube className="w-16 h-16 text-red-500 mx-auto mb-6" />
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">আমাদের ইউটিউব চ্যানেল</h2>
-            <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-              ভিডিও টিউটোরিয়ালের মাধ্যমে আরও সহজে শিখতে আমাদের ইউটিউব চ্যানেলে সাবস্ক্রাইব করুন। সেখানে আমরা নিয়মিত নতুন টুল ও ট্রিকস শেয়ার করি।
-            </p>
-            <Button size="lg" className="bg-red-600 hover:bg-red-700 text-white gap-2 font-semibold px-8" data-testid="button-subscribe-youtube">
-              <Youtube className="w-5 h-5" /> সাবস্ক্রাইব করুন
-            </Button>
+        {/* Timeline */}
+        <Section title="আমাদের যাত্রা">
+          <div className="relative pl-7">
+            <div className="absolute left-2 top-1.5 bottom-1.5 w-0.5 bg-border" />
+            {[
+              { y: "মার্চ ২০২৩", h: "যাত্রার শুরু", p: "একটি ছোট YouTube channel দিয়ে শুরু — প্রথম ভিডিওতে ৫০০ views। বাংলায় AI content এর চাহিদা প্রমাণিত হলো।" },
+              { y: "জুলাই ২০২৩", h: "Platform Launch", p: "প্রথম structured course platform চালু হলো। ১ মাসে ১,০০০ শিক্ষার্থী যোগ দিলো।" },
+              { y: "জানুয়ারি ২০২৪", h: "Scholarship Program", p: "আর্থিকভাবে পিছিয়ে পড়া শিক্ষার্থীদের জন্য বিনামূল্যে কোর্সের সুযোগ চালু হলো। ৩০০+ scholarship দেওয়া হলো।" },
+              { y: "২০২৪ বর্তমান", h: "১০,০০০+ Community", p: "এখন আমরা বাংলাদেশের সবচেয়ে বড় বাংলা AI শিক্ষা কমিউনিটি। ৬৪ জেলায় আমাদের শিক্ষার্থী রয়েছে।" },
+            ].map((t) => (
+              <div key={t.y} className="relative mb-6 last:mb-0">
+                <div className="absolute -left-7 top-1 w-3.5 h-3.5 rounded-full bg-primary border-2 border-background" />
+                <div className="text-[11px] font-mono text-primary font-bold tracking-wide mb-1">{t.y}</div>
+                <h4 className="text-sm font-bold text-foreground mb-1">{t.h}</h4>
+                <p className="text-[13px] text-muted-foreground leading-[1.7]">{t.p}</p>
+              </div>
+            ))}
           </div>
-        </motion.div>
+        </Section>
+
+        {/* Team */}
+        <Section title="আমাদের দল">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {[
+              { a: "👨‍💻", n: "রাফি আহমেদ", r: "Founder & CEO" },
+              { a: "👩‍🏫", n: "সাদিয়া ইসলাম", r: "Head of Curriculum" },
+              { a: "👨‍🎨", n: "তানভীর হোসেন", r: "Lead Instructor" },
+              { a: "👩‍💼", n: "নুসরাত জাহান", r: "Community Manager" },
+            ].map((m) => (
+              <div key={m.n} className="bg-card border border-border rounded-xl p-5 text-center">
+                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary to-yellow-400 flex items-center justify-center text-2xl mx-auto mb-3">
+                  {m.a}
+                </div>
+                <div className="text-sm font-bold text-foreground">{m.n}</div>
+                <div className="text-xs text-muted-foreground mt-1">{m.r}</div>
+              </div>
+            ))}
+          </div>
+        </Section>
+
+        {/* Contact */}
+        <Section title="যোগাযোগ করো">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {[
+              { i: "📧", l: "ইমেইল", v: "support@aishikhibanglay.com" },
+              { i: "📱", l: "WhatsApp", v: "+880 1XXX-XXXXXX" },
+              { i: "📍", l: "ঠিকানা", v: "ঢাকা, বাংলাদেশ" },
+              { i: "🕐", l: "সাপোর্ট সময়", v: "শনি–বৃহস্পতি, ৯টা–৯টা" },
+            ].map((c) => (
+              <div key={c.l} className="bg-card border border-border rounded-xl p-4 flex gap-3 items-start">
+                <span className="text-xl flex-shrink-0">{c.i}</span>
+                <div>
+                  <div className="text-[11px] text-muted-foreground uppercase tracking-wide mb-0.5">{c.l}</div>
+                  <div className="text-[13px] font-semibold text-foreground">{c.v}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Section>
+
+        <div className="mt-12 pt-6 border-t border-border flex justify-between items-center flex-wrap gap-3">
+          <p className="text-[12.5px] text-muted-foreground">সর্বশেষ আপডেট: জানুয়ারি ২০২৫</p>
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="border border-border text-muted-foreground px-4 py-1.5 rounded text-sm hover:border-primary hover:text-primary transition-colors"
+          >
+            ↑ উপরে যাও
+          </button>
+        </div>
       </div>
     </div>
   );
