@@ -10,9 +10,24 @@ import {
   communityWarningsTable,
   siteSettingsTable,
 } from "@workspace/db";
-import bcrypt from "bcryptjs";
-import crypto from "crypto";
+import { pbkdf2Sync, randomBytes, timingSafeEqual, randomUUID } from "node:crypto";
 import * as zod from "zod";
+
+// Password helpers using Node.js built-in crypto (no external deps)
+function hashPassword(password: string): string {
+  const salt = randomBytes(16).toString("hex");
+  const hash = pbkdf2Sync(password, salt, 100000, 64, "sha512").toString("hex");
+  return `${salt}:${hash}`;
+}
+
+function verifyPassword(password: string, stored: string): boolean {
+  const [salt, hash] = stored.split(":");
+  if (!salt || !hash) return false;
+  try {
+    const computed = pbkdf2Sync(password, salt, 100000, 64, "sha512").toString("hex");
+    return timingSafeEqual(Buffer.from(hash, "hex"), Buffer.from(computed, "hex"));
+  } catch { return false; }
+}
 
 const router: IRouter = Router();
 
@@ -58,8 +73,8 @@ router.post("/community/auth/register", async (req, res): Promise<void> => {
     .where(or(eq(communityMembersTable.email, email), eq(communityMembersTable.username, username))).limit(1);
   if (existing.length) { res.status(400).json({ error: "এই ইমেইল বা username ইতোমধ্যে নিবন্ধিত" }); return; }
 
-  const passwordHash = await bcrypt.hash(password, 10);
-  const sessionToken = crypto.randomUUID();
+  const passwordHash = hashPassword(password);
+  const sessionToken = randomUUID();
   const [member] = await db.insert(communityMembersTable).values({ username, email, passwordHash, sessionToken }).returning();
   res.json({ token: sessionToken, member: { id: member.id, username: member.username, email: member.email, isModerator: member.isModerator, joinedAt: member.joinedAt } });
 });
@@ -76,10 +91,10 @@ router.post("/community/auth/login", async (req, res): Promise<void> => {
   const member = rows[0];
   if (member.isBanned) { res.status(403).json({ error: `আপনি ban হয়েছেন${member.bannedReason ? `: ${member.bannedReason}` : ""}` }); return; }
 
-  const ok = await bcrypt.compare(password, member.passwordHash);
+  const ok = verifyPassword(password, member.passwordHash);
   if (!ok) { res.status(401).json({ error: "ইমেইল বা পাসওয়ার্ড ভুল" }); return; }
 
-  const sessionToken = crypto.randomUUID();
+  const sessionToken = randomUUID();
   await db.update(communityMembersTable).set({ sessionToken }).where(eq(communityMembersTable.id, member.id));
   res.json({ token: sessionToken, member: { id: member.id, username: member.username, email: member.email, isModerator: member.isModerator, warningCount: member.warningCount, joinedAt: member.joinedAt } });
 });
