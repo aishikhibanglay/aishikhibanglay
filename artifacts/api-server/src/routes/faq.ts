@@ -1,10 +1,27 @@
 import { Router, type IRouter } from "express";
-import { db } from "@workspace/db";
+import { db, pool } from "@workspace/db";
 import { faqItemsTable } from "@workspace/db/schema";
 import { eq, asc } from "drizzle-orm";
 import { requireAdmin } from "../middlewares/requireAdmin";
 
 const router: IRouter = Router();
+
+// Auto-create table if missing (handles fresh Supabase / new deployments)
+async function ensureTable(): Promise<void> {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS faq_items (
+      id        serial PRIMARY KEY,
+      question  text    NOT NULL,
+      answer    text    NOT NULL,
+      category  text    NOT NULL DEFAULT 'general',
+      display_order integer NOT NULL DEFAULT 0,
+      is_active boolean NOT NULL DEFAULT true
+    )
+  `);
+}
+
+// Run once at startup
+ensureTable().catch((err) => console.error("[faq] ensureTable error:", err));
 
 const DEFAULT_FAQS = [
   { question: '"AI শিখি বাংলায়" আসলে কী?', answer: '"AI শিখি বাংলায়" হলো বাংলাদেশের প্রথম পূর্ণাঙ্গ বাংলা ভাষার AI শিক্ষা প্ল্যাটফর্ম। এখানে তুমি Artificial Intelligence, ChatGPT, Machine Learning, Prompt Engineering সহ আধুনিক AI technology সম্পূর্ণ বাংলায় শিখতে পারবে — একদম শূন্য থেকে শুরু করে Advanced level পর্যন্ত।', category: "general", displayOrder: 1, isActive: true },
