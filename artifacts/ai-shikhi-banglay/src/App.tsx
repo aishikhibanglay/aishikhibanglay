@@ -45,6 +45,9 @@ const FooterManagerPage = lazy(() => import("./pages/admin/footer-manager"));
 const NavbarManagerPage = lazy(() => import("./pages/admin/navbar-manager"));
 const FaqManagerPage = lazy(() => import("./pages/admin/faq-manager"));
 const BlogSettingsPage = lazy(() => import("./pages/admin/blog-settings"));
+const CommunityPage = lazy(() => import("./pages/community"));
+const CommunityPostPage = lazy(() => import("./pages/community-post"));
+const CommunityManagerPage = lazy(() => import("./pages/admin/community-manager"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -80,6 +83,8 @@ function PublicRouter() {
           <Route path="/cookie-policy" component={CookiePolicy} />
           <Route path="/blog/chatgpt-bangla-guide" component={BlogChatGPTGuide} />
           <Route path="/blog/:slug" component={BlogPost} />
+          <Route path="/community" component={CommunityPage} />
+          <Route path="/community/post/:id" component={CommunityPostPage} />
           <Route path="/pages/:slug" component={DynamicPage} />
           <Route component={NotFound} />
         </Switch>
@@ -108,6 +113,7 @@ function AdminRouter() {
         <Route path="/admin/navbar" component={NavbarManagerPage} />
         <Route path="/admin/faq" component={FaqManagerPage} />
         <Route path="/admin/blog-settings" component={BlogSettingsPage} />
+        <Route path="/admin/community" component={CommunityManagerPage} />
         <Route path="/admin/reset-password" component={ResetPasswordPage} />
       </Switch>
     </Suspense>
