@@ -14,6 +14,8 @@ import socialLinksRouter from "./socialLinks";
 import aiToolsRouter from "./aiTools";
 import contactRouter from "./contact";
 import faqRouter from "./faq";
+import communityRouter from "./community";
+import adminCommunityRouter from "./adminCommunity";
 
 const router: IRouter = Router();
 
@@ -30,12 +32,14 @@ router.use(socialLinksRouter);
 router.use(aiToolsRouter);
 router.use(contactRouter);
 router.use(faqRouter);
+router.use(communityRouter);
 
 // Auth routes (login/logout/me — mixed public + protected, self-contained)
 router.use(adminAuthRouter);
 
 // Protected admin routes
 router.use(adminPostsRouter);
+router.use(adminCommunityRouter);
 router.use(storageRouter); // POST /storage/upload — auth handled inside router
 
 export default router;
