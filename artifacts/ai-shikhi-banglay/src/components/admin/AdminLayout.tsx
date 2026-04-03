@@ -16,6 +16,7 @@ import {
   Mail,
   Wrench,
   HelpCircle,
+  Newspaper,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -35,6 +36,7 @@ const NAV_ITEMS: NavItem[] = [
   { icon: <PanelBottom className="w-5 h-5" />, label: "ফুটার ম্যানেজার", href: "/admin/footer" },
   { icon: <Wrench className="w-5 h-5" />, label: "AI টুলস", href: "/admin/tools" },
   { icon: <Settings className="w-5 h-5" />, label: "সাইট সেটিংস", href: "/admin/settings" },
+  { icon: <Newspaper className="w-5 h-5" />, label: "ব্লগ সেটিংস", href: "/admin/blog-settings" },
   { icon: <HelpCircle className="w-5 h-5" />, label: "FAQ ম্যানেজার", href: "/admin/faq" },
   { icon: <Mail className="w-5 h-5" />, label: "সাবস্ক্রাইবার", href: "/admin/subscribers" },
 ];
